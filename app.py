@@ -1,6 +1,7 @@
 from urllib import request
 
 from flask import Flask, request, render_template
+import mysql.connector
 
 #notes
 #some useful API
@@ -22,7 +23,7 @@ def gallery():
 @app.route('/reviews', methods=['GET'])
 def reviews():
     return '''
-        'Welcome to the reviews, '
+        Welcome to the reviews, 
         <a href="/writeAReview">Write a review!</a>
     '''
     #database of reviews would be displayed here
