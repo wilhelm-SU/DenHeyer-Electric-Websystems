@@ -1,11 +1,13 @@
 from urllib import request
 
 from flask import Flask, request, render_template
+from markupsafe import escape
+#escape is extremely important, must be used on all user submitted arguments to prevent malicious actions
 
 #notes
 #some useful API
 #https://docs.python.org/3/library/http.html#module-http
-#https://flask.palletsprojects.com/en/stable/api/
+#https://flask.palletsprojects.com/en/stable/
 app = Flask(__name__)
 @app.route('/')
 def home():
@@ -22,7 +24,7 @@ def gallery():
 @app.route('/reviews', methods=['GET'])
 def reviews():
     return '''
-        'Welcome to the reviews, '
+        Welcome to the reviews, 
         <a href="/writeAReview">Write a review!</a>
     '''
     #database of reviews would be displayed here
@@ -38,8 +40,24 @@ def writeAReview():
         print(name, email, review)
         return 'Thanks for your review'
 
-    return render_template('htmlname.html')
+    return render_template('')
     #front end create HTML file that functions as a form and is called here
+
+@app.route('/employeeLogin', methods=['GET', 'POST'])
+def employeeLogin():
+    if request.method == 'POST':
+        'Insert username and password'
+        username = request.form['username']
+        password = request.form['password']
+        if username == '<USERNAME>' and password == '<PASSWORD>':
+            return 'not finished'
+
+    return render_template('')
+    #front end create HTML file that functions as a login page called here
+
+@app.route('/employeePortal', methods=['GET', 'POST'])
+def employeePortal():
+    return 'not finished'
 
 if __name__ == '__main__':
     app.run()
