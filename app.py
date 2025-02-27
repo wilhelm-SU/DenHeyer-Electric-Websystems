@@ -11,16 +11,20 @@ from markupsafe import escape #escape is extremely important, must be used on al
 app = Flask(__name__)
 app.secret_key = '<KEY>' #placeholder we need to make that key hard to guess and super secret
 
-DB_CONFIG = {
-    "dbname": "denheyer_webserver",
-    "user": "denheyer_webserver_user",
-    "password": "CEu8cjkwWRcBDCjjZu0GhUBwhHA2Jush",
-    "host": "dpg-curuecjv2p9s73aprlvg-a.oregon-postgres.render.com",
-    "port": "5432"
-}
+host = 'dpg-curuecjv2p9s73aprlvg-a.oregon-postgres.render.com'  # Example: 'localhost' or an IP address
+port = '5432'  # Example: '5432'
+dbname = 'denheyer_webserver'  # Your database name
+user = 'denheyer_webserver_user'  # Your database username
+password = 'CEu8cjkwWRcBDCjjZu0GhUBwhHA2Jush'  # Your database password
 
 def connect_to_db():
-    return psycopg2.connect(**DB_CONFIG)
+    return psycopg2.connect(database=dbname, user=user, password=password, host=host, port=port)
+
+try:
+    conn = connect_to_db()
+    print("Connection successful")
+except Exception as e:
+    print("Error:", e)
 @app.route('/')
 def home():
     return '''
@@ -36,17 +40,21 @@ def gallery():
 
 @app.route('/reviews', methods=['GET'])
 def reviews():
+    try:
         connect = connect_to_db()
         cursor = connect.cursor()
-
         cursor.execute("SELECT USERNAME, DESCRIPTION FROM REVIEWS")
-        #cursor.execute("SELECT COUNT(*) FROM REVIEWS")
-        reviews = cursor.fetchall()
 
-        cursor.close()
-        connect.close()
+        reviewData = cursor.fetchall()
 
-        review_list = [{"username": row[0], "description": row[1]} for row in reviews]
+        if not reviewData:
+            return jsonify({
+                "message": "No reviews available.",
+                "write_review_link": "/writeAReview",
+                "reviews": []
+            })
+
+        review_list = [{"username": row[0], "description": row[1]} for row in reviewData]
 
         return jsonify({
             "message": "Welcome to the reviews",
@@ -54,6 +62,18 @@ def reviews():
             "reviews": review_list
         })
 
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+
+    finally:
+        try:
+            if cursor:
+                cursor.close()
+            if connect:
+                connect.close()
+        except Exception as e:
+            # Optionally log any errors related to closing
+            print(f"Error closing connection: {e}")
 
     #database of reviews would be displayed here
     #front end please add a return link in order to return to home
