@@ -8,6 +8,11 @@ from markupsafe import escape #escape is extremely important, must be used on al
 #some useful API
 #https://docs.python.org/3/library/http.html#module-http
 #https://flask.palletsprojects.com/en/stable/
+#[written by Connor] - this is how to switch between master and main branch in VScode:
+#                       git checkout -b master origin/master
+#                       git checkout -b main origin/main   
+
+
 app = Flask(__name__)
 app.secret_key = '<KEY>' #placeholder we need to make that key hard to guess and super secret
 
