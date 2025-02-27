@@ -1,6 +1,7 @@
 from urllib import request
 
-from flask import Flask, request, render_template, session
+from flask import Flask, request, render_template, session, redirect, url_for, jsonify
+import psycopg2
 from markupsafe import escape #escape is extremely important, must be used on all user submitted arguments to prevent malicious actions
 
 #notes
@@ -9,6 +10,17 @@ from markupsafe import escape #escape is extremely important, must be used on al
 #https://flask.palletsprojects.com/en/stable/
 app = Flask(__name__)
 app.secret_key = '<KEY>' #placeholder we need to make that key hard to guess and super secret
+
+DB_CONFIG = {
+    "dbname": "denheyer_webserver",
+    "user": "denheyer_webserver_user",
+    "password": "CEu8cjkwWRcBDCjjZu0GhUBwhHA2Jush",
+    "host": "dpg-curuecjv2p9s73aprlvg-a.oregon-postgres.render.com",
+    "port": "5432"
+}
+
+def connect_to_db():
+    return psycopg2.connect(**DB_CONFIG)
 @app.route('/')
 def home():
     return '''
@@ -24,10 +36,25 @@ def gallery():
 
 @app.route('/reviews', methods=['GET'])
 def reviews():
-    return '''
-        Welcome to the reviews<br>
-        <a href="/writeAReview">Write a review!</a>
-    '''
+        connect = connect_to_db()
+        cursor = connect.cursor()
+
+        cursor.execute("SELECT USERNAME, DESCRIPTION FROM REVIEWS")
+        #cursor.execute("SELECT COUNT(*) FROM REVIEWS")
+        reviews = cursor.fetchall()
+
+        cursor.close()
+        connect.close()
+
+        review_list = [{"username": row[0], "description": row[1]} for row in reviews]
+
+        return jsonify({
+            "message": "Welcome to the reviews",
+            "write_review_link": "/writeAReview",
+            "reviews": review_list
+        })
+
+
     #database of reviews would be displayed here
     #front end please add a return link in order to return to home
 
@@ -43,6 +70,15 @@ def writeAReview():
 
     return render_template('')
     #front end create HTML file that functions as a form and is called here
+
+@app.route('/requestEstimate', methods=['GET', 'POST'])
+def requestEstimate():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        details = request.form['details']
+
+    return render_template('')
 
 @app.route('/employeeLogin', methods=['GET', 'POST'])
 def employeeLogin():
