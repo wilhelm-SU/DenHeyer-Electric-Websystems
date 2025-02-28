@@ -48,10 +48,22 @@ def reviews():
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
-        cursor.execute("SELECT USERNAME, DESCRIPTION FROM REVIEWS")
+        cursor.execute('SELECT "USERNAME", "DESCRIPTION" FROM "REVIEWS"')
+
+        print("Query executed successfully")
 
         reviewData = cursor.fetchall()
 
+        if not reviewData:
+            return "No reviews available.\nWrite a review: /writeAReview"
+
+        # Format each review as plain text with spacing
+        formatted_reviews = "\n\n".join([f"Username: {row[0]}\nDescription: {row[1]}" for row in reviewData])
+
+        return f"Welcome to the reviews\n\n{formatted_reviews}\n\nWrite a review: /writeAReview", 200, {"Content-Type": "text/plain"}
+
+
+        '''
         if not reviewData:
             return jsonify({
                 "message": "No reviews available.",
@@ -59,13 +71,17 @@ def reviews():
                 "reviews": []
             })
 
-        review_list = [{"username": row[0], "description": row[1]} for row in reviewData]
+        #so I just need to delete this bit of code bellow?:    
+
+        review_list = [{"username": row[0],  "description": row[1]} for row in reviewData]
 
         return jsonify({
             "message": "Welcome to the reviews",
             "write_review_link": "/writeAReview",
             "reviews": review_list
         })
+        '''
+
 
     except Exception as e:
         return jsonify({'Error': str(e)})
