@@ -63,26 +63,6 @@ def reviews():
         return f"Welcome to the reviews\n\n{formatted_reviews}\n\nWrite a review: /writeAReview", 200, {"Content-Type": "text/plain"}
 
 
-        '''
-        if not reviewData:
-            return jsonify({
-                "message": "No reviews available.",
-                "write_review_link": "/writeAReview",
-                "reviews": []
-            })
-
-        #so I just need to delete this bit of code bellow?:    
-
-        review_list = [{"username": row[0],  "description": row[1]} for row in reviewData]
-
-        return jsonify({
-            "message": "Welcome to the reviews",
-            "write_review_link": "/writeAReview",
-            "reviews": review_list
-        })
-        '''
-
-
     except Exception as e:
         return jsonify({'Error': str(e)})
 
