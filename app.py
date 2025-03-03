@@ -1,6 +1,6 @@
 from urllib import request
 
-from flask import Flask, request, render_template, session, redirect, url_for, jsonify
+from flask import Flask, request, render_template, session, redirect, url_for, jsonify, render_template_string
 import psycopg2
 from markupsafe import escape #escape is extremely important, must be used on all user submitted arguments to prevent malicious actions
 
@@ -9,8 +9,10 @@ from markupsafe import escape #escape is extremely important, must be used on al
 #https://docs.python.org/3/library/http.html#module-http
 #https://flask.palletsprojects.com/en/stable/
 #[written by Connor] - this is how to switch between master and main branch in VScode:
-#                       git checkout -b master origin/master
-#                       git checkout -b main origin/main   
+#  for bringing them local        git checkout -b master origin/master
+#                                 git checkout -b main origin/main 
+#  for when they are local        git checkout master
+#                                 git checkout main  
 
 
 app = Flask(__name__)
@@ -55,13 +57,25 @@ def reviews():
         reviewData = cursor.fetchall()
 
         if not reviewData:
-            return "No reviews available.\nWrite a review: /writeAReview"
+            return '''No reviews available.<br>
+                      <a href="/writeAReview">Write a review</a>'''
 
-        # Format each review as plain text with spacing
-        formatted_reviews = "\n\n".join([f"Username: {row[0]}\nDescription: {row[1]}" for row in reviewData])
+        # Format reviews as HTML
+        formatted_reviews = "<br><br>".join([f"<strong>Username:</strong> {row[0]}<br><strong>Description:</strong> {row[1]}" for row in reviewData])
 
-        return f"Welcome to the reviews\n\n{formatted_reviews}\n\nWrite a review: /writeAReview", 200, {"Content-Type": "text/plain"}
+        return f'''<h2>Welcome to the reviews</h2>
+                   {formatted_reviews}
+                   <br><br>
+                   <a href="/writeAReview">Write a review</a>''', 200
 
+        '''This stuff below is to Format reviews as plain text'''
+        # if not reviewData:
+        #     return "No reviews available.\nWrite a review: /writeAReview"
+
+        # # Format each review as plain text with spacing
+        # formatted_reviews = "\n\n".join([f"Username: {row[0]}\nDescription: {row[1]}" for row in reviewData])
+
+        # return f"Welcome to the reviews\n\n{formatted_reviews}\n\nWrite a review: /writeAReview", 200, {"Content-Type": "text/plain"}
 
     except Exception as e:
         return jsonify({'Error': str(e)})
@@ -82,6 +96,56 @@ def reviews():
 @app.route('/writeAReview', methods=['GET', 'POST'])
 def writeAReview():
     if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        review = request.form.get('review')
+
+        if not name or not email or not review:
+            return "All fields are required.", 400
+
+        try:
+            connect = connect_to_db()
+            cursor = connect.cursor()
+
+            cursor.execute('INSERT INTO "REVIEWS" ("USERNAME", "EMAIL", "DESCRIPTION") VALUES (%s, %s, %s)', 
+                           (name, email, review))
+            connect.commit()
+
+            return "Thanks for your review!"
+
+        except Exception as e:
+            return jsonify({'Error': str(e)})
+
+        finally:
+            try:
+                if cursor:
+                    cursor.close()
+                if connect:
+                    connect.close()
+            except Exception as e:
+                print(f"Error closing connection: {e}")
+
+    # Render the HTML form
+    return render_template_string('''
+        <form method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br><br>
+
+            <label for="review">Review:</label>
+            <textarea id="review" name="review" required></textarea><br><br>
+
+            <input type="submit" value="Submit Review">
+        </form>
+    ''')
+
+
+'''          THIS STUFF IS THE OLD ROUTE FOR WRITE A REVIEW
+@app.route('/writeAReview', methods=['GET', 'POST'])
+def writeAReview():
+    if request.method == 'POST':
         'Please write a review'
         name = request.form['name']
         email = request.form['email']
@@ -91,6 +155,8 @@ def writeAReview():
 
     return render_template('')
     #front end create HTML file that functions as a form and is called here
+'''
+
 
 @app.route('/requestEstimate', methods=['GET', 'POST'])
 def requestEstimate():
