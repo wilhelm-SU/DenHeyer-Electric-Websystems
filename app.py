@@ -242,10 +242,17 @@ def employeePortal():
 
     return 'not finished'
 
+
 @app.route('/logout')
 def logout():
     session ['loggedIn'] = False
     return redirect(url_for('employeeLogin'))
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run()
