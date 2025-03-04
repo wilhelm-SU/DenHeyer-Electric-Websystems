@@ -127,7 +127,7 @@ def writeAReview():
             connect = connect_to_db()
             cursor = connect.cursor()
 
-            cursor.execute('INSERT INTO "REVIEWS" ("USERNAME", "EMAIL", "DESCRIPTION") VALUES (%s, %s, %s)', 
+            cursor.execute('INSERT INTO "REVIEWS_ARBITER" ("USERNAME", "EMAIL", "DESCRIPTION") VALUES (%s, %s, %s)',
                            (name, email, review))
             connect.commit()
 
@@ -156,7 +156,6 @@ def writeAReview():
 ###############################################################################################################################################
 ###############################################################################################################################################
 
-
 @app.route('/requestEstimate', methods=['GET', 'POST'])
 def requestEstimate():
     if request.method == 'POST':
@@ -166,14 +165,9 @@ def requestEstimate():
 
     return render_template('')
 
-
-
-
-
 #EMPLOYEE Routes
 ###############################################################################################################################################
 ###############################################################################################################################################
-
 
 @app.route('/employeeLogin', methods=['GET', 'POST'])
 def employeeLogin():
@@ -196,7 +190,8 @@ def employeeLogin():
             if employee:
                 return redirect(url_for('employeeDashboard'))  # Redirect to the employee portal
             else:
-                return "Invalid credentials. Please try again.", 401
+                return ('''Invalid credentials. Please try again.<br>
+                        "<a href="/logout">Logout</a><br>''', 401)
 
         except Exception as e:
             return jsonify({'Error': str(e)})
@@ -211,36 +206,14 @@ def employeeLogin():
                 print(f"Error closing connection: {e}")
 
     # Render login form
-    return render_template_string('''
-        <h2>Employee Login</h2>
-        <form method="POST">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required><br><br>
-
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br><br>
-
-            <input type="submit" value="Login">
-        </form>
-    ''')
-
-    '''
-        if username == '<USERNAME>' and password == '<PASSWORD>':
-            session['loggedIn'] = True
-            redirect(url_for('employeePortal'))
-        else:
-            return 'Invalid username or password'
-
     return render_template('employeeLoginForm.html')
-    #front end please access this HTML file in templates directory and make it a form -J
-    '''
 
 @app.route('/employeePortal', methods=['GET', 'POST'])
 def employeePortal():
     if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
         return redirect(url_for('employeeLogin'))
 
-    return 'not finished'
+    return '<a href="/logout">Logout</a><br>'
 
 
 @app.route('/logout')
