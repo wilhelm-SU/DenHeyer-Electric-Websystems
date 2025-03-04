@@ -121,7 +121,7 @@ def writeAReview():
                            (name, email, review))
             connect.commit()
 
-            return "Thanks for your review!"
+            return redirect(url_for('reviews'))
 
         except Exception as e:
             return jsonify({'Error': str(e)})
