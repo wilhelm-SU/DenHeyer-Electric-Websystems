@@ -180,6 +180,51 @@ def employeeLogin():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+
+        if not username or not password:
+            return "Both fields are required.", 400
+
+        try:
+            connect = connect_to_db()
+            cursor = connect.cursor()
+
+            # Check if credentials exist in the database
+            cursor.execute('SELECT * FROM "EMPLOYEE_CREDENTIALS" WHERE "EMPLOYEE_USERNAME" = %s AND "EMPLOYEE_PASSWORD" = %s', 
+                           (username, password))
+            employee = cursor.fetchone()
+
+            if employee:
+                return redirect(url_for('employeeDashboard'))  # Redirect to the employee portal
+            else:
+                return "Invalid credentials. Please try again.", 401
+
+        except Exception as e:
+            return jsonify({'Error': str(e)})
+
+        finally:
+            try:
+                if cursor:
+                    cursor.close()
+                if connect:
+                    connect.close()
+            except Exception as e:
+                print(f"Error closing connection: {e}")
+
+    # Render login form
+    return render_template_string('''
+        <h2>Employee Login</h2>
+        <form method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+
+            <input type="submit" value="Login">
+        </form>
+    ''')
+
+    '''
         if username == '<USERNAME>' and password == '<PASSWORD>':
             session['loggedIn'] = True
             redirect(url_for('employeePortal'))
@@ -188,6 +233,7 @@ def employeeLogin():
 
     return render_template('employeeLoginForm.html')
     #front end please access this HTML file in templates directory and make it a form -J
+    '''
 
 @app.route('/employeePortal', methods=['GET', 'POST'])
 def employeePortal():
