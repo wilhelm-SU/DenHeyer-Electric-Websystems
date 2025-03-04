@@ -35,9 +35,12 @@ try:
 except Exception as e:
     print("Error:", e)
 
-#Routes
+
+
+#HOME Routes
 ###############################################################################################################################################
 ###############################################################################################################################################
+
 
 @app.route('/')
 def home():
@@ -48,12 +51,27 @@ def home():
         <a href="/employeeLogin">Employee Login</a><br>
     '''
 
+
+
+#GALLERY Routes
+###############################################################################################################################################
+###############################################################################################################################################
+
+
 @app.route('/gallery')
 def gallery():
     return '''
         Welcome to the gallery
         <a href="/">Return</a>
         '''
+
+
+
+
+#REVIEW Routes
+###############################################################################################################################################
+###############################################################################################################################################
+
 
 @app.route('/reviews', methods=['GET'])
 def reviews():
@@ -79,15 +97,7 @@ def reviews():
                    <a href="/writeAReview">Write a review</a><br>
                    <a href="/">Return</a>''', 200
 
-        '''This stuff below is to Format reviews as plain text'''
-        # if not reviewData:
-        #     return "No reviews available.\nWrite a review: /writeAReview"
-
-        # # Format each review as plain text with spacing
-        # formatted_reviews = "\n\n".join([f"Username: {row[0]}\nDescription: {row[1]}" for row in reviewData])
-
-        # return f"Welcome to the reviews\n\n{formatted_reviews}\n\nWrite a review: /writeAReview", 200, {"Content-Type": "text/plain"}
-
+        
     except Exception as e:
         return jsonify({'Error': str(e)})
 
@@ -121,7 +131,7 @@ def writeAReview():
                            (name, email, review))
             connect.commit()
 
-            return redirect(url_for('reviews'))
+            return "Thanks for your review!"
 
         except Exception as e:
             return jsonify({'Error': str(e)})
@@ -138,6 +148,15 @@ def writeAReview():
     # Render the templates form from templates folder
     return render_template('submitReviewForm.html')
 
+
+
+
+
+#ESTIMATE Routes
+###############################################################################################################################################
+###############################################################################################################################################
+
+
 @app.route('/requestEstimate', methods=['GET', 'POST'])
 def requestEstimate():
     if request.method == 'POST':
@@ -146,6 +165,15 @@ def requestEstimate():
         details = request.form['details']
 
     return render_template('')
+
+
+
+
+
+#EMPLOYEE Routes
+###############################################################################################################################################
+###############################################################################################################################################
+
 
 @app.route('/employeeLogin', methods=['GET', 'POST'])
 def employeeLogin():
