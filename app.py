@@ -4,7 +4,6 @@ from flask import Flask, request, render_template, session, redirect, url_for, j
 import psycopg2
 from markupsafe import escape #escape is extremely important, must be used on all user submitted arguments to prevent malicious actions
 
-#notes
 #some useful API
 #https://docs.python.org/3/library/http.html#module-http
 #https://flask.palletsprojects.com/en/stable/
@@ -14,9 +13,12 @@ from markupsafe import escape #escape is extremely important, must be used on al
 #  for when they are local        git checkout master
 #                                 git checkout main  
 
-
 app = Flask(__name__)
 app.secret_key = '<KEY>' #placeholder we need to make that key hard to guess and super secret
+
+#Connect To Database
+###############################################################################################################################################
+###############################################################################################################################################
 
 host = 'dpg-curuecjv2p9s73aprlvg-a.oregon-postgres.render.com'  # Example: 'localhost' or an IP address
 port = '5432'  # Example: '5432'
@@ -32,6 +34,11 @@ try:
     print("Connection successful")
 except Exception as e:
     print("Error:", e)
+
+#Routes
+###############################################################################################################################################
+###############################################################################################################################################
+
 @app.route('/')
 def home():
     return '''
@@ -40,10 +47,13 @@ def home():
         <a href="/reviews">Go to Reviews</a><br>
         <a href="/employeeLogin">Employee Login</a><br>
     '''
+
 @app.route('/gallery')
 def gallery():
-    return 'Welcome to the gallery'
-    #front end please add a return link in order to return to home
+    return '''
+        Welcome to the gallery
+        <a href="/">Return</a>
+        '''
 
 @app.route('/reviews', methods=['GET'])
 def reviews():
@@ -60,13 +70,14 @@ def reviews():
             return '''No reviews available.<br>
                       <a href="/writeAReview">Write a review</a>'''
 
-        # Format reviews as HTML
+        # Format reviews as templates
         formatted_reviews = "<br><br>".join([f"<strong>Username:</strong> {row[0]}<br><strong>Description:</strong> {row[1]}" for row in reviewData])
 
         return f'''<h2>Welcome to the reviews</h2>
                    {formatted_reviews}
                    <br><br>
-                   <a href="/writeAReview">Write a review</a>''', 200
+                   <a href="/writeAReview">Write a review</a><br>
+                   <a href="/">Return</a>''', 200
 
         '''This stuff below is to Format reviews as plain text'''
         # if not reviewData:
@@ -90,7 +101,6 @@ def reviews():
             # Optionally log any errors related to closing
             print(f"Error closing connection: {e}")
 
-    #database of reviews would be displayed here
     #front end please add a return link in order to return to home
 
 @app.route('/writeAReview', methods=['GET', 'POST'])
@@ -125,38 +135,8 @@ def writeAReview():
             except Exception as e:
                 print(f"Error closing connection: {e}")
 
-    # Render the HTML form
-    return render_template_string('''
-        <form method="POST">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required><br><br>
-
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required><br><br>
-
-            <label for="review">Review:</label>
-            <textarea id="review" name="review" required></textarea><br><br>
-
-            <input type="submit" value="Submit Review">
-        </form>
-    ''')
-
-
-'''          THIS STUFF IS THE OLD ROUTE FOR WRITE A REVIEW
-@app.route('/writeAReview', methods=['GET', 'POST'])
-def writeAReview():
-    if request.method == 'POST':
-        'Please write a review'
-        name = request.form['name']
-        email = request.form['email']
-        review = request.form['review']
-        print(name, email, review)
-        return 'Thanks for your review'
-
-    return render_template('')
-    #front end create HTML file that functions as a form and is called here
-'''
-
+    # Render the templates form from templates folder
+    return render_template('submitReviewForm.html')
 
 @app.route('/requestEstimate', methods=['GET', 'POST'])
 def requestEstimate():
@@ -178,8 +158,8 @@ def employeeLogin():
         else:
             return 'Invalid username or password'
 
-    return render_template('')
-    #front end create HTML file that functions as a login page called here
+    return render_template('employeeLoginForm.html')
+    #front end please access this HTML file in templates directory and make it a form -J
 
 @app.route('/employeePortal', methods=['GET', 'POST'])
 def employeePortal():
