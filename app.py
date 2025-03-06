@@ -35,28 +35,17 @@ try:
 except Exception as e:
     print("Error:", e)
 
-
-
 #HOME Routes
 ###############################################################################################################################################
 ###############################################################################################################################################
 
-
 @app.route('/')
 def home():
-    return '''
-        <h1>DenHeyer Electric</h1>
-        <a href="/gallery">Go to Gallery </a><br>
-        <a href="/reviews">Go to Reviews</a><br>
-        <a href="/employeeLogin">Employee Login</a><br>
-    '''
-
-
+    return render_template('home.html')
 
 #GALLERY Routes
 ###############################################################################################################################################
 ###############################################################################################################################################
-
 
 @app.route('/gallery')
 def gallery():
@@ -65,20 +54,16 @@ def gallery():
         <a href="/">Return</a>
         '''
 
-
-
-
 #REVIEW Routes
 ###############################################################################################################################################
 ###############################################################################################################################################
-
 
 @app.route('/reviews', methods=['GET'])
 def reviews():
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
-        cursor.execute('SELECT "USERNAME", "DESCRIPTION" FROM "REVIEWS"')
+        cursor.execute('SELECT "USERNAME", "DESCRIPTION" FROM "REVIEWS_ACCEPTED"')
 
         print("Query executed successfully")
 
@@ -111,8 +96,6 @@ def reviews():
             # Optionally log any errors related to closing
             print(f"Error closing connection: {e}")
 
-    #front end please add a return link in order to return to home
-
 @app.route('/writeAReview', methods=['GET', 'POST'])
 def writeAReview():
     if request.method == 'POST':
@@ -127,7 +110,7 @@ def writeAReview():
             connect = connect_to_db()
             cursor = connect.cursor()
 
-            cursor.execute('INSERT INTO "REVIEWS_ARBITER" ("USERNAME", "EMAIL", "DESCRIPTION") VALUES (%s, %s, %s)',
+            cursor.execute('INSERT INTO "REVIEWS_UNDECIDED" ("USERNAME", "EMAIL", "DESCRIPTION") VALUES (%s, %s, %s)',
                            (name, email, review))
             connect.commit()
 
@@ -147,10 +130,6 @@ def writeAReview():
 
     # Render the templates form from templates folder
     return render_template('submitReviewForm.html')
-
-
-
-
 
 #ESTIMATE Routes
 ###############################################################################################################################################
@@ -188,10 +167,12 @@ def employeeLogin():
             employee = cursor.fetchone()
 
             if employee:
-                return redirect(url_for('employeeDashboard'))  # Redirect to the employee portal
+                session['loggedIn'] = True
+                session['username'] = username
+                return redirect(url_for('employeePortal'))  # Redirect to the employee portal
             else:
                 return ('''Invalid credentials. Please try again.<br>
-                        "<a href="/logout">Logout</a><br>''', 401)
+                        "<a href="/employeeLogin">Return</a><br>''', 401)
 
         except Exception as e:
             return jsonify({'Error': str(e)})
@@ -208,22 +189,64 @@ def employeeLogin():
     # Render login form
     return render_template('employeeLoginForm.html')
 
-@app.route('/employeePortal', methods=['GET', 'POST'])
+@app.route('/employeePortal')
 def employeePortal():
     if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
         return redirect(url_for('employeeLogin'))
 
-    return '<a href="/logout">Logout</a><br>'
+    username = session.get('username')
+    return render_template('employeePortal.html', username=username)
 
+@app.route('/reviewManager', methods=['GET', 'POST'])
+def reviewManager():
+    if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
+        return redirect(url_for('employeeLogin'))
+
+    try:
+        connect = connect_to_db()
+        cursor = connect.cursor()
+        cursor.execute('SELECT "USERNAME", "DESCRIPTION" FROM "REVIEWS_UNDECIDED"')
+
+        print("Query executed successfully")
+
+        reviewData = cursor.fetchall()
+
+        if not reviewData:
+            return '''No reviews available.<br>'''
+
+        # Format reviews as templates
+        formatted_reviews = "<br><br>".join(
+            [f"<strong>Username:</strong> {row[0]}<br><strong>Description:</strong> {row[1]}" for row in reviewData])
+
+        return f'''<h2>Welcome to the review manager</h2>
+                    Here you can accept or reject reviews here.<br><br>
+                   {formatted_reviews}
+                   <br><br>
+                   <a href="/">Return</a>''', 200
+
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+
+    finally:
+        try:
+            if cursor:
+                cursor.close()
+            if connect:
+                connect.close()
+        except Exception as e:
+            # Optionally log any errors related to closing
+            print(f"Error closing connection: {e}")
+
+@app.route('/resetPassword', methods=['GET', 'POST'])
+def resetPassword():
+    if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
+        return redirect(url_for('employeeLogin'))
+    return ''
 
 @app.route('/logout')
 def logout():
     session ['loggedIn'] = False
     return redirect(url_for('employeeLogin'))
-
-
-
-
 
 
 
