@@ -1,8 +1,11 @@
 from urllib import request
-
 from flask import Flask, request, render_template, session, redirect, url_for, jsonify, render_template_string
 import psycopg2
+import pytz
 from markupsafe import escape #escape is extremely important, must be used on all user submitted arguments to prevent malicious actions
+from datetime import datetime
+
+from mysql.connector import cursor
 
 #some useful API
 #https://docs.python.org/3/library/http.html#module-http
@@ -15,6 +18,15 @@ from markupsafe import escape #escape is extremely important, must be used on al
 
 app = Flask(__name__)
 app.secret_key = '<KEY>' #placeholder we need to make that key hard to guess and super secret
+
+#Miscellanious Items
+###############################################################################################################################################
+###############################################################################################################################################
+
+#Time
+eastern = pytz.timezone('US/Eastern')
+easternTime = datetime.now(eastern)
+currentTime = easternTime.strftime('%Y-%m-%d')
 
 #Connect To Database
 ###############################################################################################################################################
@@ -63,7 +75,7 @@ def reviews():
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
-        cursor.execute('SELECT "USERNAME", "DESCRIPTION" FROM "REVIEWS_ACCEPTED"')
+        cursor.execute('SELECT "NAME", "DESCRIPTION", "DATE"  FROM "REVIEWS" WHERE "PUBLIC" = TRUE')
 
         print("Query executed successfully")
 
@@ -74,7 +86,7 @@ def reviews():
                       <a href="/writeAReview">Write a review</a>'''
 
         # Format reviews as templates
-        formatted_reviews = "<br><br>".join([f"<strong>Username:</strong> {row[0]}<br><strong>Description:</strong> {row[1]}" for row in reviewData])
+        formatted_reviews = "<br><br>".join([f"<strong>Name:</strong> {row[0]}<br><strong>Description:</strong> {row[1]} <br><strong>Date:</strong> {row[2]}" for row in reviewData])
 
         return f'''<h2>Welcome to the reviews</h2>
                    {formatted_reviews}
@@ -102,6 +114,7 @@ def writeAReview():
         name = request.form.get('name')
         email = request.form.get('email')
         review = request.form.get('review')
+        date = currentTime
 
         if not name or not email or not review:
             return "All fields are required.", 400
@@ -110,11 +123,16 @@ def writeAReview():
             connect = connect_to_db()
             cursor = connect.cursor()
 
-            cursor.execute('INSERT INTO "REVIEWS_UNDECIDED" ("USERNAME", "EMAIL", "DESCRIPTION") VALUES (%s, %s, %s)',
-                           (name, email, review))
+            cursor.execute('INSERT INTO "REVIEWS" ("NAME", "EMAIL", "DESCRIPTION", "DATE") VALUES (%s, %s, %s, %s)',
+                           (name, email, review, date))
             connect.commit()
 
-            return "Thanks for your review!"
+
+            return '''
+            Thanks for your review!<br>
+            <a href="/">Return</a>
+        
+            '''
 
         except Exception as e:
             return jsonify({'Error': str(e)})
@@ -199,13 +217,13 @@ def employeePortal():
 
 @app.route('/reviewManager', methods=['GET', 'POST'])
 def reviewManager():
-    if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
+    if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simply writing in url
         return redirect(url_for('employeeLogin'))
 
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
-        cursor.execute('SELECT "USERNAME", "DESCRIPTION" FROM "REVIEWS_UNDECIDED"')
+        cursor.execute('SELECT "NAME", "DESCRIPTION", "EMAIL", "DATE", "PUBLIC", "PRIMARY_KEY" FROM "REVIEWS"')
 
         print("Query executed successfully")
 
@@ -216,13 +234,24 @@ def reviewManager():
 
         # Format reviews as templates
         formatted_reviews = "<br><br>".join(
-            [f"<strong>Username:</strong> {row[0]}<br><strong>Description:</strong> {row[1]}" for row in reviewData])
+            [f"""
+            <strong>Date:</strong> {row[3]}<br><br>
+            <strong>Name:</strong> {row[0]}<br>
+            <strong>Description:</strong> {row[1]}<br>
+            <strong>Email:</strong> {row[2]}<br>
+            <strong>Publicly displayed:</strong> {row[4]}
+            <form action="/togglePublic/{row[5]}" method="POST">
+                <button type="submit">
+                    {'Set to Private' if row[4] else 'Set to Public'}
+                </button>
+        </form> 
+        """ for row in reviewData])
 
         return f'''<h2>Welcome to the review manager</h2>
                     Here you can accept or reject reviews here.<br><br>
                    {formatted_reviews}
                    <br><br>
-                   <a href="/">Return</a>''', 200
+                   <a href="/employeePortal">Return</a>''', 200
 
     except Exception as e:
         return jsonify({'Error': str(e)})
@@ -237,6 +266,21 @@ def reviewManager():
             # Optionally log any errors related to closing
             print(f"Error closing connection: {e}")
 
+@app.route('/togglePublic/<key>', methods=['POST'])
+def togglePublic(key):
+    connect = connect_to_db()
+    cursor = connect.cursor()
+
+    cursor.execute('SELECT "PUBLIC" FROM "REVIEWS" WHERE "PRIMARY_KEY" = %s', (key,))
+    currentStatus = cursor.fetchone()[0]
+    newStatus = not currentStatus
+
+    cursor.execute('UPDATE "REVIEWS" SET "PUBLIC" = %s WHERE "PRIMARY_KEY" = %s', (newStatus, key))
+
+    connect.commit()
+
+    return redirect(url_for('reviewManager'))
+
 @app.route('/resetPassword', methods=['GET', 'POST'])
 def resetPassword():
     if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
@@ -247,7 +291,6 @@ def resetPassword():
 def logout():
     session ['loggedIn'] = False
     return redirect(url_for('employeeLogin'))
-
 
 
 if __name__ == '__main__':
