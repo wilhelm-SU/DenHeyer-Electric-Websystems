@@ -2,6 +2,7 @@ from urllib import request
 from flask import Flask, request, render_template, session, redirect, url_for, jsonify, render_template_string
 import psycopg2
 import pytz
+import base64
 from markupsafe import escape #escape is extremely important, must be used on all user submitted arguments to prevent malicious actions
 from datetime import datetime
 
@@ -61,6 +62,30 @@ def home():
 
 @app.route('/gallery')
 def gallery():
+
+    try:
+        connect = connect_to_db()
+        cursor = connect.cursor()
+        cursor.execute('SELECT "PRIMARY_KEY", "IMAGE_DATA", "DESCRIPTION" FROM "GALLERY"')
+
+        print ("Query executed successfully")
+        imageData = cursor.fetchall()
+        print(imageData)
+
+        image_list = []
+        for data in imageData:
+            if data[1]:
+                base64_imageData = base64.b64encode(data[1]).decode('utf-8')
+                image_list.append((data[0], base64_imageData, data[2]))
+
+        print(image_list)
+
+    except Exception as e:
+        e = "What just happened?" + str(e)
+        return jsonify({'Error': str(e)})
+    
+    
+    
     return '''
         Welcome to the gallery
         <a href="/">Return</a>
