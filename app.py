@@ -70,15 +70,15 @@ def gallery():
 
         print ("Query executed successfully")
         imageData = cursor.fetchall()
-        print(imageData)
+        print(imageData)                #prints the raw data from the database to the terminal
 
-        image_list = []
+        image_list = []         #list to hold the images and their descriptions
         for data in imageData:
             if data[1]:
                 base64_imageData = base64.b64encode(data[1]).decode('utf-8')
                 image_list.append((data[0], base64_imageData, data[2]))
 
-        print(image_list)
+        print(image_list)       #prints the processed data to the terminal
 
     except Exception as e:
         e = "What just happened?" + str(e)
@@ -86,10 +86,7 @@ def gallery():
     
     
     
-    return '''
-        Welcome to the gallery
-        <a href="/">Return</a>
-        '''
+    return render_template('gallery.html', image_list=image_list)
 
 #REVIEW Routes
 ###############################################################################################################################################

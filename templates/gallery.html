@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <style>
+        .gallery img {
+            width: 200px;
+            height: auto;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Welcome to the gallery</h2>
+        <a href="/">Return</a>
+    </div>
+    
+    <h1>Image Gallery</h1>
+    <div class="gallery">
+    {% for image in images %}
+        <img src="data:image/jpeg;base64,{{ image[1] }}" alt="{{ image[2] }}">
+    {% endfor %}
+</div>
+</body>
+</html>
