@@ -62,30 +62,29 @@ def home():
 
 @app.route('/gallery')
 def gallery():
-
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
         cursor.execute('SELECT "PRIMARY_KEY", "IMAGE_DATA", "DESCRIPTION" FROM "GALLERY"')
-
-        print ("Query executed successfully")
+        print("Query executed successfully")
         imageData = cursor.fetchall()
-        print(imageData)                #prints the raw data from the database to the terminal
+        print("Image Data:", imageData)  # Check the fetched raw data
 
-        image_list = []         #list to hold the images and their descriptions
+        image_list = []
         for data in imageData:
             if data[1]:
                 base64_imageData = base64.b64encode(data[1]).decode('utf-8')
                 image_list.append((data[0], base64_imageData, data[2]))
 
-        print(image_list)       #prints the processed data to the terminal
+        # Debug: Check if image_list is populated
+        print("Image List:", image_list)  # Ensure image_list is populated
 
     except Exception as e:
-        e = "What just happened?" + str(e)
         return jsonify({'Error': str(e)})
-    
-    
-    
+
+    # Debug: Check that image_list is passed to the template
+    print("Passing image_list to HTML Template:", image_list)
+
     return render_template('gallery.html', image_list=image_list)
 
 #REVIEW Routes

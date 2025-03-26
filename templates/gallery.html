@@ -21,10 +21,22 @@
     </div>
     
     <h1>Image Gallery</h1>
+
+    <!-- Debug: Check if image_list is passed properly -->
+    <div class="debug-output">
+        <h3>Debug: image_list Data</h3>
+        <pre>{{ image_list }}</pre>  <!-- This will print out the raw image_list data -->
+    </div>
+
     <div class="gallery">
-    {% for image in images %}
-        <img src="data:image/jpeg;base64,{{ image[1] }}" alt="{{ image[2] }}">
-    {% endfor %}
-</div>
+        {% for image in image_list %}
+            <div class="image-item">
+                <h3>{{ image[2] }}</h3> <!-- Image Description -->
+                <img src="data:image/jpeg;base64,{{ image[1] }}" alt="{{ image[2] }}">
+            </div>
+        {% else %}
+            <p>No images available.</p>
+        {% endfor %}
+    </div>
 </body>
 </html>

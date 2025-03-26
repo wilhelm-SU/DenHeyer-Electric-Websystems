@@ -61,3 +61,8 @@ def upload_image(file_path):
 file_location = r"C:\Users\cmcka\Downloads\tempMiscellaneousFolder\FlowerWater.jpg"  # Replace with actual file path
 upload_image(file_location)
 
+
+
+def base64_tester():
+    
+
