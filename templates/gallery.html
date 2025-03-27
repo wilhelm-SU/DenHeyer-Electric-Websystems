@@ -31,8 +31,8 @@
     <div class="gallery">
         {% for image in image_list %}
             <div class="image-item">
-                <h3>{{ image[2] }}</h3> <!-- Image Description -->
                 <img src="data:image/jpeg;base64,{{ image[1] }}" alt="{{ image[2] }}">
+                <h3>{{ image[2] }}</h3> <!-- Image Description -->
             </div>
         {% else %}
             <p>No images available.</p>
