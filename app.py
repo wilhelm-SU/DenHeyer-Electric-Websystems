@@ -40,22 +40,12 @@ from routes.review import reviewBP
 app.register_blueprint(reviewBP)
 
 #ESTIMATE Routes
-###############################################################################################################################################
-###############################################################################################################################################
-
-@app.route('/requestEstimate', methods=['GET', 'POST'])
-def requestEstimate():
-    if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        details = request.form['details']
-
-    return render_template('')
+from routes.estimate import estimateBP
+app.register_blueprint(estimateBP)
 
 #EMPLOYEE Routes
 from routes.employee import employeeBP
 app.register_blueprint(employeeBP)
-
 
 if __name__ == '__main__':
     app.run()

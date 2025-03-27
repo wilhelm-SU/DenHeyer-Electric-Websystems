@@ -3,7 +3,7 @@ from databaseModule import connect_to_db
 
 employeeBP = Blueprint('employee', __name__)
 
-@app.route('/employeeLogin', methods=['GET', 'POST'])
+@employeeBP.route('/employeeLogin', methods=['GET', 'POST'])
 def employeeLogin():
     if request.method == 'POST':
         username = request.form['username']
@@ -44,7 +44,7 @@ def employeeLogin():
     # Render login form
     return render_template('employeeLoginForm.html')
 
-@app.route('/employeePortal')
+@employeeBP.route('/employeePortal')
 def employeePortal():
     if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
         return redirect(url_for('employeeLogin'))
@@ -52,7 +52,7 @@ def employeePortal():
     username = session.get('username')
     return render_template('employeePortal.html', username=username)
 
-@app.route('/reviewManager', methods=['GET', 'POST'])
+@employeeBP.route('/reviewManager', methods=['GET', 'POST'])
 def reviewManager():
     if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simply writing in url
         return redirect(url_for('employeeLogin'))
@@ -103,7 +103,7 @@ def reviewManager():
             # Optionally log any errors related to closing
             print(f"Error closing connection: {e}")
 
-@app.route('/togglePublic/<key>', methods=['POST'])
+@employeeBP.route('/togglePublic/<key>', methods=['POST'])
 def togglePublic(key):
     connect = connect_to_db()
     cursor = connect.cursor()
@@ -118,13 +118,13 @@ def togglePublic(key):
 
     return redirect(url_for('reviewManager'))
 
-@app.route('/resetPassword', methods=['GET', 'POST'])
+@employeeBP.route('/resetPassword', methods=['GET', 'POST'])
 def resetPassword():
     if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
         return redirect(url_for('employeeLogin'))
     return ''
 
-@app.route('/logout')
+@employeeBP.route('/logout')
 def logout():
     session ['loggedIn'] = False
     return redirect(url_for('employeeLogin'))
