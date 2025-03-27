@@ -5,6 +5,7 @@ import pytz
 import base64
 from markupsafe import escape #escape is extremely important, must be used on all user submitted arguments to prevent malicious actions
 from datetime import datetime
+
 from mysql.connector import cursor
 
 #some useful API
@@ -19,33 +20,337 @@ from mysql.connector import cursor
 app = Flask(__name__)
 app.secret_key = '<KEY>' #placeholder we need to make that key hard to guess and super secret
 
+#Miscellanious Items
+###############################################################################################################################################
+###############################################################################################################################################
+
 #Time
 eastern = pytz.timezone('US/Eastern')
 easternTime = datetime.now(eastern)
 currentTime = easternTime.strftime('%Y-%m-%d')
 
 #Connect To Database
-from databaseModule import connect_to_db
+###############################################################################################################################################
+###############################################################################################################################################
 
-#HOME Route
-from routes.home import (homeBP)
-app.register_blueprint(homeBP)
+host = 'dpg-curuecjv2p9s73aprlvg-a.oregon-postgres.render.com'  # Example: 'localhost' or an IP address
+port = '5432'  # Example: '5432'
+dbname = 'denheyer_webserver'  # Your database name
+user = 'denheyer_webserver_user'  # Your database username
+password = 'CEu8cjkwWRcBDCjjZu0GhUBwhHA2Jush'  # Your database password
 
-#GALLERY Route
-from routes.gallery import galleryBP
-app.register_blueprint(galleryBP)
+def connect_to_db():
+    return psycopg2.connect(database=dbname, user=user, password=password, host=host, port=port)
+
+try:
+    conn = connect_to_db()
+    print("Connection successful")
+except Exception as e:
+    print("Error:", e)
+
+#HOME Routes
+###############################################################################################################################################
+###############################################################################################################################################
+
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+#GALLERY Routes
+###############################################################################################################################################
+###############################################################################################################################################
+
+@app.route('/gallery')
+def gallery():
+    try:
+        connect = connect_to_db()
+        cursor = connect.cursor()
+        cursor.execute('SELECT "PRIMARY_KEY", "IMAGE_DATA", "DESCRIPTION" FROM "GALLERY"')
+        print("Query executed successfully")
+        imageData = cursor.fetchall()
+        print("Image Data:", imageData)  # Check the fetched raw data
+
+        image_list = []
+        for data in imageData:
+            if data[1]:
+                base64_imageData = base64.b64encode(data[1]).decode('utf-8')
+                image_list.append((data[0], base64_imageData, data[2]))
+
+        # Debug: Check if image_list is populated
+        print("Image List:", image_list)  # Ensure image_list is populated
+
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+
+    # Debug: Check that image_list is passed to the template
+    print("Passing image_list to HTML Template:", image_list)
+
+    return render_template('gallery.html', image_list=image_list)
 
 #REVIEW Routes
-from routes.review import reviewBP
-app.register_blueprint(reviewBP)
+###############################################################################################################################################
+###############################################################################################################################################
+
+@app.route('/reviews', methods=['GET'])
+def reviews():
+    try:
+        # Define the number of reviews per page
+        reviews_per_page = 5
+
+        # Get the page number from the URL (default to 1 if not provided)
+        page = request.args.get('page', 1, type=int)
+
+        # Calculate the offset for the SQL query
+        offset = (page - 1) * reviews_per_page
+
+        # Connect to the database
+        connect = connect_to_db()
+        cursor = connect.cursor()
+
+        # Execute the query with LIMIT and OFFSET for pagination
+        cursor.execute('SELECT "NAME", "DESCRIPTION", "DATE" FROM "REVIEWS" WHERE "PUBLIC" = TRUE LIMIT %s OFFSET %s', (reviews_per_page, offset))
+        review_data = cursor.fetchall()
+
+        # Check if there are no reviews
+        if not review_data:
+            return '''No reviews available.<br>
+                      <a href="/writeAReview">Write a review</a>'''
+
+        # Format reviews as templates
+        formatted_reviews = ""
+        for row in review_data:
+            formatted_reviews += f'''
+            <div class="review-card">
+                <h3>{row[0]}</h3>
+                <p><strong>Description:</strong> {row[1]}</p>
+                <p><strong>Date:</strong> {row[2]}</p>
+            </div>
+            <hr>
+            '''
+
+        # Get the total number of reviews to calculate pagination
+        cursor.execute('SELECT COUNT(*) FROM "REVIEWS" WHERE "PUBLIC" = TRUE')
+        total_reviews = cursor.fetchone()[0]
+
+        # Calculate the total number of pages
+        total_pages = (total_reviews + reviews_per_page - 1) // reviews_per_page
+
+        # Generate pagination links
+        pagination_links = ""
+        for p in range(1, total_pages + 1):
+            pagination_links += f'<a href="/reviews?page={p}">{p}</a> '
+
+        return f'''
+        <div class="reviews-container">
+            <h2>Welcome to the Reviews</h2>
+            {formatted_reviews}
+            <div class="pagination">
+                {pagination_links}
+            </div>
+            <br>
+            <div class="actions">
+                <a href="/writeAReview">Write a Review</a><br>
+                <a href="/">Return to Home</a>
+            </div>
+        </div>
+        ''', 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "An error occurred while fetching reviews. Please try again later.", 500
+    finally:
+        try:
+            if cursor:
+                cursor.close()
+            if connect:
+                connect.close()
+        except Exception as e:
+            print(f"Error closing connection: {e}")
+
+
+@app.route('/writeAReview', methods=['GET', 'POST'])
+def writeAReview():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        review = request.form.get('review')
+        date = currentTime
+
+        if not name or not email or not review:
+            return "All fields are required.", 400
+
+        try:
+            connect = connect_to_db()
+            cursor = connect.cursor()
+
+            cursor.execute('INSERT INTO "REVIEWS" ("NAME", "EMAIL", "DESCRIPTION", "DATE") VALUES (%s, %s, %s, %s)',
+                           (name, email, review, date))
+            connect.commit()
+
+
+            return '''
+            Thanks for your review!<br>
+            <a href="/">Return</a>
+        
+            '''
+
+        except Exception as e:
+            return jsonify({'Error': str(e)})
+
+        finally:
+            try:
+                if cursor:
+                    cursor.close()
+                if connect:
+                    connect.close()
+            except Exception as e:
+                print(f"Error closing connection: {e}")
+
+    # Render the templates form from templates folder
+    return render_template('submitReviewForm.html')
 
 #ESTIMATE Routes
-from routes.estimate import estimateBP
-app.register_blueprint(estimateBP)
+###############################################################################################################################################
+###############################################################################################################################################
+
+@app.route('/requestEstimate', methods=['GET', 'POST'])
+def requestEstimate():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        details = request.form['details']
+
+    return render_template('')
 
 #EMPLOYEE Routes
-from routes.employee import employeeBP
-app.register_blueprint(employeeBP)
+###############################################################################################################################################
+###############################################################################################################################################
+
+@app.route('/employeeLogin', methods=['GET', 'POST'])
+def employeeLogin():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        if not username or not password:
+            return "Both fields are required.", 400
+
+        try:
+            connect = connect_to_db()
+            cursor = connect.cursor()
+
+            # Check if credentials exist in the database
+            cursor.execute('SELECT * FROM "EMPLOYEE_CREDENTIALS" WHERE "EMPLOYEE_USERNAME" = %s AND "EMPLOYEE_PASSWORD" = %s', 
+                           (username, password))
+            employee = cursor.fetchone()
+
+            if employee:
+                session['loggedIn'] = True
+                session['username'] = username
+                return redirect(url_for('employeePortal'))  # Redirect to the employee portal
+            else:
+                return ('''Invalid credentials. Please try again.<br>
+                        "<a href="/employeeLogin">Return</a><br>''', 401)
+
+        except Exception as e:
+            return jsonify({'Error': str(e)})
+
+        finally:
+            try:
+                if cursor:
+                    cursor.close()
+                if connect:
+                    connect.close()
+            except Exception as e:
+                print(f"Error closing connection: {e}")
+
+    # Render login form
+    return render_template('employeeLoginForm.html')
+
+@app.route('/employeePortal')
+def employeePortal():
+    if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
+        return redirect(url_for('employeeLogin'))
+
+    username = session.get('username')
+    return render_template('employeePortal.html', username=username)
+
+@app.route('/reviewManager', methods=['GET', 'POST'])
+def reviewManager():
+    if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simply writing in url
+        return redirect(url_for('employeeLogin'))
+
+    try:
+        connect = connect_to_db()
+        cursor = connect.cursor()
+        cursor.execute('SELECT "NAME", "DESCRIPTION", "EMAIL", "DATE", "PUBLIC", "PRIMARY_KEY" FROM "REVIEWS"')
+
+        print("Query executed successfully")
+
+        reviewData = cursor.fetchall()
+
+        if not reviewData:
+            return '''No reviews available.<br>'''
+
+        # Format reviews as templates
+        formatted_reviews = "<br><br>".join(
+            [f"""
+            <strong>Date:</strong> {row[3]}<br><br>
+            <strong>Name:</strong> {row[0]}<br>
+            <strong>Description:</strong> {row[1]}<br>
+            <strong>Email:</strong> {row[2]}<br>
+            <strong>Publicly displayed:</strong> {row[4]}
+            <form action="/togglePublic/{row[5]}" method="POST">
+                <button type="submit">
+                    {'Set to Private' if row[4] else 'Set to Public'}
+                </button>
+        </form> 
+        """ for row in reviewData])
+
+        return f'''<h2>Welcome to the review manager</h2>
+                    Here you can accept or reject reviews here.<br><br>
+                   {formatted_reviews}
+                   <br><br>
+                   <a href="/employeePortal">Return</a>''', 200
+
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+
+    finally:
+        try:
+            if cursor:
+                cursor.close()
+            if connect:
+                connect.close()
+        except Exception as e:
+            # Optionally log any errors related to closing
+            print(f"Error closing connection: {e}")
+
+@app.route('/togglePublic/<key>', methods=['POST'])
+def togglePublic(key):
+    connect = connect_to_db()
+    cursor = connect.cursor()
+
+    cursor.execute('SELECT "PUBLIC" FROM "REVIEWS" WHERE "PRIMARY_KEY" = %s', (key,))
+    currentStatus = cursor.fetchone()[0]
+    newStatus = not currentStatus
+
+    cursor.execute('UPDATE "REVIEWS" SET "PUBLIC" = %s WHERE "PRIMARY_KEY" = %s', (newStatus, key))
+
+    connect.commit()
+
+    return redirect(url_for('reviewManager'))
+
+@app.route('/resetPassword', methods=['GET', 'POST'])
+def resetPassword():
+    if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
+        return redirect(url_for('employeeLogin'))
+    return ''
+
+@app.route('/logout')
+def logout():
+    session ['loggedIn'] = False
+    return redirect(url_for('employeeLogin'))
+
 
 if __name__ == '__main__':
     app.run()

@@ -1,30 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>DenHeyer Electric</title>
-<style>
-body {background-color:Azure;}
-h1 {text-align: center;}
-form {width: 90px; height: 50px;}
-</style>
+  <title>DenHeyer Electric</title>
+  <style>
+    body {
+      background-color: Azure;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      text-align: center;
+      color: LightGray;
+      font-size: 80px;
+      background-color: SteelBlue;
+      padding: 20px;
+    }
+    form {
+      width: 80%;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 20px;
+    }
+    .form-group {
+      width: 45%;  /* Make the form elements take up half the width */
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .form-group input, .form-group textarea {
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      width: 100%;
+    }
+    .form-group textarea {
+      height: 150px;
+      resize: vertical;  /* Allow vertical resizing of the textarea */
+    }
+    input[type="submit"] {
+      width: 100%;
+      background-color: SteelBlue;
+      color: white;
+      padding: 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    input[type="submit"]:hover {
+      background-color: DarkSlateBlue;
+    }
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 16px;
+      color: SteelBlue;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
 
-<h1 style="color:LightGray; font-size:80px; background-color:SteelBlue;">DenHeyer Electric</h1>
+<h1>DenHeyer Electric</h1>
 
-        <form method="POST">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required><br><br>
+<form method="POST">
+  <div class="form-group">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+  </div>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required><br><br>
+  <div class="form-group">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+  </div>
 
-            <label for="review">Review:</label>
-            <textarea id="review" name="review" required></textarea><br><br>
+  <div class="form-group" style="width: 100%;"> <!-- Make the review textarea span the full width -->
+    <label for="review">Review:</label>
+    <textarea id="review" name="review" required></textarea>
+  </div>
 
-            <input type="submit" value="Submit Review">
+  <input type="submit" value="Submit Review">
 
-            <a href="/">Return</a>
-        </form>
+  <a href="/">Return</a>
+</form>
+
 </body>
 </html>
