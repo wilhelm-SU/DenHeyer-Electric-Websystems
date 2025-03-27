@@ -63,6 +63,4 @@ upload_image(file_location)
 
 
 
-def base64_tester():
-    
-
+#def base64_tester():
