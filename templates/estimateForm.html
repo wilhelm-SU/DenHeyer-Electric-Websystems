@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Your Details</title>
+</head>
+<body>
+    <h2>Submit Your Details</h2>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <form action="{{ url_for('estimate.requestEstimate') }}" method="POST">
+        <label for="name">Name*:</label>
+        <input type="text" id="name" name="name" required>
+        <br><br>
+
+        <label for="phone">Phone*:</label>
+        <input type="tel" id="phone" name="phone" required>
+        <br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email">
+        <br><br>
+
+        <label for="description">Description*:</label>
+        <textarea id="description" name="description" required></textarea>
+        <br><br>
+
+        <label for="address">Address*:</label>
+        <input type="text" id="address" name="address" required>
+        <br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

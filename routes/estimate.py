@@ -12,7 +12,7 @@ def requestEstimate():
         email = request.form.get('email')
         description = request.form.get('description')
         address = request.form.get('address')
-        date = currentTime()
+        date = currentTime
 
         if not name or not phone:
             return "Name, phone, address and description fields required.", 400
@@ -42,4 +42,4 @@ def requestEstimate():
             except Exception as e:
                 print(f"Error closing connection: {e}")
 
-    return render_template('')
+    return render_template('estimateForm.html')

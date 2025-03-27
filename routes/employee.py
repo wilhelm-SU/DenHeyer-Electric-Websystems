@@ -24,7 +24,7 @@ def employeeLogin():
             if employee:
                 session['loggedIn'] = True
                 session['username'] = username
-                return redirect(url_for('employeePortal'))  # Redirect to the employee portal
+                return redirect(url_for('employee.employeePortal'))  # Redirect to the employee portal
             else:
                 return ('''Invalid credentials. Please try again.<br>
                         "<a href="/employeeLogin">Return</a><br>''', 401)
@@ -47,7 +47,7 @@ def employeeLogin():
 @employeeBP.route('/employeePortal')
 def employeePortal():
     if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
-        return redirect(url_for('employeeLogin'))
+        return redirect(url_for('employee.employeeLogin'))
 
     username = session.get('username')
     return render_template('employeePortal.html', username=username)
@@ -55,7 +55,7 @@ def employeePortal():
 @employeeBP.route('/reviewManager', methods=['GET', 'POST'])
 def reviewManager():
     if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simply writing in url
-        return redirect(url_for('employeeLogin'))
+        return redirect(url_for('employee.employeeLogin'))
 
     try:
         connect = connect_to_db()
@@ -116,15 +116,15 @@ def togglePublic(key):
 
     connect.commit()
 
-    return redirect(url_for('reviewManager'))
+    return redirect(url_for('employee.reviewManager'))
 
 @employeeBP.route('/resetPassword', methods=['GET', 'POST'])
 def resetPassword():
     if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
-        return redirect(url_for('employeeLogin'))
+        return redirect(url_for('employee.employeeLogin'))
     return ''
 
 @employeeBP.route('/logout')
 def logout():
     session ['loggedIn'] = False
-    return redirect(url_for('employeeLogin'))
+    return redirect(url_for('employee.employeeLogin'))
