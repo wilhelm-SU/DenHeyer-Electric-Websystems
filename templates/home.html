@@ -1,19 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>DenHeyer Electric</title>
+<h1>
+    <title>DenHeyer Electric</title>
 <style>
 body {background-color:Azure;}
 h1 {text-align: center;}
 form {width: 90px; height: auto;}
 </style>
+</h1>
 </head>
 <body>
 
-<img src="{{ url_for('static', filename='images/denheyerElectricLogo.jpg') }}" alt="DenHeyer Electric Logo" width="200" height="150">
-<img src="{{ url_for('static', filename='images/Generac.png') }}" alt="Generac Logo" width="200" height="150">
-<img src="{{ url_for('static', filename='images/Panasonic.jpg') }}" alt="Panasonic Logo" width="200" height="150">
+<title>Generac and Panasonic</title>
+    <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Centered Images</title>
+  <style>
+    .container {
+      display: flex;
+      justify-content: center;  /* Horizontal center */
+      align-items: center;      /* Vertical center */
+      height: 25vh;            /* Full height of the viewport */
+
+    }
+    img {
+      max-width: 100%;          /* Ensure the image doesn't overflow */
+      height: auto;
+      margin: 10px;             /* Optional spacing between images */
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <img src="{{ url_for('static', filename='images/Generac.png') }}" alt="Centered Image" width="200" height="150">
+    <img src="{{ url_for('static', filename='images/denheyerElectricLogo.jpg') }}" alt="Centered Image" width="200" height="150">
+    <img src="{{ url_for('static', filename='images/Panasonic.jpg') }}" alt="Centered Image" width="200" height="150">
+  </div>
+
+</body>
 <h1 style="color:LightGray; font-size:80px; background-color:SteelBlue;">DenHeyer Electric</h1>
+</html>
+
 
 <h2> <a><u>Gallery <a><u> </h2>
 <a href="/gallery">Go to Gallery </a><br>
