@@ -5,12 +5,8 @@ import pytz
 import base64
 from markupsafe import escape #escape is extremely important, must be used on all user submitted arguments to prevent malicious actions
 from datetime import datetime
-
 from mysql.connector import cursor
 
-#some useful API
-#https://docs.python.org/3/library/http.html#module-http
-#https://flask.palletsprojects.com/en/stable/
 #[written by Connor] - this is how to switch between master and main branch in VScode:
 #  for bringing them local        git checkout -b master origin/master
 #                                 git checkout -b main origin/main 
@@ -19,10 +15,6 @@ from mysql.connector import cursor
 
 app = Flask(__name__)
 app.secret_key = '<KEY>' #placeholder we need to make that key hard to guess and super secret
-
-#Miscellanious Items
-###############################################################################################################################################
-###############################################################################################################################################
 
 #Time
 eastern = pytz.timezone('US/Eastern')

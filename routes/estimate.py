@@ -12,6 +12,8 @@ def requestEstimate():
         email = request.form.get('email')
         description = request.form.get('description')
         address = request.form.get('address')
+        city = request.form.get('city')
+        zipCode = request.form.get('zipCode')
         date = currentTime
 
         if not name or not phone:
@@ -21,8 +23,8 @@ def requestEstimate():
             connect = connect_to_db()
             cursor = connect.cursor()
 
-            cursor.execute('INSERT INTO "ESTIMATES" ("NAME", "PHONE", "EMAIL", "DESCRIPTION", "ADDRESS", "DATE") VALUES (%s, %s, %s, %s, %s, %s)',
-                            (name, phone, email, description, address, date))
+            cursor.execute('INSERT INTO "ESTIMATES" ("NAME", "PHONE", "EMAIL", "DESCRIPTION", "ADDRESS", "DATE", "ZIP_CODE", "CITY") VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
+                            (name, phone, email, description, address, date, zipCode, city))
             connect.commit()
 
             return '''

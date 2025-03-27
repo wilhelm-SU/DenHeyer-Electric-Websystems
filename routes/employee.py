@@ -105,6 +105,9 @@ def reviewManager():
 
 @employeeBP.route('/togglePublic/<key>', methods=['POST'])
 def togglePublic(key):
+    if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
+        return redirect(url_for('employee.employeeLogin'))
+
     connect = connect_to_db()
     cursor = connect.cursor()
 
@@ -117,6 +120,51 @@ def togglePublic(key):
     connect.commit()
 
     return redirect(url_for('employee.reviewManager'))
+
+@employeeBP.route('/estimateManager', methods=['GET', 'POST'])
+def estimateManager():
+    if not session.get('loggedIn'):  # extremely important as this prevents non authorized users from accessing pages by simply writing in url
+        return redirect(url_for('employee.employeeLogin'))
+
+    try:
+        connect = connect_to_db()
+        cursor = connect.cursor()
+        cursor.execute('SELECT "NAME", "PHONE", "EMAIL", "DATE", "DESCRIPTION", "ADDRESS", "CITY", "ZIP_CODE" FROM "ESTIMATES"')
+
+        print("Query executed successfully")
+
+        reviewData = cursor.fetchall()
+
+        if not reviewData:
+            return '''No reviews available.<br>'''
+
+        formatted_reviews = "<br><br>".join(
+            [f"""
+                <strong>Date:</strong> {row[3]}<br><br>
+                <strong>Name:</strong> {row[0]}<br>
+                <strong>Phone:</strong> {row[1]}<br>
+                <strong>Email:</strong> {row[2]}<br>
+                <strong>Address:</strong> {row[5]}<br>
+                <strong>City:</strong> {row[6]}<br>
+                <strong>Zip code:</strong> {row[7]}<br>
+                <strong>Description:</strong> {row[4]}
+            """ for row in reviewData])
+
+        return formatted_reviews
+
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+
+    finally:
+        try:
+            if cursor:
+                cursor.close()
+            if connect:
+                connect.close()
+        except Exception as e:
+            # Optionally log any errors related to closing
+            print(f"Error closing connection: {e}")
+
 
 @employeeBP.route('/resetPassword', methods=['GET', 'POST'])
 def resetPassword():
