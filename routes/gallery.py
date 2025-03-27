@@ -21,12 +21,12 @@ def gallery():
                 image_list.append((data[0], base64_imageData, data[2]))
 
         # Debug: Check if image_list is populated
-        print("Image List:", image_list)  # Ensure image_list is populated
+        #print("Image List:", image_list)  # Ensure image_list is populated
 
     except Exception as e:
         return jsonify({'Error': str(e)})
 
     # Debug: Check that image_list is passed to the template
-    print("Passing image_list to HTML Template:", image_list)
+    #print("Passing image_list to HTML Template:", image_list)
 
     return render_template('gallery.html', image_list=image_list)
