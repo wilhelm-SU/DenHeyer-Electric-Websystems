@@ -13,6 +13,9 @@ from mysql.connector import cursor
 #  for when they are local        git checkout master
 #                                 git checkout main  
 
+# python -m flask run
+
+
 app = Flask(__name__)
 app.secret_key = '<KEY>' #placeholder we need to make that key hard to guess and super secret
 
