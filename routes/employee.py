@@ -182,6 +182,9 @@ def galleryManager():
 
         imageData = cursor.fetchall()
 
+
+#Gotta work on adding to the employeePortal.html because the raw image data is not being formated
+#to what the actual image should be
         image_list = []
         for data in imageData:
             if data[1]:
