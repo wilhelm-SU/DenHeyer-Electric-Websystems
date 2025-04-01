@@ -5,10 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Gallery</title>
     <style>
-        .gallery img {
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 images per row */
+            gap: 15px; /* Space between images */
+            padding: 10px;
+            justify-items: center; /* Centers items horizontally */
+        }
+        .image-item {
+            text-align: center;
+        }
+        .image-item img {
             width: 200px;
             height: auto;
-            margin: 10px;
             border-radius: 10px;
             box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
         }

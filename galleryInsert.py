@@ -38,7 +38,8 @@ def upload_image(file_path):
         
         print("Connected to PostgreSQL database.")
 
-        imageDescription = "This is a test image."
+        imageDescription = ("So it seems like the image description will"
+                            "just continue regardless of the description length.")
 
 
         #   Insert the image data into the table
@@ -58,5 +59,5 @@ def upload_image(file_path):
 #   Example Usage
 
 #C:\Users\cmcka\Downloads\tempMiscellaneousFolder\image.jpg
-file_location = r"C:\Users\cmcka\Downloads\tempMiscellaneousFolder\FlowerWater.jpg"  # Replace with actual file path
+file_location = r"C:\Users\cmcka\Downloads\tempMiscellaneousFolder\elisTest.JPG"  # Replace with actual file path
 upload_image(file_location)

@@ -1,3 +1,5 @@
+import base64
+
 from flask import Blueprint, request, render_template, redirect, url_for, session, jsonify
 from databaseModule import connect_to_db
 
@@ -164,6 +166,65 @@ def estimateManager():
         except Exception as e:
             # Optionally log any errors related to closing
             print(f"Error closing connection: {e}")
+
+
+#route for gallery manager
+@employeeBP.route('/galleryManager', methods=['GET', 'POST'])
+def galleryManager():
+    if not session.get('loggedIn'):  # extremely important as this prevents non authorized users from accessing pages by simply writing in url
+        return redirect(url_for('employee.employeeLogin'))
+
+    try:
+        connect = connect_to_db()
+        cursor = connect.cursor()
+        cursor.execute('SELECT "PRIMARY_KEY", "IMAGE_DATA", "DESCRIPTION", "PUBLIC" FROM "GALLERY"')
+        print("Query executed successfully")
+
+        imageData = cursor.fetchall()
+
+        image_list = []
+        for data in imageData:
+            if data[1]:
+                base64_imageData = base64.b64encode(data[1]).decode('utf-8')
+                image_list.append((data[0], base64_imageData, data[2], data[3]))
+
+        if not image_list:
+            return '''No images available.<br>'''
+
+        # Format gallery as templates
+        formatted_gallery = "<br><br>".join(
+            [f"""
+            <strong>Image:</strong>{row[1]}<br><br>
+            <strong>Description:</strong>{row[2]}<br><br>
+            <strong>Publicly displayed:</strong>{row[3]}<br><br>
+            <form action="/togglePublic/{row[0]}" method="POST">
+                <button type="submit">
+                    {'Set to Private' if row[3] else 'Set to Public'}
+                </button>
+            </form>
+            """ for row in image_list])
+
+        return f'''<h2>Welcome to the gallery manager</h2>
+                    Here you can accept or reject images from being displayed
+                    in the public gallery.<br><br>
+                    {formatted_gallery}
+                    <br><br>
+                    <a href="/employeePortal">Return</a>''', 200
+
+        print(imageData)
+        print('why is there an error bellow?')
+
+    finally:
+        try:
+            if cursor:
+                cursor.close()
+            if connect:
+                connect.close()
+        except Exception as e:
+            # Optionally log any errors related to closing
+            print(f"Error closing connection: {e}")
+
+
 
 
 @employeeBP.route('/resetPassword', methods=['GET', 'POST'])
