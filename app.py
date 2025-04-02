@@ -47,5 +47,9 @@ app.register_blueprint(estimateBP)
 from routes.employee import employeeBP
 app.register_blueprint(employeeBP)
 
+
+from routes.estimateManager import estimateManagerBP
+app.register_blueprint(estimateManagerBP)
+
 if __name__ == '__main__':
     app.run()

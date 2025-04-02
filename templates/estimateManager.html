@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estimate Requests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px;
+        }
+        .box {
+            width: 45%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .open-box { background-color: #ffcccc; }
+        .closed-box { background-color: #ccffcc; }
+        .request-item {
+            padding: 10px;
+            border-bottom: 1px solid #888;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align: center;">Estimate Requests</h2>
+
+<div class="container">
+    <div class="box open-box">
+        <h3>Open Requests</h3>
+        {% for request in open_requests %}
+            {{ request | safe }}
+        {% endfor %}
+    </div>
+
+    <div class="box closed-box">
+        <h3>Closed Requests</h3>
+        {% for request in closed_requests %}
+            {{ request | safe }}
+        {% endfor %}
+    </div>
+</div>
+
+<a href="/employeePortal">Return</a>
+
+</body>
+</html>
