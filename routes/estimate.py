@@ -19,7 +19,7 @@ def requestEstimate():
         zipCode = request.form.get('zipCode')
         date = currentTime
 
-        if not name or not phone:
+        if not name or not phone or not address or not city or not zipCode:
             return "Fields with '*' are required.", 400
 
         try:
@@ -62,16 +62,16 @@ def sendEstimateRequestEmail(requestData, recipientEmail="denheyerhelper@gmail.c
 
     #DenHeyerElectricEmailBot2025 is the gmail accounts password
 
-    subject = f"New Estimate Request: {requestData[0]}"
+    subject = f"Estimate Request from {requestData[1]}, ID: {requestData[0]}"
 
     body = f"""
     A new estimate request has been submitted.<br>
     Request ID: {requestData[0]}
-    Date: {requestData[4]}
+    Date: {requestData[4]}<br>
     Name: {requestData[1]}
     Phone: {requestData[2]}
     Email: {requestData[3]}
-    Address: {requestData[6]}, {requestData[7]}, {requestData[8]}
+    Address: {requestData[6]}, {requestData[7]}, {requestData[8]}<br>
     Description: {requestData[5]}
     """
 
