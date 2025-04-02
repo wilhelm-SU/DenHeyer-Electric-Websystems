@@ -9,7 +9,7 @@ def gallery():
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
-        cursor.execute('SELECT "PRIMARY_KEY", "IMAGE_DATA", "DESCRIPTION" FROM "GALLERY"')
+        cursor.execute('SELECT "PRIMARY_KEY", "IMAGE_DATA", "DESCRIPTION" FROM "GALLERY" WHERE "PUBLIC" = TRUE ORDER BY "PRIMARY_KEY" ASC')
         print("Query executed successfully")
         imageData = cursor.fetchall()
         print("Image Data:", imageData)  # Check the fetched raw data

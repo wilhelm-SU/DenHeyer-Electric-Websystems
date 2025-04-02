@@ -105,23 +105,28 @@ def reviewManager():
             # Optionally log any errors related to closing
             print(f"Error closing connection: {e}")
 
+
 @employeeBP.route('/togglePublic/<key>', methods=['POST'])
 def togglePublic(key):
-    if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
+    if not session.get('loggedIn'):
         return redirect(url_for('employee.employeeLogin'))
 
     connect = connect_to_db()
     cursor = connect.cursor()
 
-    cursor.execute('SELECT "PUBLIC" FROM "REVIEWS" WHERE "PRIMARY_KEY" = %s', (key,))
+    # Identify which table to modify (default is REVIEWS)
+    table = request.form.get('table', 'REVIEWS')
+
+    cursor.execute(f'SELECT "PUBLIC" FROM "{table}" WHERE "PRIMARY_KEY" = %s', (key,))
     currentStatus = cursor.fetchone()[0]
     newStatus = not currentStatus
 
-    cursor.execute('UPDATE "REVIEWS" SET "PUBLIC" = %s WHERE "PRIMARY_KEY" = %s', (newStatus, key))
-
+    cursor.execute(f'UPDATE "{table}" SET "PUBLIC" = %s WHERE "PRIMARY_KEY" = %s', (newStatus, key))
     connect.commit()
 
-    return redirect(url_for('employee.reviewManager'))
+    return redirect(url_for('employee.reviewManager' if table == 'REVIEWS' else 'employee.galleryManager'))
+
+
 
 @employeeBP.route('/estimateManager', methods=['GET', 'POST'])
 def estimateManager():
@@ -177,7 +182,7 @@ def galleryManager():
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
-        cursor.execute('SELECT "PRIMARY_KEY", "IMAGE_DATA", "DESCRIPTION", "PUBLIC" FROM "GALLERY"')
+        cursor.execute('SELECT "PRIMARY_KEY", "IMAGE_DATA", "DESCRIPTION", "PUBLIC" FROM "GALLERY" ORDER BY "PRIMARY_KEY" ASC')
         print("Query executed successfully")
 
         imageData = cursor.fetchall()
@@ -194,17 +199,19 @@ def galleryManager():
         if not image_list:
             return '''No images available.<br>'''
 
-        # Format gallery as templates
         formatted_gallery = "<br><br>".join(
             [f"""
-            <strong>Image:</strong>{row[1]}<br><br>
+            <strong>Image:</strong><br>
+            <img src="data:image/jpeg;base64,{row[1]}" alt="Gallery Image" style="max-width: 300px; max-height: 300px;"><br><br>
             <strong>Description:</strong>{row[2]}<br><br>
             <strong>Publicly displayed:</strong>{row[3]}<br><br>
             <form action="/togglePublic/{row[0]}" method="POST">
+                <input type="hidden" name="table" value="GALLERY">
                 <button type="submit">
                     {'Set to Private' if row[3] else 'Set to Public'}
                 </button>
             </form>
+
             """ for row in image_list])
 
         return f'''<h2>Welcome to the gallery manager</h2>
