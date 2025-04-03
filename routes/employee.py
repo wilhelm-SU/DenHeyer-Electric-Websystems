@@ -194,7 +194,69 @@ def galleryManager():
 def resetPassword():
     if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
         return redirect(url_for('employee.employeeLogin'))
-    return ''
+
+    reenterPassword = """
+            <form method="POST">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required><br><br>
+                <input type="submit" value="Submit">
+                <a href="/">Return</a>
+            </form>
+            """
+
+    resetPasswordHTML = """
+        <form method="POST">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            <label for="password2">Password again:</label>
+            <input type="password" id="password2" name="password2" required><br><br>
+            <input type="submit" value="Submit">
+        """
+
+    if request.method == 'POST':
+        try:
+            username = session.get('username')
+            password = request.form.get('password')
+
+            if not password:
+                return "Must enter a password"
+
+            connect = connect_to_db()
+            cursor = connect.cursor()
+            cursor.execute('SELECT * FROM "EMPLOYEE_CREDENTIALS" WHERE "EMPLOYEE_USERNAME" = %s AND "EMPLOYEE_PASSWORD" = %s'),
+            (username, password)
+            employee = cursor.fetchone()
+
+            if employee:
+                if request.method == 'POST':
+                    if request.form.get('password') != request.form.get('password2'):
+                        return ("""Passwords don't match <br>
+                                <a href="/resetPassword">Return</a>
+                                """)
+                    else:
+                        newPassword = request.form.get('password')
+                        cursor.execute('INSERT INTO "EMPLOYEE_CREDENTIALS" ("PASSWORD") VALUES (%s)', (newPassword))
+                        connect.commit()
+
+                    return'''Password successfully changed
+                    <a href="/employeePortal">Return</a>
+                    '''
+                return resetPasswordHTML
+                return resetPasswordHTML
+
+            else:
+                return ('''Invalid credentials. Please try again.<br>
+                        "<a href="/employeeLogin">Return</a><br>''', 401)
+        finally:
+            try:
+                if cursor:
+                    cursor.close()
+                if connect:
+                    connect.close()
+            except Exception as e:
+                print(f"Error closing connection: {e}")
+
+    return reenterPassword
 
 @employeeBP.route('/logout')
 def logout():

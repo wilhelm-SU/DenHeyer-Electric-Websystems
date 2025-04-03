@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estimate Requests</title>
+
+    <form method="GET" action="{{ url_for('estimateManager.search') }}">
+        <input type="text" name="query" value="{{ searchQuery }}" placeholder="Search for cases..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    {% if searchResults %}
+    <h2>Search Results for "{{ searchQuery }}"</h2>
+    <div class="requests">
+        {% for request in searchResults %}
+            {{ request|safe }}
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No results found for "{{ searchQuery }}".</p>
+{% endif %}
+
     <style>
         body {
             font-family: Arial, sans-serif;

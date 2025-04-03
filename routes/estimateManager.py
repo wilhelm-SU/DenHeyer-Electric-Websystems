@@ -20,7 +20,7 @@ def estimateManager():
         closed_requests = []
 
         for row in requestData:
-            formatted_request = f'''
+            formattedRequest = f'''
                         <div class="request-item">
                             <strong>Request ID:</strong> {row[8]}<br>
                             <strong>Date:</strong> {row[3]}<br>
@@ -34,9 +34,9 @@ def estimateManager():
                     '''
 
             if row[9]:
-                closed_requests.append(formatted_request)
+                closed_requests.append(formattedRequest)
             else:
-                open_requests.append(formatted_request)
+                open_requests.append(formattedRequest)
 
         return render_template("estimateManager.html", open_requests=open_requests, closed_requests=closed_requests)
 
@@ -64,7 +64,60 @@ def markHandled():
         cursor = connect.cursor()
         cursor.execute('UPDATE "ESTIMATES" SET "HANDLED" = TRUE WHERE "PRIMARY_KEY" = %s', (request_id,))
         connect.commit()
-        return redirect(url_for('employee.estimateManager'))
+        return redirect(url_for('estimateManager.estimateManager'))
+
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+    finally:
+        try:
+            if cursor:
+                cursor.close()
+            if connect:
+                connect.close()
+        except Exception as e:
+            print(f"Error closing connection: {e}")
+
+@estimateManagerBP.route('/search/', methods=['GET'])
+def search():
+    if not session.get('loggedIn'):
+        return redirect(url_for('employee.employeeLogin'))
+
+    searchQuery = request.args.get('query', '').strip()
+
+    try:
+        connect = connect_to_db()
+        cursor = connect.cursor()
+        cursor.execute('''SELECT "NAME", "PHONE", "EMAIL", "DATE", "ADDRESS", "DESCRIPTION", "CITY", "ZIP_CODE", "PRIMARY_KEY", "HANDLED" FROM "ESTIMATES"
+                          WHERE "NAME" ILIKE %s
+                          OR "PHONE" ILIKE %s
+                          OR "EMAIL" ILIKE %s
+                          OR CAST("DATE" AS TEXT) ILIKE %s
+                          OR "ADDRESS" ILIKE %s
+                          OR "CITY" ILIKE %s
+                          OR "ZIP_CODE" ILIKE %s
+                          OR CAST("PRIMARY_KEY" as TEXT) ILIKE %s 
+                       ''', tuple(['%' + searchQuery + '%'] * 8))
+
+        requestData = cursor.fetchall()
+        searchResults = []
+
+        for row in requestData:
+            formattedRequest = f'''
+                            <div class="request-item">
+                                <strong>Request ID:</strong> {row[8]}<br>
+                                <strong>Date:</strong> {row[3]}<br>
+                                <strong>Name:</strong> {row[0]}<br>
+                                <strong>Phone:</strong> {row[1]}<br>
+                                <strong>Email:</strong> {row[2]}<br>
+                                <strong>Address:</strong> {row[5]}, {row[6]}, {row[7]}<br>
+                                <strong>Description:</strong> {row[4]}<br>
+                                {'' if row[9] else f'<form method="POST" action="/markHandled"><input type="hidden" name="request_id" value="{row[8]}"><button type="submit">Mark as Handled</button></form>'}
+                            </div>
+                        '''
+
+            searchResults.append(formattedRequest)
+
+        return render_template("estimateManager.html", searchResults = searchResults, searchQuery = searchQuery)
 
     except Exception as e:
         return jsonify({'Error': str(e)})
