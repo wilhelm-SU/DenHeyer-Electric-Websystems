@@ -53,80 +53,6 @@ def employeePortal():
     username = session.get('username')
     return render_template('employeePortal.html', username=username)
 
-@employeeBP.route('/reviewManager', methods=['GET', 'POST'])
-def reviewManager():
-    if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simply writing in url
-        return redirect(url_for('employee.employeeLogin'))
-
-    try:
-        connect = connect_to_db()
-        cursor = connect.cursor()
-        cursor.execute('SELECT "NAME", "DESCRIPTION", "EMAIL", "DATE", "PUBLIC", "PRIMARY_KEY" FROM "REVIEWS"')
-
-        print("Query executed successfully")
-
-        reviewData = cursor.fetchall()
-
-        if not reviewData:
-            return '''No reviews available.<br>'''
-
-        # Format reviews as templates
-        formatted_reviews = "<br><br>".join(
-            [f"""
-            <strong>Date:</strong> {row[3]}<br><br>
-            <strong>Name:</strong> {row[0]}<br>
-            <strong>Description:</strong> {row[1]}<br>
-            <strong>Email:</strong> {row[2]}<br>
-            <strong>Publicly displayed:</strong> {row[4]}
-            <form action="/togglePublic/{row[5]}" method="POST">
-                <button type="submit">
-                    {'Set to Private' if row[4] else 'Set to Public'}
-                </button>
-        </form> 
-        """ for row in reviewData])
-
-        return f'''<h2>Welcome to the review manager</h2>
-                    Here you can accept or reject reviews here.<br><br>
-                   {formatted_reviews}
-                   <br><br>
-                   <a href="/employeePortal">Return</a>''', 200
-
-    except Exception as e:
-        return jsonify({'Error': str(e)})
-
-    finally:
-        try:
-            if cursor:
-                cursor.close()
-            if connect:
-                connect.close()
-        except Exception as e:
-            # Optionally log any errors related to closing
-            print(f"Error closing connection: {e}")
-
-
-@employeeBP.route('/togglePublic/<key>', methods=['POST'])
-def togglePublic(key):
-    if not session.get('loggedIn'):
-        return redirect(url_for('employee.employeeLogin'))
-
-    connect = connect_to_db()
-    cursor = connect.cursor()
-
-    # Identify which table to modify (default is REVIEWS)
-    table = request.form.get('table', 'REVIEWS')
-
-    cursor.execute(f'SELECT "PUBLIC" FROM "{table}" WHERE "PRIMARY_KEY" = %s', (key,))
-    currentStatus = cursor.fetchone()[0]
-    newStatus = not currentStatus
-
-    cursor.execute(f'UPDATE "{table}" SET "PUBLIC" = %s WHERE "PRIMARY_KEY" = %s', (newStatus, key))
-    connect.commit()
-
-    return redirect(url_for('employee.reviewManager' if table == 'REVIEWS' else 'employee.galleryManager'))
-
-
-
 #route for gallery manager
 @employeeBP.route('/galleryManager', methods=['GET', 'POST'])
 def galleryManager():
@@ -269,9 +195,88 @@ def resetPassword():
             <input type="submit" value="Submit">
         """
 
+@employeeBP.route('/resetUsername', methods=['GET', 'POST'])
+def resetUsername():
+    if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
+        return redirect(url_for('employee.employeeLogin'))
 
+    username = session.get('username')
+    if 'verifiedUsernameChange' not in session:
+        if request.method == 'POST':
+            password = request.form.get('password')
+
+            if not password:
+                return "Must enter a password"
+
+            connect = connect_to_db()
+            cursor = connect.cursor()
+
+            try:
+                cursor.execute('SELECT * FROM "EMPLOYEE_CREDENTIALS" WHERE "EMPLOYEE_USERNAME" = %s AND "EMPLOYEE_PASSWORD" = %s',
+                (username, password))
+                employee = cursor.fetchone()
+
+                if employee:
+                    session['verifiedUsernameChange'] = True
+                    return redirect(url_for('employee.resetUsername'))
+                else:
+                    return'''Invalid credentials. Please try again.<br>
+                    <a href="/resetUsername">Return</a>'''
+
+            finally:
+                cursor.close()
+                connect.close()
+
+        return """
+        <form method="POST">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            <input type="submit" value="Submit">
+            <a href="/employeePortal">Return</a>
+        </form>
+        """
+
+    else:
+        if request.method == 'POST':
+            username = session.get('username')
+            newUsername1 = request.form.get('newUsername1')
+            newUsername2 = request.form.get('newUsername2')
+
+            if not newUsername1 or not newUsername2:
+                return '''Must enter username <br>
+                        <a href="/resetUsername">Return</a>'''
+
+            if newUsername1 != newUsername2:
+                return '''Usernames don't match <br>
+                        <a href="/resetUsername">Return</a>
+                        '''
+
+            connect = connect_to_db()
+            cursor = connect.cursor()
+            try:
+                cursor.execute('UPDATE "EMPLOYEE_CREDENTIALS" SET "EMPLOYEE_USERNAME" = %s WHERE "EMPLOYEE_USERNAME" = %s', (newUsername1, username))
+                connect.commit()
+
+            finally:
+                cursor.close()
+                connect.close()
+                session['username'] = newUsername1
+                session.pop('verifiedUsernameChange', None)
+
+            return'''Username successfully changed
+            <a href="/employeePortal">Return</a>
+            '''
+
+        return """
+        <form method="POST">
+            <label for="newUsername1">New Username:</label>
+            <input type="text" id="newUsername1" name="newUsername1" required><br><br>
+            <label for="newUsername2">Confirm New Username:</label>
+            <input type="text" id="newUsername2" name="newUsername2" required><br><br>
+            <input type="submit" value="Submit">
+        """
 
 @employeeBP.route('/logout')
 def logout():
     session ['loggedIn'] = False
-    return redirect(url_for('employee.employeeLogin'))
+    return redirect(url_for('home.home'))
