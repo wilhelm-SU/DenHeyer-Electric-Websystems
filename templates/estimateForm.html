@@ -1,47 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+ <style>
+    body {
+      background-color: Azure;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      text-align: center;
+      color: LightGray;
+      font-size: 80px;
+      background-color: SteelBlue;
+      padding: 20px;
+    }
+    form {
+      width: 80%;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 20px;
+    }
+    .form-group {
+      width: 45%;  /* Make the form elements take up half the width */
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .form-group input, .form-group textarea {
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      width: 100%;
+    }
+    .form-group textarea {
+      height: 150px;
+      resize: vertical;  /* Allow vertical resizing of the textarea */
+    }
+    input[type="submit"] {
+      width: 100%;
+      background-color: SteelBlue;
+      color: white;
+      padding: 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    input[type="submit"]:hover {
+      background-color: DarkSlateBlue;
+    }
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 16px;
+      color: SteelBlue;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit Your Details</title>
+    <title>Request an Estimate</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h2>Submit Your Details</h2>
+    <div class="container">
+        <h1>Request an Estimate</h1>
 
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
 
-    <form action="{{ url_for('estimate.requestEstimate') }}" method="POST">
-        <label for="name">Name*:</label>
-        <input type="text" id="name" name="name" required>
-        <br><br>
+        <form method="POST" action="{{ url_for('estimate.requestEstimate') }}" class="form-box">
+            <label>Full Name *</label>
+            <input type="text" name="name" required>
 
-        <label for="phone">Phone*:</label>
-        <input type="tel" id="phone" name="phone" required>
-        <br><br>
+            <label>Phone Number *</label>
+            <input type="text" name="phone" required>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email">
-        <br><br>
+            <label>Email</label>
+            <input type="email" name="email">
 
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" required></textarea>
-        <br><br>
+            <label>Street Address *</label>
+            <input type="text" name="address" required>
 
-        <label for="address">Address*:</label>
-        <input type="text" id="address" name="address" required>
-        <br><br>
+            <label>City *</label>
+            <input type="text" name="city" required>
 
-        <label for="city">City*:</label>
-        <input type="text" id="city" name="city" required>
-        <br><br>
+            <label>ZIP Code *</label>
+            <input type="text" name="zipCode" required>
 
-        <label for="zipCode">Zip Code*:</label>
-        <input type="text" id="zipCode" name="zipCode" required>
-        <br><br>
+            <label>Description of Work</label>
+            <textarea name="description" rows="4"></textarea>
 
-        <button type="submit">Submit</button>
-    </form>
+            <button type="submit">Submit Request</button>
+        </form>
+    </div>
+</body>
+</html>
 </body>
 </html>
