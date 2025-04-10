@@ -22,6 +22,7 @@ def requestEstimate():
         if not name or not phone or not address or not city or not zipCode:
             return "Fields with '*' are required.", 400
 
+
         try:
             connect = connect_to_db()
             cursor = connect.cursor()
