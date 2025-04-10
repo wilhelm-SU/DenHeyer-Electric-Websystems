@@ -141,9 +141,6 @@ def galleryManager():
 
         imageData = cursor.fetchall()
 
-
-#Gotta work on adding to the employeePortal.html because the raw image data is not being formated
-#to what the actual image should be
         image_list = []
         for data in imageData:
             if data[1]:
@@ -166,11 +163,22 @@ def galleryManager():
                 </button>
             </form>
 
+            <form action="/galleryManagerManipulation/deleteImage/{row[0]}" method="POST" style="display:inline; margin-left: 10px;">
+                <input type="hidden" name="table" value="GALLERY">
+                <button type="submit" onclick="return confirm('Are you sure you want to delete this image?');">
+                    Delete
+                </button>
+            </form>
+
             """ for row in image_list])
+
+        #funtion to delete an image from the gallery in the database
+
 
         return f'''<h2>Welcome to the gallery manager</h2>
                     Here you can accept or reject images from being displayed
                     in the public gallery.<br><br>
+                    <a href="/galleryManagerManipulation/insertImagePage">Add New Image</a>
                     {formatted_gallery}
                     <br><br>
                     <a href="/employeePortal">Return</a>''', 200
@@ -187,6 +195,10 @@ def galleryManager():
         except Exception as e:
             # Optionally log any errors related to closing
             print(f"Error closing connection: {e}")
+
+
+
+
 
 
 @employeeBP.route('/resetPassword', methods=['GET', 'POST'])

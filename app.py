@@ -51,5 +51,13 @@ app.register_blueprint(employeeBP)
 from routes.estimateManager import estimateManagerBP
 app.register_blueprint(estimateManagerBP)
 
+
+# GALLERY MANIPULATION Routes
+from routes.galleryManagerManipulation import galleryManagerManipulationBP
+app.register_blueprint(galleryManagerManipulationBP, url_prefix='/galleryManagerManipulation')
+
+
+
+
 if __name__ == '__main__':
     app.run()
