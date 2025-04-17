@@ -123,10 +123,6 @@ def galleryManager():
             print(f"Error closing connection: {e}")
 
 
-
-
-
-
 @employeeBP.route('/resetPassword', methods=['GET', 'POST'])
 def resetPassword():
     if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
