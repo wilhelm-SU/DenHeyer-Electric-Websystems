@@ -89,7 +89,7 @@ def galleryManager():
                 </button>
             </form>
 
-            <form action="/galleryManagerManipulation/deleteImage/{row[0]}" method="POST" style="display:inline; margin-left: 10px;">
+            <form action="/deleteImage/{row[0]}" method="POST" style="display:inline; margin-left: 10px;">
                 <input type="hidden" name="table" value="GALLERY">
                 <button type="submit" onclick="return confirm('Are you sure you want to delete this image?');">
                     Delete
@@ -104,10 +104,11 @@ def galleryManager():
         return f'''<h2>Welcome to the gallery manager</h2>
                     Here you can accept or reject images from being displayed
                     in the public gallery.<br><br>
-                    <a href="/galleryManagerManipulation/insertImagePage">Add New Image</a>
+                    <a href="/insertImagePage">Add New Image</a>
                     {formatted_gallery}
                     <br><br>
                     <a href="/employeePortal">Return</a>''', 200
+        #/galleryManagerManipulation/insertImagePage
 
         print(imageData)
         print('why is there an error bellow?')

@@ -59,5 +59,8 @@ app.register_blueprint(aboutUsBP)
 from routes.employeeManager import employeeManagerBP
 app.register_blueprint(employeeManagerBP)
 
+from routes.galleryManagerManipulation import galleryManagerManipulationBP
+app.register_blueprint(galleryManagerManipulationBP)
+
 if __name__ == '__main__':
     app.run()

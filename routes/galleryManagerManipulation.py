@@ -72,7 +72,7 @@ def insertImagePage():
         return redirect(url_for('employee.employeeLogin'))
     return '''
         <h2>Upload a New Image</h2>
-        <form action="/galleryManagerManipulation/insertImage" method="POST" enctype="multipart/form-data">
+        <form action="/insertImage" method="POST" enctype="multipart/form-data">
             <label>Description:</label><br>
             <input type="text" name="description"><br><br>
 

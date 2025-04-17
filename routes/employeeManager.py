@@ -26,10 +26,10 @@ def employeeManager():
 
                 if employee:
                     session['verifiedAdministrator'] = True
-                    return redirect(url_for('employeeManager'))
+                    return redirect(url_for('/employeeManager'))
                 else:
                     return'''Invalid credentials or you are not an authorized administrator.<br>
-                    <a href="/resetUsername">Return</a>'''
+                    <a href="/employeeManager">Return</a>'''
 
             finally:
                 cursor.close()
@@ -43,3 +43,36 @@ def employeeManager():
             <a href="/employeePortal">Return</a>
         </form>
         """
+
+    else:
+        try:
+            connect = connect_to_db()
+            cursor = connect.cursor()
+
+            cursor.execute('SELECT "EMPLOYEE_NAME", "EMPLOYEE_USERNAME", "EMPLOYEE_EMAIL", "ADMIN" FROM "EMPLOYEE_CREDENTIALS" ',)
+            employeeData = cursor.fetchall()
+
+            formattedEmployeeData="<br><br>".join(
+                [f"""
+                <strong>Name:</strong> {row[0]}
+                <strong> Username:</strong> {row[1]}
+                <strong> Email:</strong> {row[2]}
+                <strong> Admin:</strong> {row[3]}<br>""" for row in employeeData])
+
+            return f'''<h2>Welcome to the employee manager</h2>
+                   {formattedEmployeeData}
+                   <br><br>
+                   <a href="/employeePortal">Return</a>''', 200
+
+        except Exception as e:
+            return jsonify({'Error': str(e)})
+
+        finally:
+            try:
+                if cursor:
+                    cursor.close()
+                if connect:
+                    connect.close()
+            except Exception as e:
+                # Optionally log any errors related to closing
+                print(f"Error closing connection: {e}")
