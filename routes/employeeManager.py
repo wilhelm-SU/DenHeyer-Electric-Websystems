@@ -61,7 +61,9 @@ def employeeManager():
 
             return f'''<h2>Welcome to the employee manager</h2>
                    {formattedEmployeeData}
-                   <br><br>
+                   <br>
+                   <a href="/addUser">Add New User</a>
+                   <br>
                    <a href="/employeePortal">Return</a>''', 200
 
         except Exception as e:
@@ -76,3 +78,52 @@ def employeeManager():
             except Exception as e:
                 # Optionally log any errors related to closing
                 print(f"Error closing connection: {e}")
+
+@employeeManagerBP.route('/addUser', methods=['GET', 'POST'])
+def addUser():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        if not name or not username or not email or not password:
+            return "All fields required", 400
+
+        try:
+            connect = connect_to_db()
+            cursor = connect.cursor()
+
+            cursor.execute('INSERT INTO "EMPLOYEE_CREDENTIALS" ("EMPLOYEE_NAME", "EMPLOYEE_USERNAME", "EMPLOYEE_EMAIL", "EMPLOYEE_PASSWORD") VALUES (%s, %s, %s, %s)',
+                            (name, username, email, password))
+            connect.commit()
+
+            return redirect(url_for("employee.employeePortal"))
+
+        except Exception as e:
+            return jsonify({'Error': str(e)})
+
+        finally:
+            try:
+                if cursor:
+                    cursor.close()
+                if connect:
+                    connect.close()
+            except Exception as e:
+                print(f"Error closing connection: {e}")
+
+    return '''<form method="POST" action="/addUser">
+              <label for="name">Full Name:</label><br>
+              <input type="text" id="name" name="name" required><br><br>
+            
+              <label for="username">Username:</label><br>
+              <input type="text" id="username" name="username" required><br><br>
+            
+              <label for="email">Email:</label><br>
+              <input type="email" id="email" name="email" required><br><br>
+            
+              <label for="password">Password:</label><br>
+              <input type="password" id="password" name="password" required><br><br>
+            
+              <button type="submit">Submit</button>
+            </form>'''
