@@ -56,5 +56,8 @@ app.register_blueprint(reviewManagerBP)
 from routes.aboutUs import aboutUsBP
 app.register_blueprint(aboutUsBP)
 
+from routes.employeeManager import employeeManagerBP
+app.register_blueprint(employeeManagerBP)
+
 if __name__ == '__main__':
     app.run()
