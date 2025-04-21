@@ -51,6 +51,7 @@ from routes.estimateManager import estimateManagerBP
 app.register_blueprint(estimateManagerBP)
 
 from routes.reviewManager import reviewManagerBP
+
 app.register_blueprint(reviewManagerBP)
 
 from routes.aboutUs import aboutUsBP

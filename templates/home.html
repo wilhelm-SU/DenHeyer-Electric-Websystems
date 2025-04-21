@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>DenHeyer Electric</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
 <style>
 body {background-color:Azure;
       overflow-y: scroll;
@@ -13,11 +14,14 @@ h1 {text-align: center;}
 <body>
 
 <div class="header-bar">
-  <h1>DenHeyer Electric</h1>
+    <img src="/static/images/LightBulbOG_AnniePaxson.png" alt="Lightbulb" class="lightbulb">
+    <div class="title-oval">
+        <h1><span class="denheyer">DenHeyer</span> <span class="electric">ELECTRIC</span></h1>
+    </div>
   <nav class="navbar">
     <a href="/requestEstimate">Request Your Free Estimate</a>
     <a href="/gallery">Gallery</a>
-    <a href="/reviews">Leave a Review!</a>
+    <a href="/reviews">Leave a Review</a>
     <!-- Dropdown Container -->
     <div class="dropdown">
       <button class="dropbtn">More ▼</button>
@@ -50,8 +54,8 @@ h1 {text-align: center;}
 
   /* Title inside the header */
   .header-bar h1 {
-    color: #F0F0F0; /* Slightly off-white */
-    font-size: 50px;
+    color: #2C4FA0; /* Slightly off-white */
+    font-size: 70px;
     margin: 0;
     padding-bottom: 10px;
   }
@@ -60,14 +64,14 @@ h1 {text-align: center;}
   .navbar {
     display: flex;
     justify-content: center;
-    gap: 30px;
+    gap: 40px;
   }
 
   .navbar a, .dropbtn {
     color: #F0F0F0; /* Slightly off-white */
     text-decoration: none;
-    font-size: 20px;
-    padding: 10px;
+    font-size: 26px;
+    padding: 14px;
     background: none;
     border: none;
     cursor: pointer;
@@ -130,7 +134,41 @@ h1 {text-align: center;}
 
 .right {
   right: 0; /* Stick to the right */}
+
+.lightbulb {
+  position: absolute;
+  top: 11px;
+  left: 35px;
+  height: 325px;
+  width: auto;
+  z-index: 2;
 }
+
+.denheyer {
+  font-family: 'Anton', sans-serif;
+  font-size: 100px;
+  letter-spacing: 5px;
+
+}
+
+.electric {
+  font-family: 'Teko', sans-serif;
+  font-size: 110px;
+  letter-spacing: 3px;
+}
+
+.title-oval {
+  display: flex;  /* Flex enables centering */
+  justify-content: center; /* Horizontal center */
+  align-items: center;     /* Vertical center */
+  background-color: #ffffff;
+  border-radius: 200px;
+  padding: 30px 20px;
+  margin-top: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  height: 100px;
+}
+
 
 </style>
 
