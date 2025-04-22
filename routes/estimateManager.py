@@ -30,7 +30,7 @@ def estimateManager():
                             <strong>Address:</strong> {row[5]}, {row[6]}, {row[7]}<br>
                             <strong>Description:</strong> {row[4]}<br>
                             {''
-                            if row[9] else f'''
+                            if {row[9]} else f'''
                                 <form method="POST" action="/markHandled" onsubmit="return confirm('Are you sure you want to mark this estimate as handled?');" style="display:inline;">
                                     <input type="hidden" name="request_id" value="{row[8]}">
                                     <button type="submit">Mark as Handled</button>
