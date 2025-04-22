@@ -3,6 +3,8 @@
 <head>
 <title>DenHeyer Electric</title>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 <style>
 body {
   background: linear-gradient(
@@ -22,8 +24,11 @@ body {
 
 <div class="header-bar">
     <img src="/static/images/LightBulbOG_AnniePaxson.png" alt="Lightbulb" class="lightbulb">
-    <div class="title-oval">
+   <div class="title-oval">
+      <div class="title-wrapper">
         <h1><span class="denheyer">DenHeyer</span> <span class="electric">ELECTRIC</span></h1>
+        <p class="subtitle">Serving the Sussex County area since 20xx</p>
+      </div>
     </div>
   <nav class="navbar">
     <a href="/requestEstimate">Request Your Free Estimate</a>
@@ -34,7 +39,7 @@ body {
       <button class="dropbtn">More ▼</button>
       <div class="dropdown-content">
         <a href="/aboutUs">About Us</a>
-        <a href="/employeeLogin">Employee Login</a>0
+        <a href="/employeeLogin">Employee Login</a>
         <a href="/employeePortal">Employee Portal</a>
       </div>
     </div>
@@ -47,13 +52,25 @@ body {
         <img class="gallery-slide" src="/static/images/gallery1.jpg" alt="Gallery Image 1">
         <img class="gallery-slide" src="/static/images/gallery2.jpg" alt="Gallery Image 2">
         <img class="gallery-slide" src="/static/images/gallery3.jpg" alt="Gallery Image 3">
+
+        <!-- Arrows -->
+        <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+        <a class="next" onclick="changeSlide(1)">&#10095;</a>
     </div>
 </div>
 
 <!-- About Us -->
 <div class="home-section" id="about-us">
-    <h2>About Us</h2>
-    <p>At DenHeyer Electric, we take pride in quality, safety, and reliable electrical services for residential, commercial, and industrial needs. Our certified team is committed to excellent customer service and top-tier craftsmanship.</p>
+    <div class="about-content">
+        <img src="/static/images/about_us_photo.jpg" alt="About Us" class="about-image">
+        <div class="about-text">
+            <h2>About Us</h2>
+            <p>
+                At DenHeyer Electric, we take pride in quality, safety, and reliable electrical services for residential, commercial, and industrial needs.
+                Our certified team is committed to excellent customer service and top-tier craftsmanship.
+            </p>
+        </div>
+    </div>
 </div>
 
 <!-- Request Estimate -->
@@ -64,8 +81,6 @@ body {
 
 <div class="sidebar left"></div>
 <div class="sidebar right"></div>
-
-
 
 <style>
    /* Unified Header Bar */
@@ -99,11 +114,11 @@ body {
     color: #F0F0F0; /* Slightly off-white */
     text-decoration: none;
     font-size: 26px;
-    padding: 14px;
+    padding: 5px;
     background: none;
     border: none;
     cursor: pointer;
-    font-family: inherit;
+    font-family: 'Kanit', sans-serif;
   }
 
   .navbar a:hover, .dropbtn:hover {
@@ -145,8 +160,6 @@ body {
     display: block;
   }
 
-
-
 /* Positioning the left and right bars */
 .left {
   left: 0; /* Stick to the left */
@@ -158,8 +171,8 @@ body {
 .lightbulb {
   position: absolute;
   top: 11px;
-  left: 35px;
-  height: 325px;
+  left: 30px;
+  height: 300px;
   width: auto;
   z-index: 2;
 }
@@ -178,15 +191,15 @@ body {
 }
 
 .title-oval {
-  display: flex;  /* Flex enables centering */
-  justify-content: center; /* Horizontal center */
-  align-items: center;     /* Vertical center */
+  display: flex;
+  justify-content: center;      /* Center horizontally */
+  align-items: center;          /* Center vertically */
   background-color: #ffffff;
   border-radius: 200px;
-  padding: 30px 20px;
-  margin-top: 10px;
+  padding: 5px 30px;           /* Space inside the oval */
+  margin: 0 auto;               /* Center the oval in the page */
+  max-width: 90%;               /* Prevent from touching edges */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  height: 100px;
 }
 
 .sidebar {
@@ -220,17 +233,23 @@ body {
 .slideshow-container {
     position: relative;
     width: 100%;
+    max-width: 800px;
     height: 400px;
+    margin: 0 auto; /* Center the slideshow */
     overflow: hidden;
+    border-radius: 10px;
+
 }
 
 .gallery-slide {
-    position: absolute;
+    display: none; /* Only one visible at a time */
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
+}
+
+#gallery-slideshow {
+    margin-top: 260px; /* or adjust as needed */
 }
 
 .estimate-button {
@@ -249,8 +268,114 @@ body {
     background-color: #1d3671;
 }
 
+.gallery-slide:first-child {
+  opacity: 1;
+}
+
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  padding: 16px;
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 3px;
+  user-select: none;
+  z-index: 3;
+  transform: translateY(-50%);
+}
+
+.prev {
+  left: 10px;
+}
+
+.next {
+  right: 10px;
+}
+
+.prev:hover, .next:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.about-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap; /* Makes it mobile-friendly */
+}
+
+.about-image {
+    width: 250px;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.about-text {
+    max-width: 600px;
+    text-align: left;
+}
+
+#about-us h2 {
+    margin-top: 0;
+}
+
+.title-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1; /* reduce overall vertical spacing */
+  margin-top: -10px; /* pull subtitle up slightly */
+}
+
+
+.subtitle {
+  margin-top: 0;  /* Reduced space from the title */
+  font-size: 24px;
+  color: #0a1125;
+    font-family: 'Kanit', sans-serif;
+    font-style: italic;
+
+}
 
 </style>
+
+<script>
+let slideIndex = 0;
+let slides = document.getElementsByClassName("gallery-slide");
+
+function showSlide(index) {
+    if (index >= slides.length) {
+        slideIndex = 0;
+    } else if (index < 0) {
+        slideIndex = slides.length - 1;
+    } else {
+        slideIndex = index;
+    }
+
+    for (let i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+
+    slides[slideIndex].style.display = "block";
+}
+
+function changeSlide(n) {
+    showSlide(slideIndex + n);
+}
+
+function autoSlide() {
+    changeSlide(1);
+    setTimeout(autoSlide, 3000);
+}
+
+// Initialize
+showSlide(slideIndex);
+setTimeout(autoSlide, 3000);
+</script>
 
 </body>
 </html>
