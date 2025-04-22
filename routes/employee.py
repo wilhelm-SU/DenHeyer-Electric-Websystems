@@ -12,7 +12,7 @@ def employeeLogin():
 
         if not username or not password:
             return "Both fields are required.", 400
-
+        # Connect the cursor to the database
         try:
             connect = connect_to_db()
             cursor = connect.cursor()
