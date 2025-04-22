@@ -20,28 +20,32 @@ def estimateManager():
         closed_requests = []
 
         for row in requestData:
+        # Handle conditional form logic outside the main f-string
+            markHandledForm = ''
+            if not row[9]:
+                markHandledForm = f'''
+                    <form method="POST" action="/markHandled" onsubmit="return confirm('Are you sure you want to mark this estimate as handled?');" style="display:inline;">
+                        <input type="hidden" name="request_id" value="{row[8]}">
+                        <button type="submit">Mark as Handled</button>
+                    </form>
+                '''
+
             formattedRequest = f'''
-                        <div class="request-item">
-                            <strong>Request ID:</strong> {row[8]}<br>
-                            <strong>Date:</strong> {row[3]}<br>
-                            <strong>Name:</strong> {row[0]}<br>
-                            <strong>Phone:</strong> {row[1]}<br>
-                            <strong>Email:</strong> {row[2]}<br>
-                            <strong>Address:</strong> {row[5]}, {row[6]}, {row[7]}<br>
-                            <strong>Description:</strong> {row[4]}<br>
-                            {''
-                            if {row[9]} else f'''
-                                <form method="POST" action="/markHandled" onsubmit="return confirm('Are you sure you want to mark this estimate as handled?');" style="display:inline;">
-                                    <input type="hidden" name="request_id" value="{row[8]}">
-                                    <button type="submit">Mark as Handled</button>
-                                </form>
-                            '''}
-                            <form method="POST" action="/deleteEstimate/" onsubmit="return confirm('Are you sure you want to delete this estimate?');" style="display:inline;">
-                                <input type="hidden" name="request_id" value="{row[8]}">
-                                <button type="submit">Delete</button>
-                            </form>
-                        </div>
-                    '''
+                <div class="request-item">
+                    <strong>Request ID:</strong> {row[8]}<br>
+                    <strong>Date:</strong> {row[3]}<br>
+                    <strong>Name:</strong> {row[0]}<br>
+                    <strong>Phone:</strong> {row[1]}<br>
+                    <strong>Email:</strong> {row[2]}<br>
+                    <strong>Address:</strong> {row[5]}, {row[6]}, {row[7]}<br>
+                    <strong>Description:</strong> {row[4]}<br>
+                    {markHandledForm}
+                    <form method="POST" action="/deleteEstimate/" onsubmit="return confirm('Are you sure you want to delete this estimate?');" style="display:inline;">
+                    <input type="hidden" name="request_id" value="{row[8]}">
+                    <button type="submit">Delete</button>
+                    </form>
+                </div>
+        '''
 
             if row[9]:
                 closed_requests.append(formattedRequest)
@@ -136,18 +140,28 @@ def search():
         searchResults = []
 
         for row in requestData:
+            markHandledForm = ''
+            if not row[9]:
+                markHandledForm = f'''
+                    <form method="POST" action="/markHandled">
+                        <input type="hidden" name="request_id" value="{row[8]}">
+                        <button type="submit">Mark as Handled</button>
+                    </form>
+                '''
+
             formattedRequest = f'''
-                            <div class="request-item">
-                                <strong>Request ID:</strong> {row[8]}<br>
-                                <strong>Date:</strong> {row[3]}<br>
-                                <strong>Name:</strong> {row[0]}<br>
-                                <strong>Phone:</strong> {row[1]}<br>
-                                <strong>Email:</strong> {row[2]}<br>
-                                <strong>Address:</strong> {row[5]}, {row[6]}, {row[7]}<br>
-                                <strong>Description:</strong> {row[4]}<br>
-                                {'' if row[9] else f'<form method="POST" action="/markHandled"><input type="hidden" name="request_id" value="{row[8]}"><button type="submit">Mark as Handled</button></form>'}
-                            </div>
-                        '''
+                <div class="request-item">
+                    <strong>Request ID:</strong> {row[8]}<br>
+                    <strong>Date:</strong> {row[3]}<br>
+                    <strong>Name:</strong> {row[0]}<br>
+                    <strong>Phone:</strong> {row[1]}<br>
+                    <strong>Email:</strong> {row[2]}<br>
+                    <strong>Address:</strong> {row[5]}, {row[6]}, {row[7]}<br>
+                    <strong>Description:</strong> {row[4]}<br>
+                    {markHandledForm}
+                </div>
+            '''
+
 
             searchResults.append(formattedRequest)
 
