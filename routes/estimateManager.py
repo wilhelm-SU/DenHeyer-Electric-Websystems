@@ -29,7 +29,17 @@ def estimateManager():
                             <strong>Email:</strong> {row[2]}<br>
                             <strong>Address:</strong> {row[5]}, {row[6]}, {row[7]}<br>
                             <strong>Description:</strong> {row[4]}<br>
-                            {'' if row[9] else f'<form method="POST" action="/markHandled"><input type="hidden" name="request_id" value="{row[8]}"><button type="submit">Mark as Handled</button></form>'}
+                            {''
+                            if row[9] else f'''
+                                <form method="POST" action="/markHandled" onsubmit="return confirm('Are you sure you want to mark this estimate as handled?');" style="display:inline;">
+                                    <input type="hidden" name="request_id" value="{row[8]}">
+                                    <button type="submit">Mark as Handled</button>
+                                </form>
+                            '''}
+                            <form method="POST" action="/deleteEstimate/" onsubmit="return confirm('Are you sure you want to delete this estimate?');" style="display:inline;">
+                                <input type="hidden" name="request_id" value="{row[8]}">
+                                <button type="submit">Delete</button>
+                            </form>
                         </div>
                     '''
 
@@ -63,6 +73,30 @@ def markHandled():
         connect = connect_to_db()
         cursor = connect.cursor()
         cursor.execute('UPDATE "ESTIMATES" SET "HANDLED" = TRUE WHERE "PRIMARY_KEY" = %s', (request_id,))
+        connect.commit()
+        return redirect(url_for('estimateManager.estimateManager'))
+
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+    finally:
+        try:
+            if cursor:
+                cursor.close()
+            if connect:
+                connect.close()
+        except Exception as e:
+            print(f"Error closing connection: {e}")
+
+@estimateManagerBP.route('/deleteEstimate/', methods=['POST'])
+def deleteEstimate():
+    if not session.get('loggedIn'):
+        return redirect(url_for('employee.employeeLogin'))
+
+    try:
+        request_id = request.form.get('request_id')
+        connect = connect_to_db()
+        cursor = connect.cursor()
+        cursor.execute('DELETE FROM "ESTIMATES" WHERE "PRIMARY_KEY" = %s', (request_id,))
         connect.commit()
         return redirect(url_for('estimateManager.estimateManager'))
 

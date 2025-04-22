@@ -83,25 +83,25 @@
 
         <form method="POST" action="{{ url_for('estimate.requestEstimate') }}" class="form-box">
             <label>Full Name *</label>
-            <input type="text" name="name" required>
+            <input type="text" name="name" maxlength="50" required>
 
             <label>Phone Number *</label>
-            <input type="text" name="phone" required>
+            <input type="text" name="phone" maxlength="13" required>
 
             <label>Email</label>
-            <input type="email" name="email">
+            <input type="email" name="email" maxlength="75">
 
             <label>Street Address *</label>
-            <input type="text" name="address" required>
+            <input type="text" name="address" maxlength="255" required>
 
             <label>City *</label>
-            <input type="text" name="city" required>
+            <input type="text" name="city" maxlength="75" required>
 
             <label>ZIP Code *</label>
-            <input type="text" name="zipCode" required>
+            <input type="text" name="zipCode" maxlength="10" required>
 
             <label>Description of Work</label>
-            <textarea name="description" rows="4"></textarea>
+            <textarea name="description" rows="4" maxlength="750"></textarea>
 
             <button type="submit">Submit Request</button>
         </form>
