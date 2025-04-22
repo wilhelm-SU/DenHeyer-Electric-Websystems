@@ -1,0 +1,18 @@
+# Ignore the virtual environment
+venv/
+
+# Ignore Python cache files
+*.pyc
+__pycache__/
+
+# Ignore IDE-specific files for VSCode
+.idea/
+
+# Ignore log files
+*.log
+
+# Ignore other local configuration files
+base64_dump.txt
+
+# Ignore any other files you don't want to track (e.g., database files)
+*.sqlite
