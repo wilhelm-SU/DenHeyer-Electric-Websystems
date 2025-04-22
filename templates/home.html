@@ -2,22 +2,20 @@
 <html>
 <head>
 <title>DenHeyer Electric</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 <style>
+
 body {
-  background: linear-gradient(
-    to right,
-    gray 0in,
-    #f0f0f0 1in,
-    white calc(100% - 1in),
-    #f0f0f0 100%
-  );
+  background: linear-gradient(to right, gray 0.5in, #f0f0f0 1in, white calc(100% - 1in), #f0f0f0 100%);
   overflow-y: scroll;
   margin: 0;
   padding: 0;
+  );
 }
+
 </style>
 </head>
 <body>
@@ -86,7 +84,7 @@ body {
    /* Unified Header Bar */
  .header-bar {
   background-color: #2C4FA0; /* Your blue color */
-  padding: 15px 0;
+  padding: 2vh 0;
   text-align: center;
   width: 100%;
   position: absolute; /* Ensures it starts at the top */
@@ -98,23 +96,24 @@ body {
   /* Title inside the header */
   .header-bar h1 {
     color: #2C4FA0; /* Slightly off-white */
-    font-size: 70px;
-    margin: 0;
-    padding-bottom: 10px;
+    font-size: 7vw;
+    margin-top: 4vh;
+      margin-bottom: 0;
+    padding-bottom: .5vh;
   }
 
   /* Navigation inside the header */
   .navbar {
     display: flex;
     justify-content: center;
-    gap: 40px;
+    gap: 3vw;
   }
 
   .navbar a, .dropbtn {
     color: #F0F0F0; /* Slightly off-white */
     text-decoration: none;
-    font-size: 26px;
-    padding: 5px;
+    font-size: 1.5vw;
+    padding: .5vh;
     background: none;
     border: none;
     cursor: pointer;
@@ -123,7 +122,7 @@ body {
 
   .navbar a:hover, .dropbtn:hover {
     background-color: #A3B6E9;
-    border-radius: 5px;
+    border-radius: .3vh;
   }
 
   /* Dropdown container */
@@ -137,18 +136,19 @@ body {
     display: none;
     position: absolute;
     background-color: #F8F9FA; /* Soft Gray */
-    min-width: 150px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    min-width: 14vw;
+    box-shadow: 0 .5vh 1vh rgba(0, 0, 0, 0.2);
     z-index: 1;
-    border-radius: 5px;
+    border-radius: 1vh;
   }
 
   /* Dropdown menu links */
   .dropdown-content a {
     color: black;
-    padding: 10px;
+    padding: 1vh;
     display: block;
     text-align: left;
+    font-size: 1.3vw;
   }
 
   .dropdown-content a:hover {
@@ -170,24 +170,24 @@ body {
 
 .lightbulb {
   position: absolute;
-  top: 11px;
-  left: 30px;
-  height: 300px;
+  top: 1vh;
+  left: 3vh;
+  height: 20vw;
   width: auto;
   z-index: 2;
 }
 
 .denheyer {
   font-family: 'Anton', sans-serif;
-  font-size: 100px;
-  letter-spacing: 5px;
+  font-size: 7vw;
+  letter-spacing: .2vw;
 
 }
 
 .electric {
   font-family: 'Teko', sans-serif;
-  font-size: 110px;
-  letter-spacing: 3px;
+  font-size: 7vw;
+  letter-spacing: .2vw;
 }
 
 .title-oval {
@@ -195,17 +195,21 @@ body {
   justify-content: center;      /* Center horizontally */
   align-items: center;          /* Center vertically */
   background-color: #ffffff;
-  border-radius: 200px;
-  padding: 5px 30px;           /* Space inside the oval */
-  margin: 0 auto;               /* Center the oval in the page */
-  max-width: 90%;               /* Prevent from touching edges */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 20vw;
+  padding: .2vh 3vw;           /* Space inside the oval */
+  margin-top: 0; /* Center the oval in the page */
+  margin-bottom: 1.3vh;
+  margin-left: 2vw;
+  margin-right: 2vw;
+  width: auto;
+  max-width: calc(100% - 10vw);              /* Prevent from touching edges */
+  box-shadow: 0 .5vh 1vh rgba(0, 0, 0, 0.2);
 }
 
 .sidebar {
   position: fixed;
   top: 0;
-  width: 2in;
+  width: 10vw;
   height: 100vh;
   z-index: -1;
 }
@@ -221,23 +225,23 @@ body {
 }
 
 .home-section {
-    margin: 80px auto;
-    padding: 40px;
-    max-width: 1000px;
+    margin: 8vh auto;
+    padding: 5vh;
+    max-width: 56vw;
     background-color: #f8f9fa;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 1.5vw;
+    box-shadow: 0 2vh 1vh rgba(0, 0, 0, 0.2);
     text-align: center;
 }
 
 .slideshow-container {
     position: relative;
     width: 100%;
-    max-width: 800px;
-    height: 400px;
+    max-width: 80vw;
+    height: 60vh;
     margin: 0 auto; /* Center the slideshow */
     overflow: hidden;
-    border-radius: 10px;
+    border-radius: 1vw;
 
 }
 
@@ -249,17 +253,17 @@ body {
 }
 
 #gallery-slideshow {
-    margin-top: 260px; /* or adjust as needed */
+    margin-top: 33vh; /* or adjust as needed */
 }
 
 .estimate-button {
     display: inline-block;
-    padding: 15px 30px;
-    margin-top: 20px;
-    font-size: 20px;
+    padding: 2vh 4vw;
+    margin-top: 2vh;
+    font-size: 2vw;
     background-color: #2C4FA0;
     color: white;
-    border-radius: 10px;
+    border-radius: 1vw;
     text-decoration: none;
     transition: background-color 0.3s;
 }
@@ -276,23 +280,23 @@ body {
   cursor: pointer;
   position: absolute;
   top: 50%;
-  padding: 16px;
+  padding: 2vh;
   color: white;
-  font-size: 30px;
+  font-size: 2vw;
   font-weight: bold;
   background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 3px;
+  border-radius: .5vw;
   user-select: none;
   z-index: 3;
   transform: translateY(-50%);
 }
 
 .prev {
-  left: 10px;
+  left: 1vw;
 }
 
 .next {
-  right: 10px;
+  right: 1vw;
 }
 
 .prev:hover, .next:hover {
@@ -303,20 +307,19 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 30px;
+    gap: 2vw;
     flex-wrap: wrap; /* Makes it mobile-friendly */
 }
 
 .about-image {
-    width: 250px;
+    width: 25vw;
     height: auto;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 1.5vh;
 }
 
 .about-text {
-    max-width: 600px;
-    text-align: left;
+    max-width: 22vw;
+    text-align: center;
 }
 
 #about-us h2 {
@@ -327,17 +330,18 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  line-height: 1.1; /* reduce overall vertical spacing */
-  margin-top: -10px; /* pull subtitle up slightly */
+  line-height: .8; /* reduce overall vertical spacing */
+  margin-top: -1vh; /* pull subtitle up slightly */
 }
 
 
 .subtitle {
   margin-top: 0;  /* Reduced space from the title */
-  font-size: 24px;
+  font-size: 1.7vw;
   color: #0a1125;
     font-family: 'Kanit', sans-serif;
     font-style: italic;
+    text-decoration: underline;
 
 }
 
