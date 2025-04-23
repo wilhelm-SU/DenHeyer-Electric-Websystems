@@ -65,5 +65,8 @@ app.register_blueprint(employeeManagerBP)
 from routes.galleryManagerManipulation import galleryManagerManipulationBP
 app.register_blueprint(galleryManagerManipulationBP)
 
+from routes.employeeSettings import employeeSettingsBP
+app.register_blueprint(employeeSettingsBP)
+
 if __name__ == '__main__':
     app.run()

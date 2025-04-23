@@ -57,7 +57,7 @@ def requestEstimate():
 
     return render_template('estimateForm.html')
 
-def sendEstimateRequestEmail(requestData, recipientEmail="denheyerhelper@gmail.com"):
+def sendEstimateRequestEmail(requestData):
     senderEmail = "denheyerhelper@gmail.com"
     senderPassword = "ehiq crry clwx mlrl"
 
@@ -67,27 +67,43 @@ def sendEstimateRequestEmail(requestData, recipientEmail="denheyerhelper@gmail.c
 
     body = f"""
     A new estimate request has been submitted.<br>
-    Request ID: {requestData[0]}
+    Request ID: {requestData[0]}<br><br>
     Date: {requestData[4]}<br>
-    Name: {requestData[1]}
-    Phone: {requestData[2]}
-    Email: {requestData[3]}
+    Name: {requestData[1]}<br>
+    Phone: {requestData[2]}<br>
+    Email: {requestData[3]}<br>
     Address: {requestData[6]}, {requestData[7]}, {requestData[8]}<br>
     Description: {requestData[5]}
     """
 
-    msg = MIMEMultipart()
-    msg['From'] = senderEmail
-    msg['To'] = recipientEmail
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
-
     try:
+        connect = connect_to_db()
+        cursor = connect.cursor()
+        cursor.execute('SELECT "EMPLOYEE_EMAIL" FROM "EMPLOYEE_CREDENTIALS" WHERE "EMAIL_LIST" = TRUE')
+        email_rows = cursor.fetchall()
+        recipientEmails = [row[0] for row in email_rows]
+        recipientEmails.append("denheyerhelper@gmail.com")
+
+        if not recipientEmails:
+            print("No recipients subscribed to email list.")
+            return
+
+        msg = MIMEMultipart()
+        msg['From'] = senderEmail
+        msg['To'] = ", ".join(recipientEmails)
+        msg['Subject'] = subject
+        msg.attach(MIMEText(body, 'html'))
+
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         server.login(senderEmail, senderPassword)
-        server.sendmail(senderEmail, recipientEmail, msg.as_string())
+        server.sendmail(senderEmail, recipientEmails, msg.as_string())
         server.quit()
         print("Email sent successfully")
+
     except Exception as e:
         print(f"Error sending email: {e}")
+
+    finally:
+        if cursor: cursor.close()
+        if connect: connect.close()
