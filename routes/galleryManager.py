@@ -9,7 +9,7 @@ galleryManagerBP = Blueprint('galleryManager', __name__)
 #route for gallery manager
 @galleryManagerBP.route('/galleryManager', methods=['GET', 'POST'])
 def galleryManager():
-    if not session.get('loggedIn'):  # extremely important as this prevents non authorized users from accessing pages by simply writing in url
+    if not session.get('loggedIn'):
         return redirect(url_for('employee.employeeLogin'))
 
     try:
@@ -29,42 +29,62 @@ def galleryManager():
         if not image_list:
             return '''No images available.<br>'''
 
-        formatted_gallery = "<br><br>".join(
-            [f"""
-            <strong>Image:</strong><br>
-            <img src="data:image/jpeg;base64,{row[1]}" alt="Gallery Image" style="max-width: 300px; max-height: 300px;"><br><br>
-            <strong>Description:</strong>{row[2]}<br><br>
-            <strong>Publicly displayed:</strong>{row[3]}<br><br>
-            <form action="/togglePublic/{row[0]}" method="POST">
-                <input type="hidden" name="table" value="GALLERY">
-                <button type="submit">
-                    {'Set to Private' if row[3] else 'Set to Public'}
-                </button>
-            </form>
+        formatted_gallery = '''
+        <style>
+            .gallery-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 20px;
+                padding: 20px;
+            }
+            .image-card {
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                padding: 10px;
+                box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                background-color: #f9f9f9;
+            }
+            .image-card img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 4px;
+            }
+        </style>
 
-            <form action="/deleteImage/{row[0]}" method="POST" style="display:inline; margin-left: 10px;">
-                <input type="hidden" name="table" value="GALLERY">
-                <button type="submit" onclick="return confirm('Are you sure you want to delete this image?');">
-                    Delete
-                </button>
-            </form>
+        <div class="gallery-grid">
+        ''' + "\n".join([
+            f"""
+            <div class="image-card">
+                <img src="data:image/jpeg;base64,{row[1]}" alt="Gallery Image"><br><br>
+                <strong>Description:</strong> {row[2]}<br><br>
+                <strong>Publicly displayed:</strong> {row[3]}<br><br>
+                <form action="/togglePublic/{row[0]}" method="POST">
+                    <input type="hidden" name="table" value="GALLERY">
+                    <button type="submit">
+                        {'Set to Private' if row[3] else 'Set to Public'}
+                    </button>
+                </form>
 
-            """ for row in image_list])
+                <form action="/deleteImage/{row[0]}" method="POST" style="display:inline; margin-left: 10px;">
+                    <input type="hidden" name="table" value="GALLERY">
+                    <button type="submit" onclick="return confirm('Are you sure you want to delete this image?');">
+                        Delete
+                    </button>
+                </form>
+            </div>
+            """ for row in image_list
+        ]) + '</div>'
 
-        #funtion to delete an image from the gallery in the database
-
-
-        return f'''<h2>Welcome to the gallery manager</h2>
-                    Here you can accept or reject images from being displayed
-                    in the public gallery.<br><br>
-                    <a href="/insertImagePage">Add New Image</a>
-                    {formatted_gallery}
-                    <br><br>
-                    <a href="/employeePortal">Return</a>''', 200
-        #/galleryManagerManipulation/insertImagePage
-
-        print(imageData)
-        print('why is there an error bellow?')
+        return f'''
+            <h2>Welcome to the gallery manager</h2>
+            Here you can accept or reject images from being displayed
+            in the public gallery.<br><br>
+            <a href="/insertImagePage">Add New Image</a>
+            {formatted_gallery}
+            <br><br>
+            <a href="/employeePortal">Return</a>
+        ''', 200
 
     finally:
         try:
@@ -73,7 +93,6 @@ def galleryManager():
             if connect:
                 connect.close()
         except Exception as e:
-            # Optionally log any errors related to closing
             print(f"Error closing connection: {e}")
 
 
