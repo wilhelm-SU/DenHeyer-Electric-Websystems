@@ -31,9 +31,12 @@ from databaseModule import connect_to_db
 from routes.home import (homeBP)
 app.register_blueprint(homeBP)
 
-#GALLERY Route
+#GALLERY Routes
 from routes.gallery import galleryBP
 app.register_blueprint(galleryBP)
+
+from routes.galleryManager import galleryManagerBP
+app.register_blueprint(galleryManagerBP)
 
 #REVIEW Routes
 from routes.review import reviewBP
@@ -51,7 +54,6 @@ from routes.estimateManager import estimateManagerBP
 app.register_blueprint(estimateManagerBP)
 
 from routes.reviewManager import reviewManagerBP
-
 app.register_blueprint(reviewManagerBP)
 
 from routes.aboutUs import aboutUsBP
