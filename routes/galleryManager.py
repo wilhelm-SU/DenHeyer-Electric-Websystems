@@ -28,7 +28,7 @@ def galleryManager():
 
         if not image_list:
             return '''No images available.<br>'''
-
+        #The grid display for the images in the gallery, inspired momstly from gallery.py
         formatted_gallery = '''
         <style>
             .gallery-grid {
