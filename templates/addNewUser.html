@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add New Employee</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <style>
+    body {
+      font-family: 'Kanit', sans-serif;
+      background-color: #e0e9ff;
+      background-image: url("https://www.transparenttextures.com/patterns/lined-paper-2.png");
+      background-repeat: repeat;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page-section {
+      margin: 14vh auto;
+      padding: 4vh 4vw;
+      max-width: 50vw;
+      background-color: #f8f9fa;
+      border-radius: 1.5vw;
+      box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 2.5vw;
+      color: #2C4FA0;
+      margin-bottom: 2vh;
+    }
+
+    form {
+      text-align: left;
+    }
+
+    label {
+      font-size: 1.2vw;
+      display: block;
+      margin-top: 2vh;
+    }
+
+    input {
+      width: 100%;
+      padding: 1vh;
+      font-size: 1.2vw;
+      border-radius: 0.5vw;
+      border: 1px solid #ccc;
+      margin-top: 0.5vh;
+    }
+
+    button {
+      background-color: #2C4FA0;
+      color: white;
+      padding: 1vh 2vw;
+      border: none;
+      border-radius: 1vw;
+      font-size: 1.2vw;
+      cursor: pointer;
+      margin-top: 3vh;
+    }
+
+    button:hover {
+      background-color: #1d3671;
+    }
+
+    .return-link {
+      display: block;
+      text-align: center;
+      margin-top: 3vh;
+      font-size: 1.2vw;
+      color: #2C4FA0;
+      text-decoration: none;
+    }
+
+    .return-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-section">
+    <h2>Add New Employee</h2>
+    <form method="POST" action="/addUser">
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <a href="/employeePortal" class="return-link">Return to Portal</a>
+  </div>
+
+</body>
+</html>

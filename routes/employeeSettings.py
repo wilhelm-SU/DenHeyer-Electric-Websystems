@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, url_for, session
+from flask import Blueprint, request, redirect, url_for, session, render_template
 from databaseModule import connect_to_db
 
 employeeSettingsBP = Blueprint('employeeSettings', __name__)
@@ -21,18 +21,8 @@ def employeeSettings():
         button_label = "Unsubscribe from Emails" if subscribed else "Subscribe to Emails"
         status_message = "You are currently subscribed to estimate emails." if subscribed else "You are not subscribed to estimate emails."
 
-        return f'''
-            <h2>Employee Settings</h2>
-            <ul>
-                <li><a href="/resetUsername">Reset Username</a></li>
-                <li><a href="/resetPassword">Reset Password</a></li>
-            </ul>
+        return render_template('employeeSettings.html', button_label=button_label, status_message=status_message)
 
-            <p>{status_message}</p>
-            <form method="POST" action="/emailList">
-                <button type="submit">{button_label}</button>
-            </form>
-            '''
     finally:
         cursor.close()
         connect.close()
@@ -69,14 +59,7 @@ def resetPassword():
                 cursor.close()
                 connect.close()
 
-        return """
-        <form method="POST">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br><br>
-            <input type="submit" value="Submit">
-            <a href="/">Return</a>
-        </form>
-        """
+        return render_template('verifyPassword.html')
 
     else:
         if request.method == 'POST':
@@ -104,18 +87,10 @@ def resetPassword():
                 connect.close()
                 session.pop('verified', None)
 
-            return'''Password successfully changed
-            <a href="/employeePortal">Return</a>
-            '''
+            return redirect(url_for('employeeSettings.employeeSettings'))
 
-        return """
-        <form method="POST">
-            <label for="password1">New Password:</label>
-            <input type="password" id="password1" name="password1" required><br><br>
-            <label for="password2">Confirm New Password:</label>
-            <input type="password" id="password2" name="password2" required><br><br>
-            <input type="submit" value="Submit">
-        """
+
+        return render_template('resetPassword.html')
 
 @employeeSettingsBP.route('/resetUsername', methods=['GET', 'POST'])
 def resetUsername():
@@ -149,14 +124,7 @@ def resetUsername():
                 cursor.close()
                 connect.close()
 
-        return """
-        <form method="POST">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br><br>
-            <input type="submit" value="Submit">
-            <a href="/employeePortal">Return</a>
-        </form>
-        """
+        return render_template('verifyPassword.html')
 
     else:
         if request.method == 'POST':
@@ -185,18 +153,70 @@ def resetUsername():
                 session['username'] = newUsername1
                 session.pop('verifiedUsernameChange', None)
 
-            return'''Username successfully changed
-            <a href="/employeePortal">Return</a>
-            '''
+            return redirect(url_for('employeeSettings.employeeSettings'))
 
-        return """
-        <form method="POST">
-            <label for="newUsername1">New Username:</label>
-            <input type="text" id="newUsername1" name="newUsername1" required><br><br>
-            <label for="newUsername2">Confirm New Username:</label>
-            <input type="text" id="newUsername2" name="newUsername2" required><br><br>
-            <input type="submit" value="Submit">
-        """
+        return render_template('resetUsername.html')
+
+@employeeSettingsBP.route('/resetEmail', methods=['GET', 'POST'])
+def resetEmail():
+    if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
+        return redirect(url_for('employee.employeeLogin'))
+
+
+    if 'verifiedEmailChange' not in session:
+        if request.method == 'POST':
+            password = request.form.get('password')
+
+
+            connect = connect_to_db()
+            cursor = connect.cursor()
+
+            ID = session.get('ID')
+
+            try:
+                cursor.execute('SELECT * FROM "EMPLOYEE_CREDENTIALS" WHERE "PRIMARY_KEY" = %s AND "EMPLOYEE_PASSWORD" = %s',
+                (ID, password))
+                employee = cursor.fetchone()
+
+                if employee:
+                    session['verifiedEmailChange'] = True
+                    return redirect(url_for('employeeSettings.resetEmail'))
+                else:
+                    return'''Invalid credentials. Please try again.<br>
+                    <a href="/resetUsername">Return</a>'''
+
+            finally:
+                cursor.close()
+                connect.close()
+
+        return render_template('verifyPassword.html')
+
+    else:
+        if request.method == 'POST':
+            ID = session.get('ID')
+            newEmail1 = request.form.get('newEmail1')
+            newEmail2 = request.form.get('newEmail2')
+
+
+            if newEmail1 != newEmail2:
+                return '''Emails don't match <br>
+                        <a href="/resetEmail">Return</a>
+                        '''
+
+            connect = connect_to_db()
+            cursor = connect.cursor()
+            try:
+                cursor.execute('UPDATE "EMPLOYEE_CREDENTIALS" SET "EMPLOYEE_EMAIL" = %s WHERE "PRIMARY_KEY" = %s', (newEmail1, ID))
+                connect.commit()
+
+            finally:
+                cursor.close()
+                connect.close()
+                session.pop('verifiedEmailChange', None)
+
+            return redirect(url_for('employeeSettings.employeeSettings'))
+
+        return render_template('resetEmail.html')
 @employeeSettingsBP.route('/emailList', methods=['GET', 'POST'])
 def emailList():
     if not session.get('loggedIn'): return redirect(url_for('employee.employeeLogin'))
@@ -216,3 +236,16 @@ def emailList():
     finally:
         cursor.close()
         connect.close()
+
+@employeeSettingsBP.before_app_request
+def clearVerification():
+    if 'verifiedUsernameChange' or 'verified' not in session:
+        return
+    if session.get('verifiedUsernameChange') and request.endpoint == 'employeeSettings.resetUsername' or request.endpoint == 'employeeSettings.resetPassword':
+        return
+    if session.get('verified') and request.endpoint == 'employeeSettings.resetUsername' or request.endpoint == 'employeeSettings.resetPassword':
+        return
+    else:
+        session.pop('verifiedUsernameChange')
+        session.pop('verified')
+        return

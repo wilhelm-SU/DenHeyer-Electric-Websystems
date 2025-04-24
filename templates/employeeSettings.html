@@ -2,33 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DenHeyer Electric - Estimate Requests</title>
-
-  <!-- Google Fonts -->
+  <title>Employee Settings</title>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
-
   <style>
     body {
+      font-family: 'Kanit', sans-serif;
       background-color: #e0e9ff;
       background-image: url("https://www.transparenttextures.com/patterns/lined-paper-2.png");
       background-repeat: repeat;
       background-attachment: fixed;
       margin: 0;
       padding: 0;
-      font-family: 'Kanit', sans-serif;
     }
 
     .header-bar {
       background-color: #2C4FA0;
-      padding: 1vh 0;
+      padding: -2vh 0;
       text-align: center;
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      z-index: 1000;
+      z-index: 1;
     }
 
     .header-bar h1 {
@@ -55,68 +51,75 @@
     }
 
     .page-section {
-      margin: 16vh auto;
-      padding: 4vh 2vw;
-      max-width: 85vw;
+      margin: 14vh auto;
+      padding: 4vh 4vw;
+      max-width: 50vw;
       background-color: #f8f9fa;
       border-radius: 1.5vw;
       box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
       text-align: center;
     }
 
-    .request-item {
-      padding: 1vh;
-      border-bottom: 1px solid #888;
-      margin-bottom: 1vh;
+    h2 {
+      font-size: 2.5vw;
+      color: #2C4FA0;
+      margin-bottom: 2vh;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      margin: 1vh 0;
+    }
+
+    a {
       font-size: 1.2vw;
-      text-align: left;
+      text-decoration: none;
+      color: #2C4FA0;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    p {
+      font-size: 1.2vw;
+      margin-top: 4vh;
     }
 
     button {
       background-color: #2C4FA0;
       color: white;
-      padding: 0.8vh 2vw;
+      padding: 1vh 2vw;
       border: none;
-      border-radius: 0.5vw;
+      border-radius: 1vw;
+      font-size: 1.2vw;
       cursor: pointer;
-      font-size: 1vw;
+      margin-top: 2vh;
     }
 
     button:hover {
       background-color: #1d3671;
     }
 
-    .search-form {
-      margin-bottom: 3vh;
-    }
-
-    .search-form input[type="text"] {
-      padding: 1vh;
-      font-size: 1.2vw;
-      border-radius: 0.5vw;
-      border: 1px solid #ccc;
-      width: 40vw;
-      margin-right: 1vw;
-    }
-
-    .search-form button {
-      padding: 1vh 2vw;
-    }
-
     .return-link {
       display: block;
-      text-align: center;
       margin-top: 4vh;
       font-size: 1.2vw;
       color: #2C4FA0;
       text-decoration: none;
     }
+
     .return-link:hover {
       text-decoration: underline;
     }
   </style>
 </head>
-<body>
+
+<!-- Header with split-font title -->
   <div class="header-bar">
     <h1>
       <a href="/" class="home-link">
@@ -125,27 +128,22 @@
       </a>
     </h1>
   </div>
-
+<body>
   <div class="page-section">
-    <h2>Estimate Requests</h2>
+    <h2>Employee Settings</h2>
 
-    <form method="GET" action="{{ url_for('estimateManager.search') }}" class="search-form">
-      <input type="text" name="query" value="{{ searchQuery }}" placeholder="Search for cases..." required>
-      <button type="submit">Search</button>
+    <ul>
+      <li><a href="/resetUsername">Reset Username</a></li>
+      <li><a href="/resetPassword">Reset Password</a></li>
+      <li><a href="/resetEmail">Reset Email</a></li>
+    </ul>
+
+    <p>{{ status_message }}</p>
+
+    <form method="POST" action="/emailList">
+      <button type="submit">{{ button_label }}</button>
     </form>
-
-    {% if searchResults %}
-      <h3>Search Results for "{{ searchQuery }}"</h3>
-      <div class="requests">
-        {% for request in searchResults %}
-          {{ request | safe }}
-        {% endfor %}
-      </div>
-    {% elif searchQuery %}
-      <p>No results found for "{{ searchQuery }}".</p>
-    {% endif %}
-
-    <a href="/employeePortal" class="return-link">Return to Portal</a>
+      <a href="/employeePortal" class="return-link">Return to Portal</a>
   </div>
 </body>
 </html>

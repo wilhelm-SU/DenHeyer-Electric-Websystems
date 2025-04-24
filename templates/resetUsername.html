@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reset Username</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <style>
+    body {
+      font-family: 'Kanit', sans-serif;
+      background-color: #e0e9ff;
+      background-image: url("https://www.transparenttextures.com/patterns/lined-paper-2.png");
+      background-repeat: repeat;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page-section {
+      margin: 14vh auto;
+      padding: 4vh 4vw;
+      max-width: 50vw;
+      background-color: #f8f9fa;
+      border-radius: 1.5vw;
+      box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 2.5vw;
+      color: #2C4FA0;
+      margin-bottom: 2vh;
+    }
+
+    label {
+      font-size: 1.2vw;
+      display: block;
+      margin: 2vh 0 1vh;
+      text-align: left;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 1vh;
+      font-size: 1.2vw;
+      border-radius: 0.5vw;
+      border: 1px solid #ccc;
+    }
+
+    input[type="submit"] {
+      background-color: #2C4FA0;
+      color: white;
+      padding: 1vh 2vw;
+      border: none;
+      border-radius: 1vw;
+      font-size: 1.2vw;
+      cursor: pointer;
+      margin-top: 3vh;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #1d3671;
+    }
+
+    .return-link {
+      display: block;
+      text-align: center;
+      margin-top: 3vh;
+      font-size: 1.2vw;
+      color: #2C4FA0;
+      text-decoration: none;
+    }
+
+    .return-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-section">
+    <h2>Reset Your Username</h2>
+    <form method="POST">
+      <label for="newUsername1">New Username:</label>
+      <input type="text" id="newUsername1" name="newUsername1" required>
+
+      <label for="newUsername2">Confirm New Username:</label>
+      <input type="text" id="newUsername2" name="newUsername2" required>
+
+      <input type="submit" value="Submit">
+    </form>
+
+    <a href="/" class="return-link">Return</a>
+  </div>
+
+</body>
+</html>

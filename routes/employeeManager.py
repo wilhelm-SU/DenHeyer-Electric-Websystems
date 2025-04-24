@@ -13,9 +13,6 @@ def employeeManager():
         if request.method == 'POST':
             password = request.form.get('password')
 
-            if not password:
-                return "Must enter a password"
-
             connect = connect_to_db()
             cursor = connect.cursor()
 
@@ -35,14 +32,8 @@ def employeeManager():
                 cursor.close()
                 connect.close()
 
-        return """
-        <form method="POST">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br><br>
-            <input type="submit" value="Submit">
-            <a href="/employeePortal">Return</a>
-        </form>
-        """
+        return render_template('verifyPassword.html')
+
 
     else:
         try:
@@ -64,12 +55,7 @@ def employeeManager():
                 </form>
                 """ for row in employeeData])
 
-            return f'''<h2>Welcome to the employee manager</h2>
-                   {formattedEmployeeData}
-                   <br><br>
-                   <a href="/addUser">Add New User</a>
-                   <br>
-                   <a href="/employeePortal">Return</a>''', 200
+            return render_template("employeeManager.html", employeeData=employeeData)
 
         except Exception as e:
             return jsonify({'Error': str(e)})
@@ -120,21 +106,7 @@ def addUser():
             except Exception as e:
                 print(f"Error closing connection: {e}")
 
-    return '''<form method="POST" action="/addUser">
-              <label for="name">Full Name:</label><br>
-              <input type="text" id="name" name="name" required><br><br>
-            
-              <label for="username">Username:</label><br>
-              <input type="text" id="username" name="username" required><br><br>
-            
-              <label for="email">Email:</label><br>
-              <input type="email" id="email" name="email" required><br><br>
-            
-              <label for="password">Password:</label><br>
-              <input type="password" id="password" name="password" required><br><br>
-            
-              <button type="submit">Submit</button>
-            </form>'''
+    return render_template('addNewUser.html')
 
 @employeeManagerBP.route('/removeUser/<int:primaryKey>', methods=['POST'])
 def removeUser(primaryKey):

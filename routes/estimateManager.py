@@ -3,9 +3,9 @@ from databaseModule import connect_to_db
 
 estimateManagerBP = Blueprint('estimateManager', __name__)
 
-@estimateManagerBP.route('/estimateManager', methods=['GET', 'POST'])
-def estimateManager():
-    if not session.get('loggedIn'):  # extremely important as this prevents non authorized users from accessing pages by simply writing in url
+@estimateManagerBP.route('/estimateManager/open', methods=['GET', 'POST'])
+def estimateManagerOpen():
+    if not session.get('loggedIn'):
         return redirect(url_for('employee.employeeLogin'))
 
     try:
@@ -14,15 +14,9 @@ def estimateManager():
         cursor.execute('SELECT "NAME", "PHONE", "EMAIL", "DATE", "DESCRIPTION", "ADDRESS", "CITY", "ZIP_CODE", "PRIMARY_KEY", "HANDLED" FROM "ESTIMATES"')
         requestData = cursor.fetchall()
 
-        print("Query executed successfully")
-
         open_requests = []
-        closed_requests = []
-
         for row in requestData:
-        # Handle conditional form logic outside the main f-string
-            markHandledForm = ''
-            if not row[9]:
+            if not row[9]:  # HANDLED is False (open)
                 markHandledForm = f'''
                     <form method="POST" action="/markHandled" onsubmit="return confirm('Are you sure you want to mark this estimate as handled?');" style="display:inline;">
                         <input type="hidden" name="request_id" value="{row[8]}">
@@ -30,42 +24,70 @@ def estimateManager():
                     </form>
                 '''
 
-            formattedRequest = f'''
-                <div class="request-item">
-                    <strong>Request ID:</strong> {row[8]}<br>
-                    <strong>Date:</strong> {row[3]}<br>
-                    <strong>Name:</strong> {row[0]}<br>
-                    <strong>Phone:</strong> {row[1]}<br>
-                    <strong>Email:</strong> {row[2]}<br>
-                    <strong>Address:</strong> {row[5]}, {row[6]}, {row[7]}<br>
-                    <strong>Description:</strong> {row[4]}<br>
-                    {markHandledForm}
-                    <form method="POST" action="/deleteEstimate/" onsubmit="return confirm('Are you sure you want to delete this estimate?');" style="display:inline;">
-                    <input type="hidden" name="request_id" value="{row[8]}">
-                    <button type="submit">Delete</button>
-                    </form>
-                </div>
-        '''
-
-            if row[9]:
-                closed_requests.append(formattedRequest)
-            else:
+                formattedRequest = f'''
+                    <div class="request-item">
+                        <strong>Request ID:</strong> {row[8]}<br>
+                        <strong>Date:</strong> {row[3]}<br>
+                        <strong>Name:</strong> {row[0]}<br>
+                        <strong>Phone:</strong> {row[1]}<br>
+                        <strong>Email:</strong> {row[2]}<br>
+                        <strong>Address:</strong> {row[5]}, {row[6]}, {row[7]}<br>
+                        <strong>Description:</strong> {row[4]}<br>
+                        {markHandledForm}
+                        <form method="POST" action="/deleteEstimate/" onsubmit="return confirm('Are you sure you want to delete this estimate?');" style="display:inline;">
+                            <input type="hidden" name="request_id" value="{row[8]}">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
+                '''
                 open_requests.append(formattedRequest)
 
-        return render_template("estimateManager.html", open_requests=open_requests, closed_requests=closed_requests)
+        return render_template("estimateManagerOpen.html", open_requests=open_requests)
 
     except Exception as e:
         return jsonify({'Error': str(e)})
-
     finally:
-        try:
-            if cursor:
-                cursor.close()
-            if connect:
-                connect.close()
-        except Exception as e:
-            # Optionally log any errors related to closing
-            print(f"Error closing connection: {e}")
+        if cursor: cursor.close()
+        if connect: connect.close()
+
+@estimateManagerBP.route('/estimateManager/closed', methods=['GET', 'POST'])
+def estimateManagerClosed():
+    if not session.get('loggedIn'):
+        return redirect(url_for('employee.employeeLogin'))
+
+    try:
+        connect = connect_to_db()
+        cursor = connect.cursor()
+        cursor.execute('SELECT "NAME", "PHONE", "EMAIL", "DATE", "DESCRIPTION", "ADDRESS", "CITY", "ZIP_CODE", "PRIMARY_KEY", "HANDLED" FROM "ESTIMATES"')
+        requestData = cursor.fetchall()
+
+        closed_requests = []
+        for row in requestData:
+            if row[9]:  # HANDLED is True (closed)
+                formattedRequest = f'''
+                    <div class="request-item">
+                        <strong>Request ID:</strong> {row[8]}<br>
+                        <strong>Date:</strong> {row[3]}<br>
+                        <strong>Name:</strong> {row[0]}<br>
+                        <strong>Phone:</strong> {row[1]}<br>
+                        <strong>Email:</strong> {row[2]}<br>
+                        <strong>Address:</strong> {row[5]}, {row[6]}, {row[7]}<br>
+                        <strong>Description:</strong> {row[4]}<br>
+                        <form method="POST" action="/deleteEstimate/" onsubmit="return confirm('Are you sure you want to delete this estimate?');" style="display:inline;">
+                            <input type="hidden" name="request_id" value="{row[8]}">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
+                '''
+                closed_requests.append(formattedRequest)
+
+        return render_template("estimateManagerClosed.html", closed_requests=closed_requests)
+
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+    finally:
+        if cursor: cursor.close()
+        if connect: connect.close()
 
 @estimateManagerBP.route('/markHandled/', methods=['POST'])
 def markHandled():
@@ -78,7 +100,7 @@ def markHandled():
         cursor = connect.cursor()
         cursor.execute('UPDATE "ESTIMATES" SET "HANDLED" = TRUE WHERE "PRIMARY_KEY" = %s', (request_id,))
         connect.commit()
-        return redirect(url_for('estimateManager.estimateManager'))
+        return redirect(url_for('estimateManager.estimateManagerOpen'))
 
     except Exception as e:
         return jsonify({'Error': str(e)})
@@ -102,7 +124,7 @@ def deleteEstimate():
         cursor = connect.cursor()
         cursor.execute('DELETE FROM "ESTIMATES" WHERE "PRIMARY_KEY" = %s', (request_id,))
         connect.commit()
-        return redirect(url_for('estimateManager.estimateManager'))
+        return redirect(url_for('estimateManager.estimateManagerOpen'))
 
     except Exception as e:
         return jsonify({'Error': str(e)})
@@ -161,7 +183,6 @@ def search():
                     {markHandledForm}
                 </div>
             '''
-
 
             searchResults.append(formattedRequest)
 

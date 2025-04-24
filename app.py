@@ -1,11 +1,6 @@
-from urllib import request
-from flask import Flask, request, render_template, session, redirect, url_for, jsonify, render_template_string
-import psycopg2
+from flask import Flask
 import pytz
-import base64
-from markupsafe import escape #escape is extremely important, must be used on all user submitted arguments to prevent malicious actions
 from datetime import datetime
-from mysql.connector import cursor
 
 #[written by Connor] - this is how to switch between master and main branch in VScode:
 #  for bringing them local        git checkout -b master origin/master
@@ -23,9 +18,6 @@ app.secret_key = '<KEY>' #placeholder we need to make that key hard to guess and
 eastern = pytz.timezone('US/Eastern')
 easternTime = datetime.now(eastern)
 currentTime = easternTime.strftime('%Y-%m-%d %H:%M:%S')
-
-#Connect To Database
-from databaseModule import connect_to_db
 
 #HOME Route
 from routes.home import (homeBP)

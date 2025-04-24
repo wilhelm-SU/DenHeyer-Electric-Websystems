@@ -38,10 +38,7 @@ def requestEstimate():
 
             sendEstimateRequestEmail(requestData)
 
-            return '''
-                Thank you for submitting an estimate request, a DenHeyer Electric associate will contact you within your allotted times<br>
-                <a href="/">Return Home</a>
-                '''
+            return redirect(url_for('home.home'))
 
         except Exception as e:
             return jsonify({'Error': str(e)})

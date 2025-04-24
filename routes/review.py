@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, jsonify
+from flask import Blueprint, request, render_template, jsonify, redirect, url_for
 from databaseModule import connect_to_db  # Import the DB connection function
 from app import currentTime
 
@@ -87,10 +87,7 @@ def writeAReview():
                            (name, email, review, date))
             connect.commit()
 
-            return '''
-            Thanks for your review!<br>
-            <a href="/">Return</a>
-            '''
+            return redirect(url_for('home.home'))
 
         except Exception as e:
             return jsonify({'Error': str(e)})

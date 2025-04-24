@@ -9,6 +9,15 @@ def reviewManagerPublic():
     if not session.get('loggedIn'):
         return redirect(url_for('employee.employeeLogin'))
 
+    # Define the number of reviews per page
+    reviews_per_page = 5
+
+    # Get the page number from the URL (default to 1 if not provided)
+    page = request.args.get('page', 1, type=int)
+
+    # Calculate the offset for the SQL query
+    offset = (page - 1) * reviews_per_page
+
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
@@ -28,7 +37,19 @@ def reviewManagerPublic():
             """ for row in reviewData if row[4]
         ]
 
-        return render_template('reviewManagerPublic.html', formatted_reviews_public="<br><br>".join(public_reviews))
+        # Get the total number of reviews to calculate pagination
+        cursor.execute('SELECT COUNT(*) FROM "REVIEWS" WHERE "PUBLIC" = TRUE')
+        total_reviews = cursor.fetchone()[0]
+
+        # Calculate the total number of pages
+        total_pages = (total_reviews + reviews_per_page - 1) // reviews_per_page
+
+        # Generate pagination links
+        pagination_links = ""
+        for p in range(1, total_pages + 1):
+            pagination_links += f'<a href="/reviews?page={p}">{p}</a> '
+
+        return render_template('reviewManagerPublic.html', formatted_reviews_public="<br><br>".join(public_reviews), pagination_links=pagination_links)
 
     except Exception as e:
         return jsonify({'Error': str(e)})
@@ -42,6 +63,15 @@ def reviewManagerPublic():
 def reviewManagerPrivate():
     if not session.get('loggedIn'):
         return redirect(url_for('employee.employeeLogin'))
+
+    # Define the number of reviews per page
+    reviews_per_page = 5
+
+    # Get the page number from the URL (default to 1 if not provided)
+    page = request.args.get('page', 1, type=int)
+
+    # Calculate the offset for the SQL query
+    offset = (page - 1) * reviews_per_page
 
     try:
         connect = connect_to_db()
@@ -62,7 +92,19 @@ def reviewManagerPrivate():
             """ for row in reviewData if not row[4]
         ]
 
-        return render_template('reviewManagerPrivate.html', formatted_reviews_private="<br><br>".join(private_reviews))
+        # Get the total number of reviews to calculate pagination
+        cursor.execute('SELECT COUNT(*) FROM "REVIEWS" WHERE "PUBLIC" = TRUE')
+        total_reviews = cursor.fetchone()[0]
+
+        # Calculate the total number of pages
+        total_pages = (total_reviews + reviews_per_page - 1) // reviews_per_page
+
+        # Generate pagination links
+        pagination_links = ""
+        for p in range(1, total_pages + 1):
+            pagination_links += f'<a href="/reviews?page={p}">{p}</a> '
+
+        return render_template('reviewManagerPrivate.html', formatted_reviews_private="<br><br>".join(private_reviews), pagination_links=pagination_links)
 
     except Exception as e:
         return jsonify({'Error': str(e)})
@@ -88,5 +130,10 @@ def togglePublic(key):
 
     cursor.execute(f'UPDATE "{table}" SET "PUBLIC" = %s WHERE "PRIMARY_KEY" = %s', (newStatus, key))
     connect.commit()
-
-    return redirect(url_for('employee.reviewManager' if table == 'REVIEWS' else 'employee.galleryManager'))
+    if table == 'REVIEWS':
+        if newStatus == True:
+            return redirect(url_for('reviewManager.reviewManagerPublic' if table == 'REVIEWS' else 'employee.galleryManager'))
+        else:
+            return redirect(url_for('reviewManager.reviewManagerPrivate'))
+    else:
+        return redirect(url_for('employee.galleryManage'))

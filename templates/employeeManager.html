@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Employee Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Kanit', sans-serif;
+      background-color: #e0e9ff;
+      background-image: url("https://www.transparenttextures.com/patterns/lined-paper-2.png");
+      background-repeat: repeat;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page-section {
+      margin: 14vh auto;
+      padding: 4vh 4vw;
+      max-width: 70vw;
+      background-color: #f8f9fa;
+      border-radius: 1.5vw;
+      box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      font-size: 2.5vw;
+      color: #2C4FA0;
+      text-align: center;
+      margin-bottom: 4vh;
+    }
+
+    .employee-entry {
+      font-size: 1.2vw;
+      padding: 1vh 0;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .employee-entry strong {
+      font-weight: bold;
+    }
+
+    form {
+      display: inline;
+    }
+
+    input[type="submit"] {
+      background-color: #2C4FA0;
+      color: white;
+      border: none;
+      border-radius: 0.5vw;
+      padding: 0.7vh 2vw;
+      font-size: 1vw;
+      cursor: pointer;
+      margin-left: 1vw;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #1d3671;
+    }
+
+    .links {
+      text-align: center;
+      margin-top: 3vh;
+    }
+
+    .links a {
+      font-size: 1.2vw;
+      color: #2C4FA0;
+      text-decoration: none;
+      display: block;
+      margin-top: 1.5vh;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-section">
+    <h2>Welcome to the Employee Manager</h2>
+
+    {% for row in employeeData %}
+    <div class="employee-entry">
+      <strong>Name:</strong> {{ row[0] }}
+      <strong> | Username:</strong> {{ row[1] }}
+      <strong> | Email:</strong> {{ row[2] }}
+      <strong> | Admin:</strong> {{ row[3] }}
+      <strong> | ID:</strong> {{ row[4] }}
+      <form action="/removeUser/{{ row[4] }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this user? This action cannot be undone.')">
+        <input type="submit" value="Remove User">
+      </form>
+    </div>
+    {% endfor %}
+
+    <div class="links">
+      <a href="/addUser">Add New User</a>
+      <a href="/employeePortal">Return to Portal</a>
+    </div>
+  </div>
+
+</body>
+</html>
