@@ -1,94 +1,159 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>DenHeyer Electric</title>
+  <title>DenHeyer Electric - Submit Review</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
   <style>
     body {
-      background-color: Azure;
-      font-family: Arial, sans-serif;
+      background-color: #e0e9ff;
+      background-image: url("https://www.transparenttextures.com/patterns/lined-paper-2.png");
+      background-repeat: repeat;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+      font-family: 'Kanit', sans-serif;
     }
-    h1 {
+
+    .header-bar {
+      background-color: #2C4FA0;
+      padding: -2vh 0;
       text-align: center;
-      color: LightGray;
-      font-size: 80px;
-      background-color: SteelBlue;
-      padding: 20px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1;
     }
+
+    .header-bar h1 {
+      margin: 0;
+    }
+
+    .home-link {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .denheyer {
+      font-family: 'Anton', sans-serif;
+      font-size: 5vw;
+      letter-spacing: .2vw;
+      color: #ffffff;
+    }
+    .electric {
+      font-family: 'Teko', sans-serif;
+      font-size: 5vw;
+      letter-spacing: .2vw;
+      color: #ffffff;
+    }
+
+    .home-section {
+      margin: 12vh auto;
+      padding: 5vh 2vw;
+      max-width: 50vw;
+      background-color: #f8f9fa;
+      border-radius: 1.5vw;
+      box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .home-section h2 {
+      font-size: 2.5vw;
+      color: #2C4FA0;
+      margin-bottom: 3vh;
+    }
+
     form {
-      width: 80%;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 20px;
-    }
-    .form-group {
-      width: 45%;  /* Make the form elements take up half the width */
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 2vh;
     }
-    .form-group input, .form-group textarea {
-      padding: 10px;
-      border: 2px solid #ccc;
-      border-radius: 5px;
-      width: 100%;
+
+    form label {
+      font-weight: 700;
+      font-size: 1.2vw;
+      text-align: left;
+      margin-left: 1vw;
     }
-    .form-group textarea {
-      height: 150px;
-      resize: vertical;  /* Allow vertical resizing of the textarea */
+
+    form input[type="text"],
+    form input[type="email"],
+    form textarea {
+      padding: 1vh 1vw;
+      font-size: 1.2vw;
+      border: 1px solid #2C4FA0;
+      border-radius: 0.5vw;
+      width: 90%;
+      max-width: 40vw;
+      margin: 0 auto;
+      font-family: 'Kanit', sans-serif;
     }
-    input[type="submit"] {
-      width: 100%;
-      background-color: SteelBlue;
+
+    form textarea {
+      height: 20vh;
+      resize: vertical;
+    }
+
+    form input[type="submit"] {
+      margin-top: 2vh;
+      padding: 1vh 2vw;
+      font-size: 1.2vw;
+      background-color: #2C4FA0;
       color: white;
-      padding: 15px;
       border: none;
-      border-radius: 5px;
+      border-radius: 1vw;
       cursor: pointer;
-      font-size: 16px;
     }
-    input[type="submit"]:hover {
-      background-color: DarkSlateBlue;
+
+    form input[type="submit"]:hover {
+      background-color: #1d3671;
     }
-    a {
+
+    .return-link {
       display: block;
-      text-align: center;
-      margin-top: 20px;
-      font-size: 16px;
-      color: SteelBlue;
+      margin-top: .3vh;
+      color: #2C4FA0;
+      font-size: 1.2vw;
       text-decoration: none;
     }
-    a:hover {
+    .return-link:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
-<h1>DenHeyer Electric</h1>
-
-<form method="POST">
-  <div class="form-group">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" maxlength="50" required>
+   <div class="header-bar">
+    <h1>
+      <a href="/" class="home-link">
+        <span class="denheyer">DenHeyer </span>
+        <span class="electric">ELECTRIC</span>
+      </a>
+    </h1>
   </div>
 
-  <div class="form-group">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" maxlength="75" required>
+  <div class="home-section" id="submit-review">
+    <h2>Leave a Review</h2>
+    <form method="POST">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" maxlength="50" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" maxlength="75" required>
+
+      <label for="review">Review:</label>
+      <textarea id="review" name="review" maxlength="750" required></textarea>
+
+      <input type="submit" value="Submit Review">
+      <a href="/" class="return-link">Return</a>
+    </form>
   </div>
-
-  <div class="form-group" style="width: 100%;"> <!-- Make the review textarea span the full width -->
-    <label for="review">Review:</label>
-    <textarea id="review" name="review" maxlength="750" required></textarea>
-  </div>
-
-  <input type="submit" value="Submit Review">
-
-  <a href="/">Return</a>
-</form>
 
 </body>
 </html>
