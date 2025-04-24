@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DenHeyer Electric - Employee Portal</title>
+  <title>DenHeyer Electric - Reviews</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Google Fonts -->
@@ -23,8 +23,8 @@
 
     .header-bar {
       background-color: #2C4FA0;
-      padding: -2vh 0;
       text-align: center;
+      padding: -2vh 0;
       position: absolute;
       top: 0;
       left: 0;
@@ -55,44 +55,43 @@
       color: #ffffff;
     }
 
-    .portal-section {
-      margin: 12vh auto;
-      padding: 5vh 2vw;
-      max-width: 50vw;
+    .reviews-container {
       background-color: #f8f9fa;
+      padding: 5vh 3vw;
       border-radius: 1.5vw;
       box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
-      text-align: center;
+      max-width: 60vw;
+      margin: 12vh auto;
+      font-size: 1.2vw;
     }
 
-    .portal-section h2 {
-      font-size: 2.5vw;
+    .reviews-container h2 {
       color: #2C4FA0;
-      margin-bottom: 4vh;
+      text-align: center;
+      font-size: 2.4vw;
+      text-decoration: underline;
     }
 
-    .portal-links {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 2vh;
-      justify-items: center;
+    .pagination {
+      margin-top: 2vh;
       text-align: center;
     }
 
-    .portal-links a {
-      display: block;
-      background-color: #2C4FA0;
-      color: white;
-      padding: 1.5vh 2vw;
-      border-radius: 1vw;
-      text-decoration: none;
-      font-size: 1.3vw;
-      font-weight: bold;
-      transition: background-color 0.3s;
+    .actions {
+      margin-top: 4vh;
+      text-align: center;
     }
 
-    .portal-links a:hover {
-      background-color: #1d3671;
+    .actions a {
+      display: inline-block;
+      margin: 0 1vw;
+      color: #2C4FA0;
+      font-size: 1.2vw;
+      text-decoration: none;
+    }
+
+    .actions a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -108,16 +107,18 @@
     </h1>
   </div>
 
-  <!-- Employee Portal Content -->
-  <div class="portal-section">
-    <h2>Welcome to the Employee Portal, {{ username }}</h2>
-    <div class="portal-links">
-      <a href="/reviewManager/public">Review Manager</a>
-      <a href="/estimateManager">Estimate Manager</a>
-      <a href="/galleryManager">Gallery Manager</a>
-      <a href="/employeeManager">User Manager</a>
-      <a href="/employeeSettings">Account Settings</a>
-      <a href="/logout">Logout</a>
+  <!-- Reviews Section -->
+  <div class="reviews-container">
+    <h2>Welcome to the Reviews</h2>
+    {{ formatted_reviews | safe }}
+
+    <div class="pagination">
+      {{ pagination_links | safe }}
+    </div>
+
+    <div class="actions">
+      <a href="/writeAReview">Write a Review</a>
+      <a href="/">Return to Home</a>
     </div>
   </div>
 

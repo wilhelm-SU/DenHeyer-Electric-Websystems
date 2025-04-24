@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for, session, jsonify
+from flask import Blueprint, request, redirect, url_for, session
 from databaseModule import connect_to_db
 
 employeeSettingsBP = Blueprint('employeeSettings', __name__)
@@ -19,7 +19,7 @@ def employeeSettings():
         subscribed = cursor.fetchone()[0]  # should return True or False
 
         button_label = "Unsubscribe from Emails" if subscribed else "Subscribe to Emails"
-        status_message = "You are currently subscribed to emails." if subscribed else "You are not subscribed to emails."
+        status_message = "You are currently subscribed to estimate emails." if subscribed else "You are not subscribed to estimate emails."
 
         return f'''
             <h2>Employee Settings</h2>

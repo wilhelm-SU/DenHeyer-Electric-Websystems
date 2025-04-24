@@ -139,6 +139,13 @@
   <!-- Employee Login Form -->
   <div class="home-section" id="employee-login">
     <h2>Employee Login</h2>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <script>
+          alert("{{ messages[0] }}");
+        </script>
+      {% endif %}
+    {% endwith %}
     <form method="POST" action="/employeeLogin">
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" required>

@@ -35,7 +35,7 @@ def reviews():
             formatted_reviews += f'''
             <div class="review-card">
                 <h3>{row[0]}</h3>
-                <p><strong>Description:</strong> {row[1]}</p>
+                <p><strong>Review:</strong> {row[1]}</p>
                 <p><strong>Date:</strong> {row[2]}</p>
             </div>
             <hr>
@@ -53,20 +53,8 @@ def reviews():
         for p in range(1, total_pages + 1):
             pagination_links += f'<a href="/reviews?page={p}">{p}</a> '
 
-        return f'''
-        <div class="reviews-container">
-            <h2>Welcome to the Reviews</h2>
-            {formatted_reviews}
-            <div class="pagination">
-                {pagination_links}
-            </div>
-            <br>
-            <div class="actions">
-                <a href="/writeAReview">Write a Review</a><br>
-                <a href="/">Return to Home</a>
-            </div>
-        </div>
-        ''', 200
+        return render_template('reviews.html', formatted_reviews=formatted_reviews, pagination_links=pagination_links)
+
     except Exception as e:
         print(f"Error: {e}")
         return "An error occurred while fetching reviews. Please try again later.", 500

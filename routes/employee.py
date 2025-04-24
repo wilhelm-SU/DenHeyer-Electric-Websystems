@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for, session, jsonify
+from flask import Blueprint, request, render_template, redirect, url_for, session, jsonify, flash
 from databaseModule import connect_to_db
 employeeBP = Blueprint('employee', __name__)
 
@@ -26,8 +26,8 @@ def employeeLogin():
                 session['ID'] = employee[0]
                 return redirect(url_for('employee.employeePortal'))  # Redirect to the employee portal
             else:
-                return ('''Invalid credentials. Please try again.<br>
-                        "<a href="/employeeLogin">Return</a><br>''', 401)
+                flash("Invalid credentials. Please try again.")
+                return redirect(url_for('employee.employeeLogin'))
 
         except Exception as e:
             return jsonify({'Error': str(e)})
