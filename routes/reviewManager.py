@@ -136,4 +136,4 @@ def togglePublic(key):
         else:
             return redirect(url_for('reviewManager.reviewManagerPrivate'))
     else:
-        return redirect(url_for('employee.galleryManage'))
+        return redirect(url_for('galleryManager.galleryManager'))

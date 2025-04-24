@@ -76,15 +76,7 @@ def galleryManager():
             """ for row in image_list
         ]) + '</div>'
 
-        return f'''
-            <h2>Welcome to the gallery manager</h2>
-            Here you can accept or reject images from being displayed
-            in the public gallery.<br><br>
-            <a href="/insertImagePage">Add New Image</a>
-            {formatted_gallery}
-            <br><br>
-            <a href="/employeePortal">Return</a>
-        ''', 200
+        return render_template('galleryManager.html', image_list=image_list)
 
     finally:
         try:

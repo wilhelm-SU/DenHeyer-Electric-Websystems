@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DenHeyer Electric - Gallery Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Kanit', sans-serif;
+      background-color: #e0e9ff;
+      background-image: url("https://www.transparenttextures.com/patterns/lined-paper-2.png");
+      background-repeat: repeat;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header-bar {
+      background-color: #2C4FA0;
+      padding: 1vh 0;
+      text-align: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .header-bar h1 {
+      margin: 0;
+    }
+
+    .home-link {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .denheyer {
+      font-family: 'Anton', sans-serif;
+      font-size: 5vw;
+      letter-spacing: .2vw;
+      color: #ffffff;
+    }
+
+    .electric {
+      font-family: 'Teko', sans-serif;
+      font-size: 5vw;
+      letter-spacing: .2vw;
+      color: #ffffff;
+    }
+
+    .page-section {
+      margin: 13vh auto;
+      padding: 4vh 2vw;
+      max-width: 85vw;
+      background-color: #f8f9fa;
+      border-radius: 1.5vw;
+      box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .image-card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      background-color: #f9f9f9;
+    }
+
+    .image-card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #2C4FA0;
+      color: white;
+      padding: 0.8vh 2vw;
+      border: none;
+      border-radius: 0.5vw;
+      cursor: pointer;
+      font-size: 1vw;
+    }
+
+    button:hover {
+      background-color: #1d3671;
+    }
+
+    .link-button {
+      display: inline-block;
+      margin: 2vh 1vw;
+      font-size: 1.2vw;
+      text-decoration: none;
+      color: #2C4FA0;
+    }
+
+    .link-button:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    <h1>
+      <a href="/" class="home-link">
+        <span class="denheyer">DenHeyer </span>
+        <span class="electric">ELECTRIC</span>
+      </a>
+    </h1>
+  </div>
+
+  <div class="page-section">
+    <h2>Welcome to the Gallery Manager</h2>
+    <p>Here you can accept or reject images from being displayed in the public gallery.</p>
+    <a href="/insertImagePage" class="link-button">Add New Image</a>
+
+    <div class="gallery-grid">
+      {% for row in image_list %}
+      <div class="image-card">
+        <img src="data:image/jpeg;base64,{{ row[1] }}" alt="Gallery Image">
+        <p><strong>Description:</strong> {{ row[2] }}</p>
+        <p><strong>Publicly displayed:</strong> {{ row[3] }}</p>
+
+        <form action="/togglePublic/{{ row[0] }}" method="POST">
+          <input type="hidden" name="table" value="GALLERY">
+          <button type="submit">{% if row[3] %}Set to Private{% else %}Set to Public{% endif %}</button>
+        </form>
+
+        <form action="/deleteImage/{{ row[0] }}" method="POST" style="display:inline; margin-left: 10px;">
+          <input type="hidden" name="table" value="GALLERY">
+          <button type="submit" onclick="return confirm('Are you sure you want to delete this image?');">
+            Delete
+          </button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+
+    <br>
+    <a href="/employeePortal" class="link-button">Return to Portal</a>
+  </div>
+</body>
+</html>

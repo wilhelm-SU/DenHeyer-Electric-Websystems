@@ -22,10 +22,7 @@ def deleteImage(primary_key):
         if connect:
             connect.close()
 
-    return redirect(url_for('employee.galleryManager'))  # Redirect to gallery manager after deletion
-
-
-
+    return redirect(url_for('galleryManager.galleryManager'))  # Redirect to gallery manager after deletion
 
 @galleryManagerManipulationBP.route('/insertImage', methods=['POST'])
 def insertImage():
@@ -61,30 +58,13 @@ def insertImage():
         if connect:
             connect.close()
 
-    return redirect(url_for('employee.galleryManager'))
-
-
-
+    return redirect(url_for('galleryManager.galleryManager'))
 
 @galleryManagerManipulationBP.route('/insertImagePage', methods=['GET'])
 def insertImagePage():
     if not session.get('loggedIn'):
         return redirect(url_for('employee.employeeLogin'))
-    return '''
-        <h2>Upload a New Image</h2>
-        <form action="/insertImage" method="POST" enctype="multipart/form-data">
-            <label>Description:</label><br>
-            <input type="text" name="description"><br><br>
 
-            <label>Public?</label>
-            <input type="checkbox" name="public"><br><br>
-
-            <label>Choose an image to upload:</label>
-            <input type="file" name="image" accept="image/*" required><br><br>
-
-            <button type="submit">Upload</button>
-        </form>
-        <br><a href="/employee/galleryManager">Back to Gallery Manager</a>
-    '''
+    return render_template('uploadImage.html')
 
 
