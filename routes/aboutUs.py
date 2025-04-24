@@ -5,4 +5,4 @@ aboutUsBP = Blueprint('aboutUsBP', __name__)
 # About Us page, which can be filled with personal/informative information about the company and its history
 @aboutUsBP.route('/aboutUs')
 def aboutUs():
-    return "This is the About Us page, this will be filled once DenHeyer provides us with the information they'd like here"
+    return render_template('aboutUs.html')

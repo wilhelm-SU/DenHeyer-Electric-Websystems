@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DenHeyer Electric - Reviews</title>
+  <title>DenHeyer Electric - About Us</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Google Fonts -->
@@ -23,13 +23,13 @@
 
     .header-bar {
       background-color: #2C4FA0;
+      padding: 1vh 0;
       text-align: center;
-      padding: -2vh 0;
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      z-index: 1;
+      z-index: 1000;
     }
 
     .header-bar h1 {
@@ -55,49 +55,36 @@
       color: #ffffff;
     }
 
-    .reviews-container {
+    .page-section {
+      margin: 13vh auto;
+      padding: 4vh 4vw;
+      max-width: 70vw;
       background-color: #f8f9fa;
-      padding: 5vh 3vw;
       border-radius: 1.5vw;
       box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
-      max-width: 60vw;
-      margin: 12vh auto;
-      font-size: 1.2vw;
+      text-align: center;
     }
 
-    .reviews-container h2 {
+    h2 {
+      font-size: 2.5vw;
       color: #2C4FA0;
-      text-align: center;
-      font-size: 2.4vw;
-      text-decoration: underline;
     }
 
-    .pagination {
-      margin-top: 2vh;
-      text-align: center;
-    }
-
-    .actions {
+    .return-link {
+      display: block;
       margin-top: 4vh;
-      text-align: center;
-    }
-
-    .actions a {
-      display: inline-block;
-      margin: 0 1vw;
-      color: #2C4FA0;
       font-size: 1.2vw;
+      color: #2C4FA0;
       text-decoration: none;
     }
 
-    .actions a:hover {
+    .return-link:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
-  <!-- Header with split-font title -->
   <div class="header-bar">
     <h1>
       <a href="/" class="home-link">
@@ -107,19 +94,11 @@
     </h1>
   </div>
 
-  <!-- Reviews Section -->
-  <div class="reviews-container">
-    <h2>Welcome to the Reviews</h2>
-    {{ formatted_reviews | safe }}
+  <div class="page-section">
+    <h2>About Us</h2>
+    <!-- Future content goes here -->
 
-    <div class="pagination">
-      {{ pagination_links | safe }}
-    </div>
-
-    <div class="actions">
-      <a href="/writeAReview">Write a Review</a>
-      <a href="/">Return</a>
-    </div>
+    <a href="/" class="return-link">Return to Home</a>
   </div>
 
 </body>

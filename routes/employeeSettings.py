@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, url_for, session, render_template
+from flask import Blueprint, request, redirect, url_for, session, render_template, flash
 from databaseModule import connect_to_db
 
 employeeSettingsBP = Blueprint('employeeSettings', __name__)
@@ -37,9 +37,6 @@ def resetPassword():
         if request.method == 'POST':
             password = request.form.get('password')
 
-            if not password:
-                return "Must enter a password"
-
             connect = connect_to_db()
             cursor = connect.cursor()
 
@@ -52,8 +49,8 @@ def resetPassword():
                     session['verified'] = True
                     return redirect(url_for('employeeSettings.resetPassword'))
                 else:
-                    return'''Invalid credentials. Please try again.<br>
-                    <a href="/resetPassword">Return</a>'''
+                    flash("Invalid credentials. Please try again.")
+                    return redirect(url_for('employeeSettings.resetPassword'))
 
             finally:
                 cursor.close()
@@ -67,14 +64,9 @@ def resetPassword():
             password1 = request.form.get('password1')
             password2 = request.form.get('password2')
 
-            if not password1 or not password2:
-                return '''Must enter password <br>
-                        <a href="/resetPassword">Return</a>'''
-
             if password1 != password2:
-                return """Passwords don't match <br>
-                        <a href="/resetPassword">Return</a>
-                        """
+                    flash("Passwords do not match. Please try again.")
+                    return redirect(url_for('employeeSettings.resetPassword'))
 
             connect = connect_to_db()
             cursor = connect.cursor()
@@ -102,9 +94,6 @@ def resetUsername():
         if request.method == 'POST':
             password = request.form.get('password')
 
-            if not password:
-                return "Must enter a password"
-
             connect = connect_to_db()
             cursor = connect.cursor()
 
@@ -117,8 +106,8 @@ def resetUsername():
                     session['verifiedUsernameChange'] = True
                     return redirect(url_for('employeeSettings.resetUsername'))
                 else:
-                    return'''Invalid credentials. Please try again.<br>
-                    <a href="/resetUsername">Return</a>'''
+                    flash("Invalid credentials. Please try again.")
+                    return redirect(url_for('employeeSettings.resetPassword'))
 
             finally:
                 cursor.close()
@@ -182,8 +171,8 @@ def resetEmail():
                     session['verifiedEmailChange'] = True
                     return redirect(url_for('employeeSettings.resetEmail'))
                 else:
-                    return'''Invalid credentials. Please try again.<br>
-                    <a href="/resetUsername">Return</a>'''
+                    flash("Invalid credentials. Please try again.")
+                    return redirect(url_for('employeeSettings.resetPassword'))
 
             finally:
                 cursor.close()
