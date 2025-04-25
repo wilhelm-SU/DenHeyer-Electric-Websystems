@@ -20,7 +20,7 @@
     .page-section {
       margin: 14vh auto;
       padding: 4vh 4vw;
-      max-width: 70vw;
+      max-width: 78vw;
       background-color: #f8f9fa;
       border-radius: 1.5vw;
       box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
@@ -47,7 +47,8 @@
       display: inline;
     }
 
-    input[type="submit"] {
+    input[type="submit"],
+    button {
       background-color: #2C4FA0;
       color: white;
       border: none;
@@ -58,7 +59,8 @@
       margin-left: 1vw;
     }
 
-    input[type="submit"]:hover {
+    input[type="submit"]:hover,
+    button:hover {
       background-color: #1d3671;
     }
 
@@ -95,6 +97,11 @@
       <form action="/removeUser/{{ row[4] }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this user? This action cannot be undone.')">
         <input type="submit" value="Remove User">
       </form>
+      <form action="/toggleAdmin/{{ row[4] }}" method="POST" style="display:inline;">
+        <button type="submit">
+          {% if row[3] %}Remove Admin{% else %}Make Admin{% endif %}
+        </button>
+      </form>
     </div>
     {% endfor %}
 
@@ -103,6 +110,14 @@
       <a href="/employeePortal">Return to Portal</a>
     </div>
   </div>
+
+  {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <script>
+          alert("{{ messages[0] }}");
+        </script>
+      {% endif %}
+    {% endwith %}
 
 </body>
 </html>

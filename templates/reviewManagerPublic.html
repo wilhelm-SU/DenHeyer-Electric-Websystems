@@ -67,21 +67,6 @@
       margin-bottom: 3vh;
     }
 
-    .pagination {
-      margin: 3vh 0;
-      font-size: 1.1vw;
-    }
-
-    .pagination a {
-      margin: 0 1vw;
-      color: #2C4FA0;
-      text-decoration: none;
-    }
-
-    .pagination a:hover {
-      text-decoration: underline;
-    }
-
     .nav-links {
       font-size: 1.2vw;
       margin-top: 3vh;
@@ -95,6 +80,37 @@
 
     .nav-links a:hover {
       text-decoration: underline;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 1vw;
+      margin-top: 4vh;
+      flex-wrap: wrap;
+    }
+
+    .pagination a,
+    .pagination strong {
+      padding: 0.6vh 1.2vw;
+      font-size: 1.2vw;
+      text-decoration: none;
+      color: #2C4FA0;
+      background-color: #ffffff;
+      border: 2px solid #2C4FA0;
+      border-radius: 0.5vw;
+      transition: background-color 0.3s;
+    }
+
+    .pagination a:hover {
+      background-color: #2C4FA0;
+      color: #ffffff;
+    }
+
+    .pagination strong {
+      background-color: #2C4FA0;
+      color: #ffffff;
+      border-color: #2C4FA0;
     }
   </style>
 </head>

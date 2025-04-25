@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for, session, jsonify
+from flask import Blueprint, request, render_template, redirect, url_for, session, jsonify, flash
 from databaseModule import connect_to_db
 
 employeeManagerBP = Blueprint('employeeManager', __name__)
@@ -25,8 +25,8 @@ def employeeManager():
                     session['verifiedAdministrator'] = True
                     return redirect(url_for('employeeManager.employeeManager'))
                 else:
-                    return'''Invalid credentials or you are not an authorized administrator.<br>
-                    <a href="/employeeManager">Return</a>'''
+                    flash("Invalid credentials. Please try again.")
+                    return redirect(url_for('employeeSettings.resetPassword'))
 
             finally:
                 cursor.close()
@@ -43,18 +43,6 @@ def employeeManager():
             cursor.execute('SELECT "EMPLOYEE_NAME", "EMPLOYEE_USERNAME", "EMPLOYEE_EMAIL", "ADMIN", "PRIMARY_KEY" FROM "EMPLOYEE_CREDENTIALS" ',)
             employeeData = cursor.fetchall()
 
-            formattedEmployeeData="<br><br>".join(
-                [f"""
-                <strong>Name:</strong> {row[0]}
-                <strong> | Username:</strong> {row[1]}
-                <strong> | Email:</strong> {row[2]}
-                <strong> | Admin:</strong> {row[3]}
-                <strong> | ID:</strong> {row[4]}<br>
-                <form action="/removeUser/{row[4]}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to remove this user? This action cannot be undone.')">
-                    <input type="submit" value="Remove User">
-                </form>
-                """ for row in employeeData])
-
             return render_template("employeeManager.html", employeeData=employeeData)
 
         except Exception as e:
@@ -67,7 +55,6 @@ def employeeManager():
                 if connect:
                     connect.close()
             except Exception as e:
-                # Optionally log any errors related to closing
                 print(f"Error closing connection: {e}")
 
 @employeeManagerBP.route('/addUser', methods=['GET', 'POST'])
@@ -130,11 +117,34 @@ def removeUser(primaryKey):
 
     return redirect(url_for('employeeManager.employeeManager'))
 
+@employeeManagerBP.route('/toggleAdmin/<int:primaryKey>', methods=['POST'])
+def toggleAdmin(primaryKey):
+    if 'verifiedAdministrator' not in session:
+        return redirect(url_for('employee.employeePortal'))
+
+    try:
+        connect = connect_to_db()
+        cursor = connect.cursor()
+
+        cursor.execute(''' UPDATE "EMPLOYEE_CREDENTIALS" SET "ADMIN" = NOT "ADMIN" WHERE "PRIMARY_KEY" = %s ''', (primaryKey,))
+        connect.commit()
+
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+
+    finally:
+        if cursor:
+            cursor.close()
+        if connect:
+            connect.close()
+
+    return redirect(url_for('employeeManager.employeeManager'))
+
 @employeeManagerBP.before_app_request
 def clearVerification():
     if 'verifiedAdministrator' not in session:
         return
-    if session.get('verifiedAdministrator') and request.endpoint == 'employeeManager.employeeManager' or request.endpoint == 'employeeManager.addUser' or request.endpoint == 'employeeManager.removeUser':
+    if session.get('verifiedAdministrator') and request.endpoint == 'employeeManager.employeeManager' or request.endpoint == 'employeeManager.addUser' or request.endpoint == 'employeeManager.removeUser' or request.endpoint == 'employeeManager.toggleAdmin':
         return
     else:
         session.pop('verifiedAdministrator')

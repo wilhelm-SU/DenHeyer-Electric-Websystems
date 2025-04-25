@@ -7,29 +7,21 @@ reviewBP = Blueprint('review', __name__)
 @reviewBP.route('/reviews', methods=['GET'])
 def reviews():
     try:
-        # Define the number of reviews per page
+
         reviews_per_page = 5
-
-        # Get the page number from the URL (default to 1 if not provided)
         page = request.args.get('page', 1, type=int)
-
-        # Calculate the offset for the SQL query
         offset = (page - 1) * reviews_per_page
 
-        # Connect to the database
         connect = connect_to_db()
         cursor = connect.cursor()
 
-        # Execute the query with LIMIT and OFFSET for pagination
         cursor.execute('SELECT "NAME", "DESCRIPTION", "DATE" FROM "REVIEWS" WHERE "PUBLIC" = TRUE LIMIT %s OFFSET %s', (reviews_per_page, offset))
         review_data = cursor.fetchall()
 
-        # Check if there are no reviews
         if not review_data:
             return '''No reviews available.<br>
                       <a href="/writeAReview">Write a review</a>'''
 
-        # Format reviews as templates
         formatted_reviews = ""
         for row in review_data:
             formatted_reviews += f'''
@@ -41,17 +33,16 @@ def reviews():
             <hr>
             '''
 
-        # Get the total number of reviews to calculate pagination
         cursor.execute('SELECT COUNT(*) FROM "REVIEWS" WHERE "PUBLIC" = TRUE')
+
         total_reviews = cursor.fetchone()[0]
-
-        # Calculate the total number of pages
         total_pages = (total_reviews + reviews_per_page - 1) // reviews_per_page
-
-        # Generate pagination links
         pagination_links = ""
         for p in range(1, total_pages + 1):
-            pagination_links += f'<a href="/reviews?page={p}">{p}</a> '
+            if p == page:
+                pagination_links += f"<strong>{p}</strong> "
+            else:
+                pagination_links += f'<a href="/reviews?page={p}">{p}</a> '
 
         return render_template('reviews.html', formatted_reviews=formatted_reviews, pagination_links=pagination_links)
 

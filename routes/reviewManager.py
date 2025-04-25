@@ -9,19 +9,14 @@ def reviewManagerPublic():
     if not session.get('loggedIn'):
         return redirect(url_for('employee.employeeLogin'))
 
-    # Define the number of reviews per page
     reviews_per_page = 5
-
-    # Get the page number from the URL (default to 1 if not provided)
     page = request.args.get('page', 1, type=int)
-
-    # Calculate the offset for the SQL query
     offset = (page - 1) * reviews_per_page
 
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
-        cursor.execute('SELECT "NAME", "DESCRIPTION", "EMAIL", "DATE", "PUBLIC", "PRIMARY_KEY" FROM "REVIEWS"')
+        cursor.execute('SELECT "NAME", "DESCRIPTION", "EMAIL", "DATE", "PUBLIC", "PRIMARY_KEY" FROM "REVIEWS" WHERE "PUBLIC" = TRUE ORDER BY "DATE" DESC LIMIT %s OFFSET %s' % (reviews_per_page, offset))
         reviewData = cursor.fetchall()
 
         public_reviews = [
@@ -34,7 +29,7 @@ def reviewManagerPublic():
             <form action="/togglePublic/{row[5]}" method="POST">
                 <button type="submit">Set to Private</button>
             </form>
-            """ for row in reviewData if row[4]
+            """ for row in reviewData
         ]
 
         # Get the total number of reviews to calculate pagination
@@ -47,7 +42,10 @@ def reviewManagerPublic():
         # Generate pagination links
         pagination_links = ""
         for p in range(1, total_pages + 1):
-            pagination_links += f'<a href="/reviews?page={p}">{p}</a> '
+            if p == page:
+                pagination_links += f"<strong>{p}</strong> "
+            else:
+                pagination_links += f'<a href="/reviewManager/public?page={p}">{p}</a> '
 
         return render_template('reviewManagerPublic.html', formatted_reviews_public="<br><br>".join(public_reviews), pagination_links=pagination_links)
 
@@ -64,19 +62,14 @@ def reviewManagerPrivate():
     if not session.get('loggedIn'):
         return redirect(url_for('employee.employeeLogin'))
 
-    # Define the number of reviews per page
     reviews_per_page = 5
-
-    # Get the page number from the URL (default to 1 if not provided)
     page = request.args.get('page', 1, type=int)
-
-    # Calculate the offset for the SQL query
     offset = (page - 1) * reviews_per_page
 
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
-        cursor.execute('SELECT "NAME", "DESCRIPTION", "EMAIL", "DATE", "PUBLIC", "PRIMARY_KEY" FROM "REVIEWS"')
+        cursor.execute('SELECT "NAME", "DESCRIPTION", "EMAIL", "DATE", "PUBLIC", "PRIMARY_KEY" FROM "REVIEWS" WHERE "PUBLIC" = FALSE ORDER BY "DATE" DESC LIMIT %s OFFSET %s' % (reviews_per_page, offset))
         reviewData = cursor.fetchall()
 
         private_reviews = [
@@ -89,20 +82,19 @@ def reviewManagerPrivate():
             <form action="/togglePublic/{row[5]}" method="POST">
                 <button type="submit">Set to Public</button>
             </form>
-            """ for row in reviewData if not row[4]
+            """ for row in reviewData
         ]
 
         # Get the total number of reviews to calculate pagination
-        cursor.execute('SELECT COUNT(*) FROM "REVIEWS" WHERE "PUBLIC" = TRUE')
+        cursor.execute('SELECT COUNT(*) FROM "REVIEWS" WHERE "PUBLIC" = FALSE')
         total_reviews = cursor.fetchone()[0]
-
-        # Calculate the total number of pages
         total_pages = (total_reviews + reviews_per_page - 1) // reviews_per_page
-
-        # Generate pagination links
         pagination_links = ""
         for p in range(1, total_pages + 1):
-            pagination_links += f'<a href="/reviews?page={p}">{p}</a> '
+            if p == page:
+                pagination_links += f"<strong>{p}</strong> "
+            else:
+                pagination_links += f'<a href="/reviewManager/private?page={p}">{p}</a> '
 
         return render_template('reviewManagerPrivate.html', formatted_reviews_private="<br><br>".join(private_reviews), pagination_links=pagination_links)
 

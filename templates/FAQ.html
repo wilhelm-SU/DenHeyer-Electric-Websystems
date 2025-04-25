@@ -2,10 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DenHeyer Electric - Review Manager</title>
+  <title>DenHeyer Electric - FAQ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
   <style>
     body {
       background-color: #e0e9ff;
@@ -21,7 +25,7 @@
       background-color: #2C4FA0;
       padding: 1vh 0;
       text-align: center;
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
@@ -52,65 +56,30 @@
     }
 
     .page-section {
-      margin: 12vh auto;
-      padding: 5vh 2vw;
-      max-width: 60vw;
+      margin: 13vh auto;
+      padding: 4vh 4vw;
+      max-width: 70vw;
       background-color: #f8f9fa;
       border-radius: 1.5vw;
       box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
       text-align: center;
     }
 
-    .review-container {
-      text-align: left;
-      font-size: 1.2vw;
-      margin-bottom: 3vh;
-    }
-
-    .nav-links {
-      font-size: 1.2vw;
-      margin-top: 3vh;
-    }
-
-    .nav-links a {
+    h2 {
+      font-size: 2.5vw;
       color: #2C4FA0;
-      text-decoration: none;
-      margin: 0 1vw;
     }
 
-    .nav-links a:hover {
-      text-decoration: underline;
-    }
-
-    .pagination {
-      display: flex;
-      justify-content: center;
-      gap: 1vw;
+    .return-link {
+      display: block;
       margin-top: 4vh;
-      flex-wrap: wrap;
-    }
-
-    .pagination a,
-    .pagination strong {
-      padding: 0.6vh 1.2vw;
       font-size: 1.2vw;
-      text-decoration: none;
       color: #2C4FA0;
-      background-color: #ffffff;
-      border: 2px solid #2C4FA0;
-      border-radius: 0.5vw;
-      transition: background-color 0.3s;
+      text-decoration: none;
     }
 
-    .pagination a:hover {
-      background-color: #2C4FA0;
-      color: #ffffff;
-    }
-
-    .pagination strong {
-      background-color: #2C4FA0;
-      color: #ffffff;
-      border-color: #2C4FA0;
+    .return-link:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -126,20 +95,10 @@
   </div>
 
   <div class="page-section">
-    <h2>Privated Reviews</h2>
+    <h2>FAQ</h2>
+    <!-- Future content goes here -->
 
-    <div class="review-container">
-      {{ formatted_reviews_private | safe }}
-    </div>
-
-    <div class="pagination">
-      {{ pagination_links | safe }}
-    </div>
-
-    <div class="nav-links">
-      <a href="/reviewManager/public">View Public Reviews</a>
-      <a href="/employeePortal">Return to Portal</a>
-    </div>
+    <a href="/" class="return-link">Return to Home</a>
   </div>
 
 </body>

@@ -98,5 +98,12 @@
     </form>
     <a href="/employeePortal" class="return-link">Return to Portal</a>
   </div>
+  {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <script>
+          alert("{{ messages[0] }}");
+        </script>
+      {% endif %}
+    {% endwith %}
 </body>
 </html>
