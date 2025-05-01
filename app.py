@@ -2,15 +2,6 @@ from flask import Flask
 import pytz
 from datetime import datetime
 
-#[written by Connor] - this is how to switch between master and main branch in VScode:
-#  for bringing them local        git checkout -b master origin/master
-#                                 git checkout -b main origin/main 
-#  for when they are local        git checkout master
-#                                 git checkout main  
-
-# python -m flask run
-
-
 app = Flask(__name__)
 app.secret_key = '<KEY>' #placeholder we need to make that key hard to guess and super secret
 
@@ -62,6 +53,10 @@ app.register_blueprint(employeeSettingsBP)
 
 from routes.certifsAndInsurance import certifsAndInsuranceBP
 app.register_blueprint(certifsAndInsuranceBP)
+
+from routes.FAQ import FAQBP
+app.register_blueprint(FAQBP)
+
 
 if __name__ == '__main__':
     app.run()

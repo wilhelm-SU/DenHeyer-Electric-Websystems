@@ -121,14 +121,9 @@ def resetUsername():
             newUsername1 = request.form.get('newUsername1')
             newUsername2 = request.form.get('newUsername2')
 
-            if not newUsername1 or not newUsername2:
-                return '''Must enter username <br>
-                        <a href="/resetUsername">Return</a>'''
-
             if newUsername1 != newUsername2:
-                return '''Usernames don't match <br>
-                        <a href="/resetUsername">Return</a>
-                        '''
+                flash("Usernames do not match. Please try again.")
+                return redirect(url_for('employeeSettings.resetPassword'))
 
             connect = connect_to_db()
             cursor = connect.cursor()
@@ -151,11 +146,9 @@ def resetEmail():
     if not session.get('loggedIn'): #extremely important as this prevents non authorized users from accessing pages by simplying writing in url
         return redirect(url_for('employee.employeeLogin'))
 
-
     if 'verifiedEmailChange' not in session:
         if request.method == 'POST':
             password = request.form.get('password')
-
 
             connect = connect_to_db()
             cursor = connect.cursor()
@@ -188,9 +181,8 @@ def resetEmail():
 
 
             if newEmail1 != newEmail2:
-                return '''Emails don't match <br>
-                        <a href="/resetEmail">Return</a>
-                        '''
+                flash("Emails do not match. Please try again.")
+                return redirect(url_for('employeeSettings.resetPassword'))
 
             connect = connect_to_db()
             cursor = connect.cursor()

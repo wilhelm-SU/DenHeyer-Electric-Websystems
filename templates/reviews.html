@@ -72,11 +72,6 @@
       text-decoration: underline;
     }
 
-    .pagination {
-      margin-top: 2vh;
-      text-align: center;
-    }
-
     .actions {
       margin-top: 4vh;
       text-align: center;
@@ -92,6 +87,37 @@
 
     .actions a:hover {
       text-decoration: underline;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 1vw;
+      margin-top: 4vh;
+      flex-wrap: wrap;
+    }
+
+    .pagination a,
+    .pagination strong {
+      padding: 0.6vh 1.2vw;
+      font-size: 1.2vw;
+      text-decoration: none;
+      color: #2C4FA0;
+      background-color: #ffffff;
+      border: 2px solid #2C4FA0;
+      border-radius: 0.5vw;
+      transition: background-color 0.3s;
+    }
+
+    .pagination a:hover {
+      background-color: #2C4FA0;
+      color: #ffffff;
+    }
+
+    .pagination strong {
+      background-color: #2C4FA0;
+      color: #ffffff;
+      border-color: #2C4FA0;
     }
   </style>
 </head>
