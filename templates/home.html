@@ -92,11 +92,11 @@
 
     .contact-box {
       position: absolute;
-      right: 4vw;
+      right: .8vw;
       top: 50%;
       transform: translateY(-50%);
       font-family: 'Kanit', sans-serif;
-      font-size: 1vw;
+      font-size: .9vw;
       background-color: #f0f0f0;
       border: 2px solid #2C4FA0;
       border-radius: 0.6vw;
@@ -106,6 +106,10 @@
       text-align: left;
       line-height: .6;
       box-shadow: 0 0.2vh 0.6vh rgba(0, 0, 0, 0.1);
+    }
+
+    .contact-box p.address-line {
+      margin-left: 120px;
     }
 
     /* Navigation */
@@ -384,25 +388,27 @@
     <div class="title-oval">
       <div class="title-wrapper">
         <h1><span class="denheyer">DenHeyer </span> <span class="electric">ELECTRIC</span></h1>
-        <p class="subtitle">Serving the Sussex County area since 20xx</p>
+        <p class="subtitle">Serving the Sussex County area since 2015</p>
       </div>
       <div class="contact-box">
-        <p><strong>Phone:</strong> (123) 456-7890</p>
-        <p><strong>Email:</strong> info@denheyer.com</p>
+        <p><strong>Phone:</strong> (862) 268-1290</p>
+        <p><strong>Email:</strong> Denheyerelectric@gmail.com</p>
         <p><strong>Hours:</strong> M–F 8am–5pm</p>
-        <p><strong>Address:</strong> 123 butthead Street</p>
+        <p><strong>Address:</strong> 24 County Rd 639 Wantage,</p>
+          <p class="address-line">NJ 07461</p>
+
       </div>
     </div>
     <nav class="navbar">
       <a href="/requestEstimate">Request Your Free Estimate</a>
       <a href="/gallery">Gallery</a>
-      <a href="/reviews">Leave a Review</a>
+      <a href="/reviews">Reviews</a>
       <div class="dropdown">
         <button class="dropbtn">More ▼</button>
         <div class="dropdown-content">
           <a href="/aboutUs">About Us</a>
           <a href="/FAQ">FAQ</a>
-          <a href="/certifsAndInsurance">Certifications</a>
+          <a href="/certifsAndInsurance">Payment</a>
           <a href="/certifsAndInsurance">Insurance</a>
           <a href="/employeePortal">Employee Portal</a>
         </div>
@@ -412,8 +418,8 @@
 
   <!-- Our Work Slideshow -->
   <div class="home-section" id="gallery-slideshow">
-    <h2><strong>OUR WORK</strong></h2>
-    <p class="work-description">WE DO: Old Work • New Work • Residential • Commercial • Industrial • Generators • Natural Gas • Propane • Mini Split Systems • and more...</p>
+    <h2><strong>OUR WORK:</strong></h2><br>
+
     <div class="slideshow-container">
       <img class="gallery-slide" src="/static/images/gallery1.jpg" alt="Gallery Image 1">
       <img class="gallery-slide" src="/static/images/gallery2.jpg" alt="Gallery Image 2">
@@ -423,12 +429,25 @@
     </div>
   </div>
 
+  <div class="home-section" id="what-we-do">
+    <div class="work-content">
+      <p class="work-description">
+          <h2>WE OFFER:</h2> • All phases of residential, commercial, industrial renovations and installations<br>
+	• Stand by and portable generator installs<br>
+	• Service and troubleshooting whole house generators<br>
+	• Pools and hot tub wiring<br>
+	• Smoke detector installation and repairs<br>
+	• Repair of existing electrical issues for home inspections.<br>
+	• Installation of residential and commercial car charging stations
+    </div>
+  </div>
+
   <!-- About Us Section -->
   <div class="home-section" id="about-us">
     <div class="about-content">
       <img src="/static/images/about_us_photo.jpg" alt="About Us" class="about-image">
       <div class="about-text">
-        <h2>About Us</h2>
+        <h2>ABOUT US:</h2>
         <p>At DenHeyer Electric, we take pride in quality, safety, and reliable electrical services for residential, commercial, and industrial needs. Our certified team is committed to excellent customer service and top-tier craftsmanship.</p>
       </div>
     </div>

@@ -3,7 +3,9 @@ import pytz
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = '<KEY>' #placeholder we need to make that key hard to guess and super secret
+
+import os
+app.secret_key = os.urandom(24)
 
 #Time
 eastern = pytz.timezone('US/Eastern')

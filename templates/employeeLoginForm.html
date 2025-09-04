@@ -4,55 +4,11 @@
   <title>DenHeyer Electric - Employee Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
-
   <!-- Styles -->
   <style>
-    /* Base page background and font settings */
-    body {
-      background-color: #e0e9ff;
-      background-image: url("https://www.transparenttextures.com/patterns/lined-paper-2.png");
-      background-repeat: repeat;
-      background-attachment: fixed;
-      margin: 0;
-      padding: 0;
-      font-family: 'Kanit', sans-serif;
-    }
-
-    /* Header bar styling */
-    .header-bar {
-      background-color: #2C4FA0;
-      padding: -2vh 0;
-      text-align: center;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1;
-    }
-
-    /* Title fonts matching home page */
-    .header-bar h1 {
-      margin: 0;
-    }
-    .denheyer {
-      font-family: 'Anton', sans-serif;
-      font-size: 5vw;
-      letter-spacing: .2vw;
-      color: #ffffff;
-    }
-    .electric {
-      font-family: 'Teko', sans-serif;
-      font-size: 5vw;
-      letter-spacing: .2vw;
-      color: #ffffff;
-    }
-
     /* Main content section styling */
     .home-section {
-      margin: 12vh auto;
+      margin: auto;
       padding: 5vh 2vw;
       max-width: 40vw;
       background-color: #f8f9fa;
@@ -126,15 +82,8 @@
 </head>
 <body>
 
-  <!-- Header with split-font title -->
-  <div class="header-bar">
-    <h1>
-      <a href="/" class="home-link">
-        <span class="denheyer">DenHeyer </span>
-        <span class="electric">ELECTRIC</span>
-      </a>
-    </h1>
-  </div>
+  {% include 'header.html' %}
+
 
   <!-- Employee Login Form -->
   <div class="home-section" id="employee-login">
