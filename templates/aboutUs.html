@@ -7,12 +7,14 @@
 
   <style>
     .page-section {
-      padding: 4vh 4vw;
-      max-width: 70vw;
-      background-color: #f8f9fa;
-      border-radius: 1.5vw;
-      box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
-      text-align: center;
+        padding: 4vh 4vw;
+        max-width: 70vw; /* constrains width */
+        background-color: #f8f9fa;
+        border-radius: 1.5vw;
+        box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
+        text-align: center;
+
+        margin: 2vh auto 2vh auto;
     }
 
     h2 {
@@ -32,17 +34,27 @@
       text-decoration: underline;
     }
 
+    body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Kanit', sans-serif;
+    }
+
     .bottom-ribbon {
-      background-color: #2C4FA0;
-      color: white;
-      text-align: center;
-      padding: 1vh 0;
-      font-family: 'Kanit', sans-serif;
-      font-size: .8vw;
-      position: relative;
-      bottom: 0;
-      left: 0;
-      right: 0;
+        width: 100%;
+        background-color: #2C4FA0;
+        color: white;
+        text-align: center;
+        padding: 1vh 0;
+        font-family: 'Kanit', sans-serif;
+        font-size: 0.8vw;
+        position: relative;
+        margin: 0;
+    }
+
+    .header-spacer {
+    height: 15vh; /* same as your header height */
+    width: 100%;
     }
 
   </style>
@@ -50,6 +62,8 @@
 <body>
 
   {% include 'header.html' %}
+
+  <div class="header-spacer"></div>
 
 
   <div class="page-section">

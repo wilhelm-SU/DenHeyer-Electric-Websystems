@@ -5,7 +5,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 import os
-app.secret_key = os.urandom(24)
+app.secret_key = os.getenv('SECRET_KEY')
 
 #Time
 eastern = pytz.timezone('US/Eastern')

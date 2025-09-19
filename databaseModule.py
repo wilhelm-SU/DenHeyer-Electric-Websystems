@@ -1,12 +1,14 @@
-import psycopg2
+from dotenv import load_dotenv
+import psycopg2, os
 
 # Database credentials
+load_dotenv()
 DB_CONFIG = {
-    'host': 'dpg-curuecjv2p9s73aprlvg-a.oregon-postgres.render.com',
-    'port': '5432',
-    'dbname': 'denheyer_webserver',
-    'user': 'denheyer_webserver_user',
-    'password': 'CEu8cjkwWRcBDCjjZu0GhUBwhHA2Jush'
+    'host': os.getenv("HOST"),
+    'port': os.getenv("PORT"),
+    'dbname': os.getenv("DBNAME"),
+    'user': os.getenv("USER"),
+    'password': os.getenv("PASSWORD"),
 }
 
 def connect_to_db():

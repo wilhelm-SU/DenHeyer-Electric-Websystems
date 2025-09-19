@@ -17,3 +17,5 @@ base64_dump.txt
 
 # Ignore any other files you don't want to track (e.g., database files)
 *.sqlite
+
+.env
