@@ -27,8 +27,8 @@ def requestEstimate():
             connect = connect_to_db()
             cursor = connect.cursor()
 
-            cursor.execute('INSERT INTO "ESTIMATES" ("NAME", "PHONE", "EMAIL", "DATE", "DESCRIPTION", "ADDRESS","CITY", "ZIP_CODE") VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING "PRIMARY_KEY"',
-                            (name, phone, email, date, description, address, city, zipCode))
+            cursor.execute('INSERT INTO "ESTIMATES" ("NAME", "PHONE", "EMAIL", "DATE", "ADDRESS", "CITY", "ZIP_CODE", "HANDLED", "DESCRIPTION") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING "PRIMARY_KEY"',
+                                (name, phone, email, date, address, city, zipCode, False, description))
 
             requestID = cursor.fetchone()[0]
             connect.commit()
@@ -69,8 +69,8 @@ def sendEstimateRequestEmail(requestData):
     Name: {requestData[1]}<br>
     Phone: {requestData[2]}<br>
     Email: {requestData[3]}<br>
-    Address: {requestData[6]}, {requestData[7]}, {requestData[8]}<br>
-    Description: {requestData[5]}
+    Address: {requestData[5]}, {requestData[6]}, {requestData[7]}<br>
+    Description: {requestData[9]}
     """
 
     try:
