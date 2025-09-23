@@ -1,27 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>DenHeyer Electric - Insurance & Payment</title>
+  <meta charset="UTF-8">
+  <title>DenHeyer Electric - Insurance & Payment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Kanit', sans-serif;
+      background-color: #f9f9f9;
+      color: #222;
+    }
 
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+    main {
+      padding: 4vh 6vw;
+    }
+
+    main h2 {
+      font-family: 'Anton', sans-serif;
+      font-size: 2rem;
+      margin-top: 2vh;
+      margin-bottom: 1vh;
+    }
+
+    main p {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .bottom-ribbon {
+        width: 100%;
+        background-color: #2C4FA0;
+        color: white;
+        text-align: center;
+        padding: 1vh 0;
+        font-family: 'Kanit', sans-serif;
+        font-size: 0.8vw;
+        position: relative;
+        margin: 0;
+        margin-top: 10vh;
+    }
 
 
+  </style>
 </head>
 <body>
 
-{% include 'header.html' %}
+  {% include 'header.html' %}
 
+  <main>
+    <h2>Insurance</h2>
+    <p>License #17643, Fully insured & bonded</p>
 
-<h2>Insurance: </h2><br>
-<p>License #17643, Fully insured & bonded</p>
-<h2>Payment:</h2><br>
-<p>Checks made out to “DenHeyer Electric” mailed to 24 County Rd 639 Wantage, NJ 07461<br> Or, <br>
-Zelle:  (862) 268-1290
-</p>
+    <h2>Payment</h2>
+    <p>
+      Checks made out to “DenHeyer Electric” mailed to:<br>
+      24 County Rd 639, Wantage, NJ 07461<br><br>
+      Or<br><br>
+      Zelle: (862) 268-1290
+    </p>
+  </main>
 
-
+  <div class="bottom-ribbon">
+    Licensed & Insured • Serving Sussex County Area • Est. 2015<br>
+    Website developed by: Jadon Wilhelm, Connor McKay, Michael Tardi, Matthew Houseworth for Stockton University's Software Engineering Class Spring 2025
+  </div>
 
 </body>
 </html>
