@@ -8,6 +8,7 @@ def estimateManagerOpen():
     if not session.get('loggedIn'):
         return redirect(url_for('employee.employeeLogin'))
 
+
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
@@ -42,7 +43,15 @@ def estimateManagerOpen():
                 '''
                 open_requests.append(formattedRequest)
 
-        return render_template("estimateManagerOpen.html", open_requests=open_requests)
+        page = int(request.args.get('page', 1))
+        per_page = 5
+        total = len(open_requests)
+        total_pages = (total + per_page - 1) // per_page
+        start = (page - 1) * per_page
+        end = start + per_page
+        paginated_requests = open_requests[start:end]
+
+        return render_template("estimateManagerOpen.html", open_requests=paginated_requests, page=page, total_pages=total_pages)
 
     except Exception as e:
         return jsonify({'Error': str(e)})
@@ -81,7 +90,15 @@ def estimateManagerClosed():
                 '''
                 closed_requests.append(formattedRequest)
 
-        return render_template("estimateManagerClosed.html", closed_requests=closed_requests)
+        page = int(request.args.get('page', 1))
+        per_page = 10
+        total = len(closed_requests)
+        total_pages = (total + per_page - 1) // per_page
+        start = (page - 1) * per_page
+        end = start + per_page
+        paginated_requests = closed_requests[start:end]
+
+        return render_template("estimateManagerClosed.html", closed_requests=paginated_requests, page=page, total_pages=total_pages)
 
     except Exception as e:
         return jsonify({'Error': str(e)})
@@ -137,8 +154,8 @@ def deleteEstimate():
         except Exception as e:
             print(f"Error closing connection: {e}")
 
-@estimateManagerBP.route('/search/', methods=['GET'])
-def search():
+@estimateManagerBP.route('/searchOpen/', methods=['GET'])
+def search_open():
     if not session.get('loggedIn'):
         return redirect(url_for('employee.employeeLogin'))
 
@@ -148,7 +165,9 @@ def search():
         connect = connect_to_db()
         cursor = connect.cursor()
         cursor.execute('''SELECT "NAME", "PHONE", "EMAIL", "DATE", "ADDRESS", "DESCRIPTION", "CITY", "ZIP_CODE", "PRIMARY_KEY", "HANDLED" FROM "ESTIMATES"
-                          WHERE "NAME" ILIKE %s
+                          WHERE "HANDLED" = FALSE
+                          AND(
+                             "NAME" ILIKE %s
                           OR "PHONE" ILIKE %s
                           OR "EMAIL" ILIKE %s
                           OR CAST("DATE" AS TEXT) ILIKE %s
@@ -156,6 +175,7 @@ def search():
                           OR "CITY" ILIKE %s
                           OR "ZIP_CODE" ILIKE %s
                           OR CAST("PRIMARY_KEY" as TEXT) ILIKE %s 
+                          )
                        ''', tuple(['%' + searchQuery + '%'] * 8))
 
         requestData = cursor.fetchall()
@@ -186,7 +206,72 @@ def search():
 
             searchResults.append(formattedRequest)
 
-        return render_template("estimateManager.html", searchResults = searchResults, searchQuery = searchQuery)
+        return render_template("estimateManagerOpen.html", searchResults = searchResults, searchQuery = searchQuery)
+
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+    finally:
+        try:
+            if cursor:
+                cursor.close()
+            if connect:
+                connect.close()
+        except Exception as e:
+            print(f"Error closing connection: {e}")
+
+@estimateManagerBP.route('/searchClosed/', methods=['GET'])
+def search_closed():
+    if not session.get('loggedIn'):
+        return redirect(url_for('employee.employeeLogin'))
+
+    searchQuery = request.args.get('query', '').strip()
+
+    try:
+        connect = connect_to_db()
+        cursor = connect.cursor()
+        cursor.execute('''SELECT "NAME", "PHONE", "EMAIL", "DATE", "ADDRESS", "DESCRIPTION", "CITY", "ZIP_CODE", "PRIMARY_KEY", "HANDLED" FROM "ESTIMATES"
+                          WHERE "HANDLED" = TRUE
+                          AND(
+                             "NAME" ILIKE %s
+                          OR "PHONE" ILIKE %s
+                          OR "EMAIL" ILIKE %s
+                          OR CAST("DATE" AS TEXT) ILIKE %s
+                          OR "ADDRESS" ILIKE %s
+                          OR "CITY" ILIKE %s
+                          OR "ZIP_CODE" ILIKE %s
+                          OR CAST("PRIMARY_KEY" as TEXT) ILIKE %s 
+                          )
+                       ''', tuple(['%' + searchQuery + '%'] * 8))
+
+        requestData = cursor.fetchall()
+        searchResults = []
+
+        for row in requestData:
+            markHandledForm = ''
+            if not row[9]:
+                markHandledForm = f'''
+                    <form method="POST" action="/markHandled">
+                        <input type="hidden" name="request_id" value="{row[8]}">
+                        <button type="submit">Mark as Handled</button>
+                    </form>
+                '''
+
+            formattedRequest = f'''
+                <div class="request-item">
+                    <strong>Request ID:</strong> {row[8]}<br>
+                    <strong>Date:</strong> {row[3]}<br>
+                    <strong>Name:</strong> {row[0]}<br>
+                    <strong>Phone:</strong> {row[1]}<br>
+                    <strong>Email:</strong> {row[2]}<br>
+                    <strong>Address:</strong> {row[5]}, {row[6]}, {row[7]}<br>
+                    <strong>Description:</strong> {row[4]}<br>
+                    {markHandledForm}
+                </div>
+            '''
+
+            searchResults.append(formattedRequest)
+
+        return render_template("estimateManagerClosed.html", searchResults = searchResults, searchQuery = searchQuery)
 
     except Exception as e:
         return jsonify({'Error': str(e)})

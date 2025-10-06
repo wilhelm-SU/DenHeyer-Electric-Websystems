@@ -123,6 +123,7 @@
     .return-link:hover {
       text-decoration: underline;
     }
+
   </style>
 </head>
 <body>
@@ -138,9 +139,10 @@
   <div class="page-section">
     <h2>Open Estimate Requests</h2>
 
-    <form method="GET" action="{{ url_for('estimateManager.search') }}" class="search-form">
+    <form method="GET" action="{{ url_for('estimateManager.search_open') }}" class="search-form">
       <input type="text" name="query" value="{{ searchQuery }}" placeholder="Search for cases..." required>
       <button type="submit">Search</button>
+      <a href="{{ url_for('estimateManager.search_open') }}" class="button">Reset Search</a>
     </form>
 
     {% if searchResults %}
@@ -158,6 +160,18 @@
       {% for request in open_requests %}
         {{ request | safe }}
       {% endfor %}
+    </div>
+
+    <div class="pagination">
+      {% if page > 1 %}
+        <a href="{{ url_for('estimateManager.estimateManagerOpen', page=page-1) }}" class="button">Previous</a>
+      {% endif %}
+
+      <span>Page {{ page }} of {{ total_pages }}</span>
+
+      {% if page < total_pages %}
+        <a href="{{ url_for('estimateManager.estimateManagerOpen', page=page+1) }}" class="button">Next</a>
+      {% endif %}
     </div>
 
     <br><br><a href="/estimateManager/closed" class="return-link">View closed requests</a>

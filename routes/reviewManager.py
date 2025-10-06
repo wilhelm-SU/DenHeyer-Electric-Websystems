@@ -16,7 +16,16 @@ def reviewManagerPublic():
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
-        cursor.execute('SELECT "NAME", "DESCRIPTION", "EMAIL", "DATE", "PUBLIC", "PRIMARY_KEY" FROM "REVIEWS" WHERE "PUBLIC" = TRUE ORDER BY "DATE" DESC LIMIT %s OFFSET %s' % (reviews_per_page, offset))
+        cursor.execute(
+            '''
+            SELECT "NAME", "DESCRIPTION", "EMAIL", "DATE", "PUBLIC", "PRIMARY_KEY"
+            FROM "REVIEWS"
+            WHERE "PUBLIC" = TRUE
+            ORDER BY "DATE" DESC
+            LIMIT %s OFFSET %s
+            ''',
+            (reviews_per_page, offset)
+        )
         reviewData = cursor.fetchall()
 
         public_reviews = [
@@ -28,6 +37,10 @@ def reviewManagerPublic():
             <strong>Publicly displayed:</strong> {row[4]}
             <form action="/togglePublic/{row[5]}" method="POST">
                 <button type="submit">Set to Private</button>
+            </form>
+            <form action="/deleteReview/" method="POST" style="display:inline;">
+                <input type="hidden" name="request_id" value="{row[5]}">
+                <button type="submit">Delete</button>
             </form>
             """ for row in reviewData
         ]
@@ -69,7 +82,16 @@ def reviewManagerPrivate():
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
-        cursor.execute('SELECT "NAME", "DESCRIPTION", "EMAIL", "DATE", "PUBLIC", "PRIMARY_KEY" FROM "REVIEWS" WHERE "PUBLIC" = FALSE ORDER BY "DATE" DESC LIMIT %s OFFSET %s' % (reviews_per_page, offset))
+        cursor.execute(
+            '''
+            SELECT "NAME", "DESCRIPTION", "EMAIL", "DATE", "PUBLIC", "PRIMARY_KEY"
+            FROM "REVIEWS"
+            WHERE "PUBLIC" = TRUE
+            ORDER BY "DATE" DESC
+            LIMIT %s OFFSET %s
+            ''',
+            (reviews_per_page, offset)
+        )
         reviewData = cursor.fetchall()
 
         private_reviews = [
@@ -81,6 +103,10 @@ def reviewManagerPrivate():
             <strong>Publicly displayed:</strong> {row[4]}
             <form action="/togglePublic/{row[5]}" method="POST">
                 <button type="submit">Set to Public</button>
+            </form>
+            <form action="/deleteReview/" method="POST" style="display:inline;">
+                <input type="hidden" name="request_id" value="{row[5]}">
+                <button type="submit">Delete</button>
             </form>
             """ for row in reviewData
         ]
@@ -129,3 +155,35 @@ def togglePublic(key):
             return redirect(url_for('reviewManager.reviewManagerPrivate'))
     else:
         return redirect(url_for('galleryManager.galleryManager'))
+
+@reviewManagerBP.route('/deleteReview/', methods=['POST'])
+def deleteReview():
+    if not session.get('loggedIn'):
+        return redirect(url_for('employee.employeeLogin'))
+
+    try:
+        request_id = request.form.get('request_id')
+
+        if not request_id:
+            return jsonify({'Error': 'Missing "request_id" parameter'}), 400
+
+        connect = connect_to_db()
+        cursor = connect.cursor()
+        cursor.execute('DELETE FROM "REVIEWS" WHERE "PRIMARY_KEY" = %s', (request_id,))
+        connect.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({'Error': 'No review found with that ID'}), 404
+
+        return redirect(url_for('reviewManager.reviewManagerPrivate'))
+
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+    finally:
+        try:
+            if cursor:
+                cursor.close()
+            if connect:
+                connect.close()
+        except Exception as e:
+            print(f"Error closing connection: {e}")
