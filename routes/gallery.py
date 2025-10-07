@@ -1,5 +1,6 @@
 import base64
-from flask import Blueprint, render_template, jsonify
+from flask import Blueprint, render_template, jsonify, send_file
+from io import BytesIO
 from databaseModule import connect_to_db
 
 galleryBP = Blueprint('gallery', __name__)
@@ -9,24 +10,61 @@ def gallery():
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
-        cursor.execute('SELECT "PRIMARY_KEY", "IMAGE_DATA", "DESCRIPTION" FROM "GALLERY" WHERE "PUBLIC" = TRUE ORDER BY "PRIMARY_KEY" ASC')
-        print("Query executed successfully")
+        cursor.execute('''
+            SELECT gm."PRIMARY_KEY", gi."THUMBNAIL", gm."DESCRIPTION"
+            FROM "GALLERY_META" gm
+            JOIN "GALLERY_IMAGE" gi
+            ON gm."PRIMARY_KEY" = gi."GALLERY_KEY"
+            WHERE gm."PUBLIC" = TRUE
+            ORDER BY gm."PRIMARY_KEY" ASC;
+        ''')
+
         imageData = cursor.fetchall()
-        print("Image Data:", imageData)  # Check the fetched raw data
 
         image_list = []
         for data in imageData:
             if data[1]:
-                base64_imageData = base64.b64encode(data[1]).decode('utf-8')
-                image_list.append((data[0], base64_imageData, data[2]))
-
-        # Debug: Check if image_list is populated
-        #print("Image List:", image_list)  # Ensure image_list is populated
+                base64_thumb = base64.b64encode(data[1]).decode('utf-8')
+                image_list.append({
+                    'id': data[0],
+                    'thumbnail': base64_thumb,
+                    'description': data[2]
+                })
 
     except Exception as e:
         return jsonify({'Error': str(e)})
 
-    # Debug: Check that image_list is passed to the template
-    #print("Passing image_list to HTML Template:", image_list)
+    finally:
+        if cursor:
+            cursor.close()
+        if connect:
+            connect.close()
 
     return render_template('gallery.html', image_list=image_list)
+
+
+@galleryBP.route('/get_fullres/<int:image_id>')
+def get_fullres(image_id):
+    """Serve full-resolution image on-demand for lazy loading."""
+    try:
+        connect = connect_to_db()
+        cursor = connect.cursor()
+        cursor.execute('''
+            SELECT "FULL_RES" FROM "GALLERY_IMAGE"
+            WHERE "GALLERY_KEY" = %s;
+        ''', (image_id,))
+        result = cursor.fetchone()
+
+        if result and result[0]:
+            return send_file(BytesIO(result[0]), mimetype='image/jpeg')
+        else:
+            return "Image not found", 404
+
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+
+    finally:
+        if cursor:
+            cursor.close()
+        if connect:
+            connect.close()
