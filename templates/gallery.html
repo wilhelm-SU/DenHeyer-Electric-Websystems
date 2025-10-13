@@ -16,6 +16,8 @@
       margin: auto;
     }
 
+    {# some comment syntax sucks,
+    {# too much to remember #}
     .gallery {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -78,7 +80,7 @@
       margin-top: 10vh;
     }
 
-    /* Lightbox Styles */
+    /* Lightbox Styles   */
     .lightbox {
       display: none;
       position: fixed;
@@ -157,7 +159,7 @@
     <a href="/" class="return-link">Return</a>
   </div>
 
-  <!-- Lightbox Container -->
+  <!-- this is where the light box displays full res -->
   <div class="lightbox" id="lightbox">
     <span class="close-btn" id="closeBtn">&times;</span>
     <span class="nav-arrow arrow-left" id="prevBtn">&#10094;</span>
@@ -181,7 +183,8 @@
 
     let currentIndex = 0;
 
-    // Open lightbox on click
+
+
     items.forEach((item, index) => {
       item.addEventListener("click", () => {
         currentIndex = index;
@@ -212,11 +215,10 @@
       openLightbox(itemsArr[currentIndex]);
     }
 
-    // Navigation
     prevBtn.addEventListener("click", () => showImage(currentIndex - 1));
     nextBtn.addEventListener("click", () => showImage(currentIndex + 1));
 
-    // Close events
+
     closeBtn.addEventListener("click", closeLightbox);
     lightbox.addEventListener("click", (e) => {
       if (e.target === lightbox) closeLightbox();
