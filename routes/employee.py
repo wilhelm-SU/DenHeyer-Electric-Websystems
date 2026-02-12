@@ -51,6 +51,7 @@ def employeePortal():
 
     username = session.get('username')
     return render_template('employeePortal.html', username=username)
+
 # Function that allows authorized users log out and close the page once they are finished. Doesn't force a log in to always stay logged in
 @employeeBP.route('/logout')
 def logout():

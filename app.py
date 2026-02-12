@@ -1,11 +1,15 @@
 from flask import Flask
+from dotenv import load_dotenv
 import pytz
 from datetime import datetime
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
 
-import os
-app.secret_key = os.getenv('SECRET_KEY')
+
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev_secret" )
 
 #Time
 eastern = pytz.timezone('US/Eastern')
@@ -60,5 +64,5 @@ from routes.FAQ import FAQBP
 app.register_blueprint(FAQBP)
 
 
-if __name__ == '__main__':
-    app.run()
+#if __name__ == '__main__':
+#    app.run()
