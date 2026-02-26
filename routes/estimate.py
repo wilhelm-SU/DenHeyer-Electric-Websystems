@@ -1,3 +1,5 @@
+import os
+
 from flask import Blueprint, request, render_template, redirect, url_for, session, jsonify
 from app import currentTime
 from databaseModule import connect_to_db
@@ -55,10 +57,8 @@ def requestEstimate():
     return render_template('estimateForm.html')
 
 def sendEstimateRequestEmail(requestData):
-    senderEmail = "denheyerhelper@gmail.com"
-    senderPassword = "ehiq crry clwx mlrl"
-
-    #DenHeyerElectricEmailBot2025 is the gmail accounts password
+    senderEmail = os.getenv("EMAIL_USER")
+    senderPassword = os.getenv("EMAIL_PASSWORD")
 
     subject = f"Estimate Request from {requestData[1]}, ID: {requestData[0]}"
 
