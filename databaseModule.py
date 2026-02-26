@@ -4,11 +4,11 @@ import psycopg2, os
 # Database credentials
 load_dotenv()
 DB_CONFIG = {
-    'host': os.getenv("HOST"),
-    'port': os.getenv("PORT"),
-    'dbname': os.getenv("DBNAME"),
-    'user': os.getenv("USER"),
-    'password': os.getenv("PASSWORD"),
+    'host': os.getenv("DB_HOST"),
+    'port': os.getenv("DB_PORT"),
+    'dbname': os.getenv("DB_NAME"),
+    'user': os.getenv("DB_USER"),
+    'password': os.getenv("DB_PASSWORD"),
 }
 
 def connect_to_db():
@@ -19,3 +19,4 @@ def connect_to_db():
     except psycopg2.Error as e:
         print("Database connection failed:", e)
         return None
+

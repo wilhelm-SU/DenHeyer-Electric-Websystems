@@ -1,5 +1,6 @@
 from flask import Flask
 from dotenv import load_dotenv
+from databaseModule import connect_to_db
 import pytz
 from datetime import datetime
 import os
@@ -62,6 +63,26 @@ app.register_blueprint(certifsAndInsuranceBP)
 
 from routes.FAQ import FAQBP
 app.register_blueprint(FAQBP)
+
+@app.route('/test-db')
+def test_db():
+    conn = connect_to_db()
+    if conn is None:
+        return "DB connection failed"
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM employees LIMIT 1")  # example table
+        result = cursor.fetchall()
+        return str(result)
+    except Exception as e:
+        # Print full error to logs
+        print("DB query failed:", e)
+        return f"DB query failed: {e}", 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 
 #if __name__ == '__main__':
