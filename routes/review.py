@@ -1,6 +1,7 @@
-from flask import Blueprint, request, render_template, jsonify, redirect, url_for
+from flask import Blueprint, request, render_template, jsonify, redirect, url_for, flash
 from databaseModule import connect_to_db  # Import the DB connection function
 from app import currentTime
+from submissionLimit import canSubmit
 
 reviewBP = Blueprint('review', __name__)
 
@@ -62,6 +63,9 @@ def reviews():
 @reviewBP.route('/writeAReview', methods=['GET', 'POST'])
 def writeAReview():
     if request.method == 'POST':
+        if not canSubmit(1):
+            flash(f"You can only submit {1} review.", "warning")
+            return redirect(url_for('review.writeAReview'))
         name = request.form.get('name')
         email = request.form.get('email')
         review = request.form.get('review')

@@ -85,5 +85,5 @@ def test_db():
             conn.close()
 
 
-#if __name__ == '__main__':
-#    app.run()
+if __name__ == '__main__':
+    app.run()

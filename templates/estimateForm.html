@@ -113,11 +113,16 @@
   <div class="home-section" id="request-estimate">
     <h2>Request an Estimate</h2>
 
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        <div class="flash">
-          {% for message in messages %}
-            <p>{{ message }}</p>
+        <div style="max-width: 50vw; margin: 2vh auto;">
+          {% for category, message in messages %}
+            <div style="padding: 1vh 2vw; margin-bottom: 1vh; border-radius: 0.5vw;
+                        background-color: {% if category == 'warning' %}#ffc107{% else %}#d4edda{% endif %};
+                        color: {% if category == 'warning' %}#856404{% else %}#155724{% endif %};
+                        font-weight: bold;">
+              {{ message }}
+            </div>
           {% endfor %}
         </div>
       {% endif %}

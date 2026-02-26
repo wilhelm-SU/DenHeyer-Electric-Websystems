@@ -1,17 +1,22 @@
 import os
 
-from flask import Blueprint, request, render_template, redirect, url_for, session, jsonify
+from flask import Blueprint, request, render_template, redirect, url_for, session, jsonify, flash
 from app import currentTime
 from databaseModule import connect_to_db
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from submissionLimit import canSubmit
 
 estimateBP = Blueprint('estimate', __name__)
 
 @estimateBP.route('/requestEstimate', methods=['GET', 'POST'])
 def requestEstimate():
     if request.method == 'POST':
+        if not canSubmit(2):
+            flash(f"You can only submit {2} estimate request per day from this IP.", "warning")
+            return redirect(url_for('estimate.requestEstimate'))
+
         name = request.form.get('name')
         phone = request.form.get('phone')
         email = request.form.get('email')
