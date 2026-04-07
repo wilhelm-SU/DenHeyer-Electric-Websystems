@@ -1,6 +1,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 
@@ -14,7 +15,6 @@
       font-family: 'Kanit', sans-serif;
     }
 
-    /* Header */
     .header-bar {
       background-color: #2C4FA0;
       padding: 2vh 0;
@@ -34,7 +34,7 @@
       position: absolute;
       top: 1vh;
       left: 3vh;
-      height: 20vw;
+      height: 21vw;
       width: auto;
       z-index: 2;
     }
@@ -46,7 +46,7 @@
       align-items: center;
       background-color: #ffffff;
       border-radius: 20vw;
-      padding: 0.2vh 3vw;
+      padding: .7vh 3vw;
       margin: 0 2vw 1.3vh 2vw;
       max-width: calc(100% - 10vw);
       box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
@@ -55,65 +55,44 @@
     .title-wrapper {
       display: flex;
       flex-direction: column;
-      align-items: center;
       line-height: .8;
       margin-top: -1vh;
+      padding-left: 17vw;
     }
 
     .denheyer {
       font-family: 'Anton', sans-serif;
       font-size: 7vw;
-      letter-spacing: .2vw;
+      letter-spacing: .3vw;
     }
 
     .electric {
       font-family: 'Teko', sans-serif;
       font-size: 7vw;
-      letter-spacing: .2vw;
+      letter-spacing: .3vw;
     }
 
     .subtitle {
-      margin-top: 0;
-      font-size: 1.7vw;
+      margin-top: -.8vh;
+      margin-bottom: .9vh;
+      font-size: 2.3vw;
       color: #0a1125;
       font-family: 'Kanit', sans-serif;
       font-style: italic;
       text-decoration: underline;
     }
 
-    .contact-box {
-      position: absolute;
-      right: .8vw;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: 'Kanit', sans-serif;
-      font-size: .9vw;
-      background-color: #f0f0f0;
-      border: 2px solid #2C4FA0;
-      border-radius: 0.6vw;
-      padding: 1vh 1vw;
-      color: #2C4FA0;
-      min-width: 9vw;
-      text-align: left;
-      line-height: .6;
-      box-shadow: 0 0.2vh 0.6vh rgba(0, 0, 0, 0.1);
-    }
-
-    .contact-box p.address-line {
-      margin-left: 120px;
-    }
-
-    /* Navigation */
     .navbar {
       display: flex;
-      justify-content: center;
-      gap: 3vw;
+      gap: 11vw;
+      padding-left: 21vw;
+
     }
 
     .navbar a, .dropbtn {
       color: #F0F0F0;
       text-decoration: none;
-      font-size: 1.5vw;
+      font-size: 2vw;
       padding: .5vh;
       background: none;
       border: none;
@@ -162,6 +141,96 @@
       text-decoration: none;
       color: inherit;
     }
+
+    .contact-float {
+      position: fixed;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #2C4FA0;
+      color: white;
+      padding: 1.2vh 1vw;
+      border-radius: 1vw 0 0 1vw;
+      cursor: pointer;
+      font-size: 1.1vw;
+      font-family: 'Kanit', sans-serif;
+      box-shadow: -0.3vw 0 0.8vw rgba(0,0,0,0.2);
+      z-index: 999;
+    }
+
+    /* Slide-out panel */
+    .contact-panel {
+      position: fixed;
+      right: -320px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 300px;
+      background: white;
+      padding: 2vh 1.5vw;
+      box-shadow: -0.5vw 0 1vw rgba(0,0,0,0.2);
+      border-radius: 1vw 0 0 1vw;
+      transition: right 0.3s ease;
+      font-family: 'Kanit', sans-serif;
+      z-index: 998;
+    }
+
+    .contact-panel.open {
+      right: 0;
+    }
+
+@media (max-width: 768px) {
+
+    .navbar {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        gap: .1vw;
+        padding: 0;
+        margin-bottom: -3vw;
+    }
+
+    .navbar a,
+    .dropbtn {
+        font-size: 3.8vw;
+        padding: 1vh 1.5vw;
+        width: auto;
+        text-align: center;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    .dropdown {
+        position: relative; /* keep menu relative to button */
+    }
+
+    .dropdown-content {
+        position: absolute;
+        right: 0; /* align right edge of menu to right edge of button */
+        left: auto; /* ignore left */
+        min-width: 150px; /* or auto, whatever fits content */
+        max-width: 90vw; /* never overflow viewport */
+        box-sizing: border-box;
+    }
+
+    .dropdown-content a {
+        font-size: 3.8vw;
+        padding: 1vh 1.5vw;
+    }
+
+    .denheyer {
+        font-family: 'Anton', sans-serif;
+        font-size: 8vw;
+        letter-spacing: .3vw;
+    }
+
+    .electric {
+        font-family: 'Teko', sans-serif;
+        font-size: 8vw;
+        letter-spacing: .3vw;
+    }
+}
+
 </style>
 
 <!-- Header with Title and Contact Info -->
@@ -171,22 +240,16 @@
       <div class="title-wrapper">
           <h1>
             <a href="/" class="home-link">
-              <span class="denheyer">DenHeyer </span>
-              <span class="electric">ELECTRIC</span>
+              <span class="denheyer">DenHeyer  </span>
+              <span class="electric"> ELECTRIC</span>
             </a>
           </h1>
           <p class="subtitle">Serving the Sussex County area since 2015</p>
         </div>
-      <div class="contact-box">
-        <p><strong>Phone:</strong> (862) 268-1290</p>
-        <p><strong>Email:</strong> Denheyerelectric@gmail.com</p>
-        <p><strong>Hours:</strong> M–F 8am–4pm</p>
-        <p><strong>Address:</strong> 24 County Rd 639 Wantage, <br><br>NJ 07461</p>
 
-      </div>
     </div>
     <nav class="navbar">
-      <a href="/requestEstimate">Request Your Free Estimate</a>
+      <a href="/requestEstimate">Request Estimate</a>
       <a href="/gallery">Gallery</a>
       <a href="/reviews">Reviews</a>
       <div class="dropdown">
@@ -202,3 +265,20 @@
     </nav>
   </div>
 <div class="header-spacer"></div>
+
+<div class="contact-float" onclick="toggleContact()">
+  Contact
+</div>
+
+<div class="contact-panel" id="contactPanel">
+  <p><strong>Phone:</strong> (862) 268-1290</p>
+  <p><strong>Email:</strong> Denheyerelectric@gmail.com</p>
+  <p><strong>Hours:</strong> M–F 8am–4pm</p>
+  <p><strong>Address:</strong> 24 County Rd 639 Wantage, NJ 07461</p>
+</div>
+
+<script>
+function toggleContact(){
+  document.getElementById("contactPanel").classList.toggle("open");
+}
+</script>

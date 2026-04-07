@@ -1,138 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>DenHeyer Electric - About Us</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>DenHeyer Electric - About Us</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: "Courgette", cursive;
-        font-size: 1.5vw;
-    }
+<style>
 
-    .page-section {
-        padding: 4vh 4vw;
-        max-width: 70vw;
-        background-color: #f8f9fa;
-        border-radius: 1.5vw;
-        box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
-        text-align: center;
-        margin: 2vh auto;
-    }
+.page-section {
+    padding: 4vh 4vw;
+    max-width: 70vw;
+    background-color: #f8f9fa;
+    border-radius: 1.5vw;
+    box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin: 2vh auto;
+}
 
-    h2 {
-        font-size: 2.5vw;
-        color: #2C4FA0;
-    }
+h2 {
+    font-size: 2.5vw;
+    color: #2C4FA0;
+}
 
-    .return-link {
-        display: block;
-        margin-top: 4vh;
-        font-size: 1.2vw;
-        color: #2C4FA0;
-        text-decoration: none;
-    }
+p {
+    margin: 0;
+}
 
-    .return-link:hover {
-        text-decoration: underline;
-    }
+.return-link {
+    display: block;
+    margin-top: 4vh;
+    font-size: 1.2vw;
+    color: #2C4FA0;
+    text-decoration: none;
+}
 
-    /* ---- Photo Section ---- */
-    .photo-row {
-        display: flex;
-        gap: 2vw;
-        margin-top: 4vh;
-        justify-content: center;
-        align-items: flex-start;
-        flex-wrap: wrap;
-    }
+.return-link:hover {
+    text-decoration: underline;
+}
 
-    .photo-box {
-        display: inline-block;              /* shrink-wrap container */
-        background-color: #ddd;
-        border-radius: 1vw;
-        box-shadow: 0 0.4vh 0.8vh rgba(0, 0, 0, 0.2);
-        overflow: hidden;
-        max-width: 45%;                     /* keeps layout sane */
-    }
+.photo-row {
+    display: flex;
+    gap: 2vw;
+    margin-top: 4vh;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
 
-    .photo-box img {
-        display: block;                     /* removes bottom gap */
-        max-width: 100%;                    /* responsive */
-        height: auto;                       /* preserve aspect ratio */
-    }
+.photo-box {
+    display: inline-block;
+    background-color: #ddd;
+    border-radius: 1vw;
+    box-shadow: 0 0.4vh 0.8vh rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    max-width: 45%;
+}
 
-    .bottom-ribbon {
-        width: 100%;
-        background-color: #2C4FA0;
-        color: white;
-        text-align: center;
-        padding: 1vh 0;
-        font-size: 0.8vw;
-        margin-top: 10vh;
-    }
+.photo-box img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
 
-    /* ---- Mobile responsiveness ---- */
-    @media (max-width: 768px) {
-        .photo-row {
-            flex-direction: column;
-            align-items: center;
-        }
+.bottom-ribbon {
+    width: 100%;
+    background-color: #2C4FA0;
+    color: white;
+    text-align: center;
+    padding: 1vh 0;
+    font-size: 0.8vw;
+    margin-top: 10vh;
+}
 
-        .photo-box {
-            max-width: 100%;
-        }
+@media (max-width: 768px) {
 
-        h2 {
-            font-size: 6vw;
-        }
+body {
+    margin: 0;
+    padding: 0;
+    font-size: 1.5vw;
+}
 
-        .return-link {
-            font-size: 3.5vw;
-        }
+.page-section {
+    max-width: 85vw;
+    background-color: #f8f9fa;
+    border-radius: 1.5vw;
+    box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin: -1vh auto;
+}
 
-    }
-  </style>
+h2 {
+    margin-top: -2vh;
+    font-size: 6vw;
+}
+
+p {
+    font-size: 4vw;
+}
+
+.photo-row {
+    flex-direction: column;
+    align-items: center;
+}
+
+.photo-box {
+    max-width: 100%;
+}
+
+.return-link {
+    font-size: 5vw;
+}
+
+.bottom-ribbon {
+    width: 100%;
+    background-color: #2C4FA0;
+    color: white;
+    text-align: center;
+    padding: 1vh 0;
+    font-size: 2vw;
+    margin-top: 5vh;
+}
+
+}
+
+</style>
 </head>
 
 <body>
 
-  {% include 'header.html' %}
+{% include 'header.html' %}
 
-  <div class="page-section">
-    <h2>About Us</h2>
+<div class="page-section">
+<h2>About Us</h2>
 
-    <div class="body">
-      <p>
-        Our father was an electrician for many years working with different companies. His best friend and himself decided to take a leap of faith and start their own electric company. Sadly shortly after they started their company our father passed away unexpectedly.  For as long as I can remember My brother has always talked about living out many of our fathers dreams. One was being an electrician and starting his own company.<Br><br>
-	Wayne worked as a fabricator at a trailer company building trailers. Usually having the task of wiring the trailers working next to his two cousins and best friend. Moving on from the trailer building  Wayne was an electrician for years working with companies that our dad had once worked with.<br><br>
-In 2015 Wayne started his own company. He started out working out of his truck with just some hand tools. He built his reputation all by word of mouth growing his company day by day. One day coming to me asking me to help him come up with a logo for his company. He wanted to incorporate something about our father. After many different logos we finally went with the light bulb guy with coke bottle glasses, a big mustache and smile from ear to ear. Our dad  always had a smile on his face. This little guys is a constant reminder of our dad.<br><br>
- Years have gone by and our company has grown in so many ways. When Wayne became too busy to do it all alone, friends would always be there to help out. We are now a team of 8.<br><br>
+<div class="body">
+<p>
+Our father was an electrician for many years working with different companies. His best friend and himself decided to take a leap of faith and start their own electric company. Sadly shortly after they started their company our father passed away unexpectedly. For as long as I can remember My brother has always talked about living out many of our fathers dreams. One was being an electrician and starting his own company.<br><br>
 
-      </p>
-    </div>
+Wayne worked as a fabricator at a trailer company building trailers. Usually having the task of wiring the trailers working next to his two cousins and best friend. Moving on from the trailer building Wayne was an electrician for years working with companies that our dad had once worked with.<br><br>
 
-    <!-- Photo containers -->
-    <div class="photo-row">
-      <div class="photo-box">
-        <img src="/static/images/babyKoa(About%20us).jpeg" alt="DenHeyer Electric team">
-      </div>
+In 2015 Wayne started his own company. He started out working out of his truck with just some hand tools. He built his reputation all by word of mouth growing his company day by day. One day coming to me asking me to help him come up with a logo for his company. He wanted to incorporate something about our father. After many different logos we finally went with the light bulb guy with coke bottle glasses, a big mustache and smile from ear to ear. Our dad always had a smile on his face. This little guys is a constant reminder of our dad.<br><br>
 
-      <div class="photo-box">
-        <img src="/static/images/denheyerFather.jpeg" alt="DenHeyer Electric work">
-      </div>
-    </div>
+Years have gone by and our company has grown in so many ways. When Wayne became too busy to do it all alone, friends would always be there to help out. We are now a team of 8.
+</p>
+</div>
 
-    <a href="/" class="return-link">Return to Home</a>
-  </div>
+<div class="photo-row">
+<div class="photo-box">
+<img src="/static/images/babyKoa(About%20us).jpeg" alt="DenHeyer Electric team">
+</div>
 
-  <div class="bottom-ribbon">
-    Licensed & Insured • Serving Sussex County Area • Est. 2015<br>
-    Website developed by: Jadon Wilhelm, Connor McKay, Michael Tardi, Matthew Houseworth for Stockton University's Software Engineering Class Spring 2025
-  </div>
+<div class="photo-box">
+<img src="/static/images/denheyerFather.jpeg" alt="DenHeyer Electric work">
+</div>
+</div>
+
+<a href="/" class="return-link">Return to Home</a>
+</div>
+
+<div class="bottom-ribbon">
+Licensed & Insured • Serving Sussex County Area • Est. 2015<br>
+Website developed by: Jadon Wilhelm, Connor McKay, Michael Tardi, Matthew Houseworth for Stockton University's Software Engineering Class Spring 2025
+</div>
 
 </body>
 </html>

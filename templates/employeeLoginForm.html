@@ -1,106 +1,150 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>DenHeyer Electric - Employee Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>DenHeyer Electric - Employee Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Styles -->
-  <style>
-    /* Main content section styling */
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Courgette', cursive;
+    font-size: 1.5vw;
+    background-color: #ffffff;
+}
+
+.home-section {
+    margin: 2vh auto;
+    padding: 4vh 4vw;
+    max-width: 70vw;
+    background-color: #f8f9fa;
+    border-radius: 1.5vw;
+    box-shadow: 0 0.5vh 1vh rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.home-section h2 {
+    font-size: 2.5vw;
+    color: #2C4FA0;
+    margin-bottom: 3vh;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+form label {
+    font-weight: 700;
+    font-size: 1.2vw;
+    text-align: left;
+    margin-left: 1vw;
+}
+
+form input[type="text"],
+form input[type="password"] {
+    padding: 1vh 1vw;
+    font-size: 1.2vw;
+    border: 1px solid #2C4FA0;
+    border-radius: 0.5vw;
+    width: 80%;
+    max-width: 30vw;
+    margin: 0 auto;
+}
+
+form input[type="submit"] {
+    margin-top: 2vh;
+    padding: 1vh 2vw;
+    font-size: 1.2vw;
+    background-color: #2C4FA0;
+    color: white;
+    border: none;
+    border-radius: 1vw;
+    cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+    background-color: #1d3671;
+}
+
+.return-link {
+    display: block;
+    margin-top: 2vh;
+    font-size: 1.2vw;
+    color: #2C4FA0;
+    text-decoration: none;
+}
+
+.return-link:hover {
+    text-decoration: underline;
+}
+
+.bottom-ribbon {
+    width: 100%;
+    background-color: #2C4FA0;
+    color: white;
+    text-align: center;
+    padding: 1vh 0;
+    font-family: 'Kanit', sans-serif;
+    font-size: 0.8vw;
+    margin-top: 10vh;
+}
+
+@media (max-width: 768px) {
     .home-section {
-      margin: auto;
-      padding: 5vh 2vw;
-      max-width: 40vw;
-      background-color: #f8f9fa;
-      border-radius: 1.5vw;
-      box-shadow: 0 0.5vh 1vh rgba(0,0,0,0.2);
-      text-align: center;
+        max-width: 85vw;
+        padding: 4vh 4vw;
+        margin: -1vh auto;
+        border-radius: 1.5vw;
+        box-shadow: 0 0.5vh 1vh rgba(0,0,0,0.2);
     }
 
     .home-section h2 {
-      font-size: 2.5vw;
-      color: #2C4FA0;
-      margin-bottom: 3vh;
-    }
-
-    /* Form styling to match base theme */
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 2vh;
+        font-size: 6vw;
+        margin-top: -2vh;
     }
 
     form label {
-      font-weight: 700;
-      font-size: 1.2vw;
-      text-align: left;
-      margin-left: 1vw;
+        font-size: 4vw;
+        text-align: left;
+        margin-left: 0;
     }
 
     form input[type="text"],
     form input[type="password"] {
-      padding: 1vh 1vw;
-      font-size: 1.2vw;
-      border: 1px solid #2C4FA0;
-      border-radius: 0.5vw;
-      width: 80%;
-      max-width: 30vw;
-      margin: 0 auto;
+        width: 100%;
+        max-width: 100%;
+        font-size: 4vw;
     }
 
     form input[type="submit"] {
-      margin-top: 2vh;
-      padding: 1vh 2vw;
-      font-size: 1.2vw;
-      background-color: #2C4FA0;
-      color: white;
-      border: none;
-      border-radius: 1vw;
-      cursor: pointer;
-    }
-
-    form input[type="submit"]:hover {
-      background-color: #1d3671;
+        font-size: 4vw;
+        padding: 2vh 4vw;
     }
 
     .return-link {
-      display: block;
-      margin-top: .3vh;
-      color: #2C4FA0;
-      font-size: 1.2vw;
-      text-decoration: none;
-    }
-    .return-link:hover {
-      text-decoration: underline;
-    }
-
-    .home-link {
-      text-decoration: none;
+        font-size: 5vw;
+        margin-top: 4vh;
     }
 
     .bottom-ribbon {
-        width: 100%;
-        background-color: #2C4FA0;
-        color: white;
-        text-align: center;
+        font-size: 2vw;
+        margin-top: 5vh;
         padding: 1vh 0;
-        font-family: 'Kanit', sans-serif;
-        font-size: 0.8vw;
-        position: relative;
-        margin: 0;
-        margin-top: 10vh;
     }
-
-  </style>
+}
+</style>
 </head>
+
 <body>
 
-  {% include 'header.html' %}
+{% include 'header.html' %}
 
-
-  <!-- Employee Login Form -->
-  <div class="home-section" id="employee-login">
+<div class="home-section" id="employee-login">
     <h2>Employee Login</h2>
+
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <script>
@@ -108,23 +152,23 @@
         </script>
       {% endif %}
     {% endwith %}
+
     <form method="POST" action="/employeeLogin">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
 
-      <input type="submit" value="Login">
-      <a href="/" class="return-link">Return</a>
+        <input type="submit" value="Login">
+        <a href="/" class="return-link">Return</a>
     </form>
-  </div>
+</div>
 
 <div class="bottom-ribbon">
     Licensed & Insured • Serving Sussex County Area • Est. 2015<br>
     Website developed by: Jadon Wilhelm, Connor McKay, Michael Tardi, Matthew Houseworth for Stockton University's Software Engineering Class Spring 2025
-  </div>
-
+</div>
 
 </body>
 </html>

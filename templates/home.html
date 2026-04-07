@@ -12,410 +12,305 @@
 
   <!-- Styles -->
   <style>
-    /* Global */
-    body {
-      background-color: #e0e9ff;
-      background-image: url("https://www.transparenttextures.com/patterns/lined-paper-2.png");
-      background-repeat: repeat;
-      background-attachment: fixed;
-      margin: 0;
-      padding: 0;
-      overflow-y: scroll;
-    }
+  /* Sections */
+  .home-section {
+    margin: 6vh auto;
+    padding: 5vh;
+    max-width: 56vw;
+    background-color: #f8f9fa;
+    border-radius: 1.5vw;
+    box-shadow: 0 2vh 1vh rgba(0, 0, 0, 0.2);
+    text-align: center;
+    font-family: 'Kanit', sans-serif;
+    font-size: 1.5vw;
+  }
 
-    /* Header */
-    .header-bar {
-      background-color: #2C4FA0;
-      padding: 2vh 0;
-      text-align: center;
-      width: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-    }
+  .about-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2vw;
+    flex-wrap: wrap;
+  }
 
-    .header-bar h1 {
-      color: #2C4FA0;
-    }
+  .about-image {
+    width: 30vw;
+    height: auto;
+    border-radius: 1.5vh;
+  }
 
-    .lightbulb {
-      position: absolute;
-      top: 1vh;
-      left: 3vh;
-      height: 20vw;
-      width: auto;
-      z-index: 2;
-    }
+  .about-text {
+    max-width: 22vw;
+    text-align: center;
+  }
 
-    .title-oval {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #ffffff;
-      border-radius: 20vw;
-      padding: 0.2vh 3vw;
-      margin: 0 2vw 1.3vh 2vw;
-      max-width: calc(100% - 10vw);
-      box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
-    }
+  #about-us h2 {
+    margin-top: 0;
+  }
 
-    .title-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      line-height: .8;
-      margin-top: -1vh;
-    }
+  /* Slideshow */
+  .slideshow-container {
+    position: relative;
+    width: 100%;
+    max-width: 80vw;
+    height: 60vh;
+    margin-top: -5vh;
+    margin-bottom: .5vh;
+    overflow: hidden;
+    border-radius: 1vw;
+  }
 
-    .denheyer {
-      font-family: 'Anton', sans-serif;
-      font-size: 7vw;
-      letter-spacing: .2vw;
-    }
+  .gallery-slide {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-    .electric {
-      font-family: 'Teko', sans-serif;
-      font-size: 7vw;
-      letter-spacing: .2vw;
-    }
+  .gallery-slide:first-child {
+    opacity: 1;
+  }
 
-    .subtitle {
-      margin-top: 0;
-      font-size: 1.7vw;
-      color: #0a1125;
-      font-family: 'Kanit', sans-serif;
-      font-style: italic;
-      text-decoration: underline;
-    }
+  .prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    padding: 2vh;
+    color: white;
+    font-size: 2vw;
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: .5vw;
+    user-select: none;
+    z-index: 3;
+    transform: translateY(-50%);
+  }
 
-    .contact-box {
-      position: absolute;
-      right: .8vw;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: 'Kanit', sans-serif;
-      font-size: .9vw;
-      background-color: #f0f0f0;
-      border: 2px solid #2C4FA0;
-      border-radius: 0.6vw;
-      padding: 1vh 1vw;
-      color: #2C4FA0;
-      min-width: 9vw;
-      text-align: left;
-      line-height: .6;
-      box-shadow: 0 0.2vh 0.6vh rgba(0, 0, 0, 0.1);
-    }
+  .prev { left: 1vw; }
+  .next { right: 1vw; }
 
-    .contact-box p.address-line {
-      margin-left: 120px;
-    }
+  .prev:hover, .next:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
 
-    /* Navigation */
-    .navbar {
-      display: flex;
-      justify-content: center;
-      gap: 3vw;
-    }
+  #gallery-slideshow {
+    margin-top: -.5vh;
+  }
 
-    .navbar a, .dropbtn {
-      color: #F0F0F0;
-      text-decoration: none;
-      font-size: 1.5vw;
-      padding: .5vh;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-family: 'Kanit', sans-serif;
-    }
+  .work-description {
+    font-size: 1.3vw;
+    color: #5e5d5d;
+    margin-top: .2vh;
+  }
 
-    .navbar a:hover, .dropbtn:hover {
-      background-color: #A3B6E9;
-      border-radius: .3vh;
-    }
+  #gallery-slideshow h2 {
+    margin-top: -1vh;
+    font-weight: 700;
+  }
 
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
+  /* Estimate Section */
+  .estimate-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2vw;
+  }
 
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #F8F9FA;
-      min-width: 14vw;
-      box-shadow: 0 .5vh 1vh rgba(0, 0, 0, 0.2);
-      z-index: 1;
-      border-radius: 1vh;
-    }
+  .estimate-text {
+    flex: 1;
+    min-width: 25vw;
+  }
 
-    .dropdown-content a {
-      color: black;
-      padding: 1vh;
-      display: block;
-      text-align: left;
-      font-size: 1.3vw;
-    }
+  .estimate-image img {
+    max-width: 100%;
+    height: auto;
+    max-height: 17vw;
+  }
 
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
+  .estimate-button {
+    display: inline-block;
+    padding: 2vh 4vw;
+    margin-top: 2vh;
+    font-size: 2vw;
+    font-family: 'Kanit', sans-serif;
+    background-color: #2C4FA0;
+    color: white;
+    border-radius: 1vw;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
 
-    /* Sections */
-    .home-section {
-      margin: 6vh auto;
-      padding: 5vh;
-      max-width: 56vw;
-      background-color: #f8f9fa;
-      border-radius: 1.5vw;
-      box-shadow: 0 2vh 1vh rgba(0, 0, 0, 0.2);
-      text-align: center;
-      font-family: 'Kanit', sans-serif;
-      font-size: 1.5vw;
-    }
+  .estimate-button:hover {
+    background-color: #1d3671;
+  }
 
-    .about-content {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 2vw;
-      flex-wrap: wrap;
-    }
+  /* Dealers Section */
+  .dealers-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6vw;
+    margin: 4vh auto;
+    padding: 4vh;
+    max-width: 60vw;
+    background-color: #f8f9fa;
+    border-radius: 1.5vw;
+    box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
 
-    .about-image {
-      width: 30vw;
-      height: auto;
-      border-radius: 1.5vh;
-    }
+  .dealers-title {
+    width: 100%;
+    text-align: center;
+    font-size: 2.4vw;
+    color: #0a1125;
+    margin-top: 0;
+    margin-bottom: -10vh;
+  }
 
-    .about-text {
-      max-width: 22vw;
-      text-align: center;
-      font-family: 'Kanit', sans-serif;
-    }
+  .dealer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    max-width: 24vw;
+    background: white;
+    border-radius: 1vw;
+    padding: 2vh;
+    box-shadow: 0 0.3vh 0.8vh rgba(0, 0, 0, 0.1);
+  }
 
-    #about-us h2 {
-      margin-top: 0;
-      font-family: 'Kanit', sans-serif;
-    }
+  .dealer img {
+    max-width: 100%;
+    max-height: 120px;
+    object-fit: contain;
+    margin-bottom: 2vh;
+  }
 
-    /* Slideshow */
-    .slideshow-container {
-      position: relative;
-      width: 100%;
-      max-width: 80vw;
-      height: 60vh;
-      margin: 0 auto;
-      overflow: hidden;
-      border-radius: 1vw;
-    }
+  .dealer p {
+    font-size: 1.4vw;
+    color: #2C4FA0;
+    margin: 0;
+  }
 
-    .gallery-slide {
-      display: none;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+  .dealers-link {
+    font-size: 1.2vw;
+    color: #2C4FA0;
+    margin-top: -5vh;
+  }
 
-    .gallery-slide:first-child {
-      opacity: 1;
-    }
+  /* Footer Ribbon */
+  .bottom-ribbon {
+    background-color: #2C4FA0;
+    color: white;
+    text-align: center;
+    padding: 1vh 0;
+    font-family: 'Kanit', sans-serif;
+    font-size: .8vw;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
 
-    .prev, .next {
-      cursor: pointer;
-      position: absolute;
-      top: 50%;
-      padding: 2vh;
-      color: white;
-      font-size: 2vw;
-      font-weight: bold;
-      background-color: rgba(0, 0, 0, 0.4);
-      border-radius: .5vw;
-      user-select: none;
-      z-index: 3;
-      transform: translateY(-50%);
-    }
+  /* ===== MOBILE STYLING ===== */
+  @media (max-width: 768px) {
 
-    .prev { left: 1vw; }
-    .next { right: 1vw; }
+  /* Remove any global body font scaling */
+  body {
+    margin: 0;
+    padding: 0;
+    font-size: 1.5vw;
+  }
 
-    .prev:hover, .next:hover {
-      background-color: rgba(0, 0, 0, 0.7);
-    }
+  /* Home sections scaling */
+  .home-section {
+    padding: 4vh 4vw;
+    max-width: 85vw;
+    margin: 4vh auto;
+    font-size: 4vw; /* scales only section text */
+  }
 
-    #gallery-slideshow {
-      margin-top: 30vh;
-    }
+  /* About content stacking */
+  .about-content {
+    flex-direction: column;
+    gap: 3vh;
+  }
 
-    .work-description {
-      font-size: 1.3vw;
-      color: #5e5d5d;
-      font-family: 'Kanit', sans-serif;
-      margin-top: .2vh;
-    }
+  .about-image {
+    width: 80%;
+    height: auto;
+    margin: 0 auto;
+  }
 
-    #gallery-slideshow h2 {
-      margin-bottom: 0.5vh;
-      font-weight: 700;
-    }
+  .about-text {
+    max-width: 90%;
+    font-size: 4vw;
+  }
 
-    /* Estimate Section */
-    .estimate-flex {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 2vw;
-    }
+  /* Slideshow scaling */
+  #gallery-slideshow .slideshow-container {
+    height: 40vh;
+  }
 
-    .estimate-text {
-      flex: 1;
-      min-width: 25vw;
-    }
+  .gallery-slide {
+    height: 100%;
+  }
 
-    .estimate-image img {
-      max-width: 100%;
-      height: auto;
-      max-height: 17vw;
-    }
+  #gallery-slideshow h2 {
+    font-size: 6vw;
+    margin-top: 0;
+  }
 
-    .estimate-button {
-      display: inline-block;
-      padding: 2vh 4vw;
-      margin-top: 2vh;
-      font-size: 2vw;
-      font-family: 'Kanit', sans-serif;
-      background-color: #2C4FA0;
-      color: white;
-      border-radius: 1vw;
-      text-decoration: none;
-      transition: background-color 0.3s;
-    }
+  .work-description {
+    font-size: 4vw;
+  }
 
-    .estimate-button:hover {
-      background-color: #1d3671;
-    }
+  /* Estimate section */
+  .estimate-text h2 {
+    font-size: 5vw;
+  }
 
-    /* Dealers Section */
-    .dealers-section {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 6vw;
-      margin: 4vh auto;
-      padding: 4vh;
-      max-width: 60vw;
-      background-color: #f8f9fa;
-      border-radius: 1.5vw;
-      box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
-      text-align: center;
-    }
+  .estimate-button {
+    font-size: 4vw;
+    padding: 2vh 3vw;
+  }
 
-    .dealers-title {
-      width: 100%;
-      text-align: center;
-      font-family: 'Kanit', sans-serif;
-      font-size: 2.4vw;
-      color: #0a1125;
-      margin-top: 0;
-      margin-bottom: -10vh;
-    }
+  .estimate-image img {
+    max-height: 30vw;
+  }
 
-    .dealer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      max-width: 24vw;
-      background: white;
-      border-radius: 1vw;
-      padding: 2vh;
-      box-shadow: 0 0.3vh 0.8vh rgba(0, 0, 0, 0.1);
-    }
+  /* Dealers section */
+  .dealers-title {
+    font-size: 5vw;
+    margin-bottom: 0;
+  }
 
-    .dealer img {
-      max-width: 100%;
-      max-height: 120px;
-      object-fit: contain;
-      margin-bottom: 2vh;
-    }
+  .dealer p {
+    font-size: 4vw;
+  }
 
-    .dealer p {
-      font-family: 'Kanit', sans-serif;
-      font-size: 1.4vw;
-      color: #2C4FA0;
-      margin: 0;
-    }
+  .dealers-link {
+    font-size: 4vw;
+    margin-top: 2vh;
+    display: block;
+  }
 
-    .dealers-link {
-      font-family: 'Kanit', sans-serif;
-      font-size: 1.2vw;
-      color: #2C4FA0;
-      margin-top: -5vh;
-    }
+  /* Bottom ribbon */
+  .bottom-ribbon {
+    font-size: 2vw;
+    padding: 2vh 0;
+    margin-top: 5vh;
+  }
 
-    @media (max-width: 768px) {
-      .dealer {
-        flex: 1 1 80vw;
-        max-width: 80vw;
-      }
-
-      .dealer p {
-        font-size: 3.5vw;
-      }
-    }
-
-    /* Footer Ribbon */
-    .bottom-ribbon {
-      background-color: #2C4FA0;
-      color: white;
-      text-align: center;
-      padding: 1vh 0;
-      font-family: 'Kanit', sans-serif;
-      font-size: .8vw;
-      position: relative;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    }
-  </style>
+}
+</style>
 </head>
 <body>
 
-  <!-- Header with Title and Contact Info -->
-  <div class="header-bar">
-    <img src="/static/images/LightBulbOG_AnniePaxson.png" alt="Lightbulb" class="lightbulb">
-    <div class="title-oval">
-      <div class="title-wrapper">
-        <h1><span class="denheyer">DenHeyer </span> <span class="electric">ELECTRIC</span></h1>
-        <p class="subtitle">Serving the Sussex County area since 2015</p>
-      </div>
-      <div class="contact-box">
-        <p><strong>Phone:</strong> (862) 268-1290</p>
-        <p><strong>Email:</strong> Denheyerelectric@gmail.com</p>
-        <p><strong>Hours:</strong> M–F 8am–4pm</p>
-        <p><strong>Address:</strong> 24 County Rd 639 Wantage, <br><br>NJ 07461</p>
-
-      </div>
-    </div>
-    <nav class="navbar">
-      <a href="/requestEstimate">Request Your Free Estimate</a>
-      <a href="/gallery">Gallery</a>
-      <a href="/reviews">Reviews</a>
-      <div class="dropdown">
-        <button class="dropbtn">More ▼</button>
-        <div class="dropdown-content">
-          <a href="/aboutUs">About Us</a>
-          <a href="/FAQ">FAQ</a>
-          <a href="/certifsAndInsurance">Payment</a>
-          <a href="/certifsAndInsurance">Insurance</a>
-          <a href="/employeePortal">Employee Portal</a>
-        </div>
-      </div>
-    </nav>
-  </div>
+    {% include 'header.html' %}
 
   <!-- Our Work Slideshow -->
   <div class="home-section" id="gallery-slideshow">
@@ -425,7 +320,7 @@
       <img class="gallery-slide" src="/static/images/truck(slideshow).jpeg" alt="Gallery Image 1">
       <img class="gallery-slide" src="/static/images/lightFixture(Slideshow).jpeg" alt="Gallery Image 2">
       <img class="gallery-slide" src="/static/images/lightFixtureInBarn(Slideshow).jpeg" alt="Gallery Image 3">
-        <img class="gallery-slide" src="/static/images/lightFixtureKitchen(Slideshow).jpeg" alt="Gallery Image 4">
+      <img class="gallery-slide" src="/static/images/lightFixtureKitchen(Slideshow).jpeg" alt="Gallery Image 4">
       <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
       <a class="next" onclick="changeSlide(1)">&#10095;</a>
     </div>
@@ -435,12 +330,13 @@
     <div class="work-content">
       <p class="work-description">
           <h2>WE OFFER:</h2> • All phases of residential, commercial, industrial renovations and installations<br>
-	• Stand by and portable generator installs<br>
-	• Service and troubleshooting whole house generators<br>
-	• Pools and hot tub wiring<br>
-	• Smoke detector installation and repairs<br>
-	• Repair of existing electrical issues for home inspections.<br>
-	• Installation of residential and commercial car charging stations
+          • Stand by and portable generator installs<br>
+          • Service and troubleshooting whole house generators<br>
+          • Pools and hot tub wiring<br>
+          • Smoke detector installation and repairs<br>
+          • Repair of existing electrical issues for home inspections.<br>
+          • Installation of residential and commercial car charging stations
+      </p>
     </div>
   </div>
 
@@ -523,3 +419,5 @@
     setTimeout(autoSlide, 3000);
   </script>
 
+</body>
+</html>

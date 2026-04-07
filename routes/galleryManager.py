@@ -2,7 +2,7 @@ import base64
 from flask import render_template, jsonify, Blueprint, request, redirect, url_for, session
 from databaseModule import connect_to_db
 
-galleryManagerBP = Blueprint('galleryManager', __name__)
+galleryManagerBP = Blueprint('galleryManager', __name__, url_prefix='/galleryManager')
 
 # Route for gallery manager
 @galleryManagerBP.route('/galleryManager', methods=['GET', 'POST'])
@@ -30,8 +30,6 @@ def galleryManager():
                 base64_thumbnail = base64.b64encode(data[1]).decode('utf-8')
                 image_list.append((data[0], base64_thumbnail, data[2], data[3]))
 
-        if not image_list:
-            return '''No images available.<br>'''
 
         # The grid display for the images (with inline CSS preserved)
         formatted_gallery = '''

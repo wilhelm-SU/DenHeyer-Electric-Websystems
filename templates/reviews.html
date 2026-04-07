@@ -1,116 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>DenHeyer Electric - Reviews</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>DenHeyer Electric - Reviews</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Styles -->
-  <style>
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Courgette', cursive;
+    font-size: 1.5vw;
+    background-color: #ffffff;
+}
+
+.reviews-container {
+    background-color: #f8f9fa;
+    padding: 4vh 4vw;
+    border-radius: 1.5vw;
+    box-shadow: 0 0.5vh 1vh rgba(0,0,0,0.2);
+    max-width: 70vw;
+    margin: 2vh auto;
+    text-align: center;
+}
+
+.reviews-container h2 {
+    color: #2C4FA0;
+    font-size: 2.5vw;
+    margin-bottom: 3vh;
+}
+
+.review-text {
+        font-size: 1.5vw;
+        line-height: 1.6;
+        text-align: left;
+}
+
+.actions {
+    margin-top: 4vh;
+    text-align: center;
+}
+
+.actions a {
+    display: inline-block;
+    text-align: center;
+    margin: 0 10vw;
+    color: #2C4FA0;
+    font-size: 1.5vw;
+    text-decoration: none;
+}
+
+.actions a:hover {
+    text-decoration: underline;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 1vw;
+    margin-top: 4vh;
+    flex-wrap: wrap;
+}
+
+.pagination a,
+.pagination strong {
+    padding: 0.6vh 1.2vw;
+    font-size: 1.2vw;
+    text-decoration: none;
+    color: #2C4FA0;
+    background-color: #ffffff;
+    border: 2px solid #2C4FA0;
+    border-radius: 0.5vw;
+    transition: background-color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #2C4FA0;
+    color: #ffffff;
+}
+
+.pagination strong {
+    background-color: #2C4FA0;
+    color: #ffffff;
+    border-color: #2C4FA0;
+}
+
+.bottom-ribbon {
+    width: 100%;
+    background-color: #2C4FA0;
+    color: white;
+    text-align: center;
+    padding: 1vh 0;
+    font-family: 'Kanit', sans-serif;
+    font-size: 0.8vw;
+    margin-top: 10vh;
+}
+
+@media (max-width: 768px) {
 
     .reviews-container {
-      background-color: #f8f9fa;
-      padding: 5vh 3vw;
-      border-radius: 1.5vw;
-      box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
-      max-width: 60vw;
-      margin: auto;
-      font-size: 1.2vw;
+        max-width: 85vw;
+        padding: 4vh 4vw;
+        margin: -1vh auto;
+        border-radius: 1.5vw;
+        box-shadow: 0 0.5vh 1vh rgba(0,0,0,0.2);
     }
 
     .reviews-container h2 {
-      color: #2C4FA0;
-      text-align: center;
-      font-size: 2.4vw;
+        font-size: 6vw;
+        margin-top: -2vh;
     }
 
-    .actions {
-      margin-top: 4vh;
-      text-align: center;
+    .review-text {
+        font-size: 4vw;
+        line-height: 1.6;
+        text-align: left;
     }
 
     .actions a {
-      display: inline-block;
-      margin: 0 1vw;
-      color: #2C4FA0;
-      font-size: 1.2vw;
-      text-decoration: none;
-    }
-
-    .actions a:hover {
-      text-decoration: underline;
-    }
-
-    .pagination {
-      display: flex;
-      justify-content: center;
-      gap: 1vw;
-      margin-top: 4vh;
-      flex-wrap: wrap;
+        font-size: 3.5vw;  /* slightly smaller */
+        margin: 1.5vh 9vw;  /* slightly smaller spacing */
     }
 
     .pagination a,
     .pagination strong {
-      padding: 0.6vh 1.2vw;
-      font-size: 1.2vw;
-      text-decoration: none;
-      color: #2C4FA0;
-      background-color: #ffffff;
-      border: 2px solid #2C4FA0;
-      border-radius: 0.5vw;
-      transition: background-color 0.3s;
-    }
-
-    .pagination a:hover {
-      background-color: #2C4FA0;
-      color: #ffffff;
-    }
-
-    .pagination strong {
-      background-color: #2C4FA0;
-      color: #ffffff;
-      border-color: #2C4FA0;
+        font-size: 2.5vw;  /* smaller for pagination buttons */
+        padding: 0.8vh 1.5vw;
     }
 
     .bottom-ribbon {
-        width: 100%;
-        background-color: #2C4FA0;
-        color: white;
-        text-align: center;
+        font-size: 2vw;
+        margin-top: 5vh;
         padding: 1vh 0;
-        font-family: 'Kanit', sans-serif;
-        font-size: 0.8vw;
-        position: relative;
-        margin: 0;
-        margin-top: 10vh;
     }
-
-  </style>
+}
+</style>
 </head>
+
 <body>
 
- {% include 'header.html' %}
+{% include 'header.html' %}
 
-
-  <!-- Reviews Section -->
-  <div class="reviews-container">
+<div class="reviews-container">
     <h2>Welcome to the Reviews</h2>
+    <div class="review-text">
     {{ formatted_reviews | safe }}
+    </div>
 
     <div class="pagination">
-      {{ pagination_links | safe }}
+        {{ pagination_links | safe }}
     </div>
 
     <div class="actions">
-      <a href="/writeAReview">Write a Review</a>
-      <a href="/">Return</a>
+        <a href="/writeAReview">Write a Review</a>
+        <a href="/">Return</a>
     </div>
-  </div>
+</div>
 
 <div class="bottom-ribbon">
     Licensed & Insured • Serving Sussex County Area • Est. 2015<br>
     Website developed by: Jadon Wilhelm, Connor McKay, Michael Tardi, Matthew Houseworth for Stockton University's Software Engineering Class Spring 2025
-  </div>
+</div>
 
 </body>
 </html>

@@ -1,164 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>DenHeyer Electric - Request Estimate</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DenHeyer Electric - Request Estimate</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<style>
 
-  <!-- Styles -->
-  <style>
-    .home-section {
-      background-color: #f8f9fa;
-      padding: 5vh 3vw;
-      border-radius: 1.5vw;
-      box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
-      max-width: 60vw;
-      margin: auto;
-      font-size: 1.2vw;
-    }
+.page-section {
+    padding: 4vh 4vw;
+    max-width: 70vw;
+    background-color: #f8f9fa;
+    border-radius: 1.5vw;
+    box-shadow: 0 0.5vh 1vh rgba(0,0,0,0.2);
+    text-align: center;
+    margin: 2vh auto;
+}
 
-    .home-section h2 {
-      font-size: 2.5vw;
-      color: #2C4FA0;
-      margin-bottom: 3vh;
-    }
+h2 {
+    font-size: 2.5vw;
+    color: #2C4FA0;
+}
 
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 2vh;
-    }
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    margin-top: 2vh;
+}
 
-    form label {
-      font-weight: 700;
-      font-size: 1.2vw;
-      text-align: left;
-      margin-left: 1vw;
-    }
+form label {
+    font-weight: 700;
+    font-size: 1.2vw;
+    text-align: left;
+}
 
-    form input[type="text"],
-    form input[type="email"],
-    form textarea {
-      padding: 1vh 1vw;
-      font-size: 1.2vw;
-      border: 1px solid #2C4FA0;
-      border-radius: 0.5vw;
-      width: 90%;
-      max-width: 40vw;
-      margin: 0 auto;
-      font-family: 'Kanit', sans-serif;
-    }
+form input,
+form textarea {
+    padding: 1vh 1vw;
+    font-size: 1.1vw;
+    border: 1px solid #2C4FA0;
+    border-radius: .5vw;
+    width: 100%;
+    font-family: 'Kanit', sans-serif;
+}
 
-    form textarea {
-      height: 20vh;
-      resize: vertical;
-    }
+form textarea {
+    height: 20vh;
+    resize: vertical;
+}
 
-    form button[type="submit"] {
-      margin-top: 2vh;
-      padding: 1vh 2vw;
-      font-size: 1.2vw;
-      background-color: #2C4FA0;
-      color: white;
-      border: none;
-      border-radius: 1vw;
-      cursor: pointer;
-    }
+form button {
+    margin-top: 2vh;
+    padding: 1vh 2vw;
+    font-size: 1.2vw;
+    background-color: #2C4FA0;
+    color: white;
+    border: none;
+    border-radius: 1vw;
+    cursor: pointer;
+}
 
-    form button[type="submit"]:hover {
-      background-color: #1d3671;
-    }
+form button:hover {
+    background-color: #1d3671;
+}
 
-    .return-link {
-      display: block;
-      margin-top: 2vh;
-      color: #2C4FA0;
-      font-size: 1.2vw;
-      text-decoration: none;
-      text-align: center;
-    }
+.return-link {
+    display: block;
+    margin-top: 2vh;
+    font-size: 1.2vw;
+    color: #2C4FA0;
+    text-decoration: none;
+}
 
-    .return-link:hover {
-      text-decoration: underline;
-    }
+.return-link:hover {
+    text-decoration: underline;
+}
 
-    .flash {
-      background-color: #eaf4ff;
-      color: #2C4FA0;
-      padding: 1vh;
-      border-radius: 0.5vw;
-      margin-bottom: 2vh;
-    }
+.bottom-ribbon {
+    width: 100%;
+    background-color: #2C4FA0;
+    color: white;
+    text-align: center;
+    padding: 1vh 0;
+    font-size: 0.8vw;
+    margin-top: 10vh;
+}
 
-    .bottom-ribbon {
-        width: 100%;
-        background-color: #2C4FA0;
-        color: white;
-        text-align: center;
-        padding: 1vh 0;
-        font-family: 'Kanit', sans-serif;
-        font-size: 0.8vw;
-        position: relative;
-        margin: 0;
-        margin-top: 10vh;
-    }
+@media (max-width: 768px) {
 
-  </style>
+body {
+    margin: 0;
+    padding: 0;
+    font-size: 1.5vw;
+}
+
+.page-section {
+    max-width: 85vw;
+    margin: -1vh auto;
+}
+
+h2 {
+    font-size: 6vw;
+}
+
+form label {
+    font-size: 4vw;
+}
+
+form input,
+form textarea {
+    font-size: 4vw;
+}
+
+form button {
+    font-size: 4.5vw;
+    border-radius: 2vw;
+}
+
+.return-link {
+    font-size: 5vw;
+}
+
+.bottom-ribbon {
+    font-size: 2vw;
+    margin-top: 5vh;
+}
+
+}
+
+</style>
 </head>
+
 <body>
 
-  {% include 'header.html' %}
+{% include 'header.html' %}
 
+<div class="page-section">
 
-  <div class="home-section" id="request-estimate">
-    <h2>Request an Estimate</h2>
+<h2>Request an Estimate</h2>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div style="max-width: 50vw; margin: 2vh auto;">
-          {% for category, message in messages %}
-            <div style="padding: 1vh 2vw; margin-bottom: 1vh; border-radius: 0.5vw;
-                        background-color: {% if category == 'warning' %}#ffc107{% else %}#d4edda{% endif %};
-                        color: {% if category == 'warning' %}#856404{% else %}#155724{% endif %};
-                        font-weight: bold;">
-              {{ message }}
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div style="margin:2vh 0;">
+{% for category, message in messages %}
+<div style="
+padding:1vh 2vw;
+margin-bottom:1vh;
+border-radius:.5vw;
+background-color:{% if category=='warning' %}#ffc107{% else %}#d4edda{% endif %};
+color:{% if category=='warning' %}#856404{% else %}#155724{% endif %};
+font-weight:bold;">
+{{ message }}
+</div>
+{% endfor %}
+</div>
+{% endif %}
+{% endwith %}
 
-    <form method="POST" action="{{ url_for('estimate.requestEstimate') }}">
-      <label>Full Name: *</label>
-      <input type="text" name="name" maxlength="50" required>
+<form method="POST" action="{{ url_for('estimate.requestEstimate') }}">
 
-      <label>Phone Number: *</label>
-      <input type="text" name="phone" maxlength="13" required>
+<label>Full Name: *</label>
+<input type="text" name="name" maxlength="50" required>
 
-      <label>Email:</label>
-      <input type="email" name="email" maxlength="75">
+<label>Phone Number: *</label>
+<input type="text" name="phone" maxlength="13" required>
 
-      <label>Street Address: *</label>
-      <input type="text" name="address" maxlength="255" required>
+<label>Email:</label>
+<input type="email" name="email" maxlength="75">
 
-      <label>City: *</label>
-      <input type="text" name="city" maxlength="75" required>
+<label>Street Address: *</label>
+<input type="text" name="address" maxlength="255" required>
 
-      <label>ZIP Code: *</label>
-      <input type="text" name="zipCode" maxlength="10" required>
+<label>City: *</label>
+<input type="text" name="city" maxlength="75" required>
 
-      <label>Description of Work:</label>
-      <textarea name="description" rows="4" maxlength="750"></textarea>
+<label>ZIP Code: *</label>
+<input type="text" name="zipCode" maxlength="10" required>
 
-      <button type="submit">Submit Request</button>
-      <a href="/" class="return-link">Return</a>
-    </form>
-  </div>
+<label>Description of Work:</label>
+<textarea name="description" maxlength="750"></textarea>
+
+<button type="submit">Submit Request</button>
+
+<a href="/" class="return-link">Return</a>
+
+</form>
+</div>
 
 <div class="bottom-ribbon">
-    Licensed & Insured • Serving Sussex County Area • Est. 2015<br>
-    Website developed by: Jadon Wilhelm, Connor McKay, Michael Tardi, Matthew Houseworth for Stockton University's Software Engineering Class Spring 2025
-  </div>
+Licensed & Insured • Serving Sussex County Area • Est. 2015<br>
+Website developed by: Jadon Wilhelm, Connor McKay, Michael Tardi, Matthew Houseworth for Stockton University's Software Engineering Class Spring 2025
+</div>
 
 </body>
 </html>
