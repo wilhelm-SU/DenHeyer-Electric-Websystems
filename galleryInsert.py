@@ -2,22 +2,16 @@ import psycopg2
 import os
 import sys
 
-'''
-host = 'dpg-curuecjv2p9s73aprlvg-a.oregon-postgres.render.com'  # Example: 'localhost' or an IP address
-port = '5432'  # Example: '5432'
-dbname = 'denheyer_webserver'  # Your database name
-user = 'denheyer_webserver_user'  # Your database username
-password = 'CEu8cjkwWRcBDCjjZu0GhUBwhHA2Jush'  # Your database password
-'''
-
 import psycopg2
 
-#  PostgreSQL Connection Details
-DB_NAME = 'denheyer_webserver'
-DB_USER = 'denheyer_webserver_user'
-DB_PASSWORD = 'CEu8cjkwWRcBDCjjZu0GhUBwhHA2Jush'  
-DB_HOST = 'dpg-curuecjv2p9s73aprlvg-a.oregon-postgres.render.com'  # e.g., "localhost" or Render database URL
-DB_PORT = '5432'  # Default is "5432"
+load_dotenv()
+DB_CONFIG = {
+    'host': os.getenv("DB_HOST"),
+    'port': os.getenv("DB_PORT"),
+    'dbname': os.getenv("DB_NAME"),
+    'user': os.getenv("DB_USER"),
+    'password': os.getenv("DB_PASSWORD"),
+}
 
 def upload_image(file_path):
     """Reads an image file and uploads it to a PostgreSQL database."""
@@ -27,13 +21,7 @@ def upload_image(file_path):
             binary_data = file.read()
         
         #  Connect to PostgreSQL
-        conn = psycopg2.connect(
-            dbname=DB_NAME,
-            user=DB_USER,
-            password=DB_PASSWORD,
-            host=DB_HOST,
-            port=DB_PORT
-        )
+        conn = psycopg2.connect(**DB_CONFIG)
         cur = conn.cursor()
         
         print("Connected to PostgreSQL database.")
