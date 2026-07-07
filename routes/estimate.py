@@ -1,5 +1,5 @@
 import os
-
+import requests
 from flask import Blueprint, request, render_template, redirect, url_for, session, jsonify, flash
 from app import currentTime
 from databaseModule import connect_to_db
@@ -7,12 +7,35 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from submissionLimit import canSubmit
+from dotenv import load_dotenv
 
+load_dotenv()
+
+RECAPTCHA_SITE_KEY = os.getenv("RECAPTCHA_SITE_KEY")
+RECAPTCHA_SECRET_KEY = os.getenv("RECAPTCHA_SECRET_KEY")
 estimateBP = Blueprint('estimate', __name__)
 
 @estimateBP.route('/requestEstimate', methods=['GET', 'POST'])
 def requestEstimate():
     if request.method == 'POST':
+
+        """Google captcha part"""
+        recaptcha_response = request.form.get("g-recaptcha-response")
+
+        verification = requests.post(
+            "https://www.google.com/recaptcha/api/siteverify",
+            data={
+                "secret": RECAPTCHA_SECRET_KEY,
+                "response": recaptcha_response
+            }
+        )
+
+        result = verification.json()
+
+        if not result.get("success"):
+            flash("Please complete the reCAPTCHA verification.", "warning")
+            return redirect(url_for('estimate.requestEstimate'))
+
         if not canSubmit(2):
             flash(f"You can only submit {2} estimate request per day from this IP.", "warning")
             return redirect(url_for('estimate.requestEstimate'))
@@ -59,7 +82,7 @@ def requestEstimate():
             except Exception as e:
                 print(f"Error closing connection: {e}")
 
-    return render_template('estimateForm.html')
+    return render_template('estimateForm.html', recaptcha_site_key=RECAPTCHA_SITE_KEY)
 
 def sendEstimateRequestEmail(requestData):
     senderEmail = os.getenv("EMAIL_USER")
