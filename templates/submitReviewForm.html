@@ -8,6 +8,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
 
+    <link rel="icon" href="/static/images/LightBulbOG_AnniePaxson.png" sizes="any">
+  <link rel="icon" type="image/png" href="/static/images/LightBulbOG_AnniePaxson.png">
+  <link rel="apple-touch-icon" href="/static/images/LightBulbOG_AnniePaxson.png">
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
   <!-- Styles -->
   <style>
     body {
@@ -145,6 +151,12 @@
 
       <label for="review">Review: *</label>
       <textarea id="review" name="review" maxlength="750" required></textarea>
+
+        <br>
+
+        <div class="g-recaptcha"
+     data-sitekey="{{ recaptcha_site_key }}">
+</div>
 
       <input type="submit" value="Submit Review">
       <a href="/" class="return-link">Return</a>

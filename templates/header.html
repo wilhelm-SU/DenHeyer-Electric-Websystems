@@ -1,284 +1,327 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DenHeyer Electric</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-
     body {
-      background-color: #e0e9ff;
-      background-image: url("https://www.transparenttextures.com/patterns/lined-paper-2.png");
-      background-repeat: repeat;
-      background-attachment: fixed;
-      margin: 0;
-      padding: 0;
-      font-family: 'Kanit', sans-serif;
+        margin: 0;
+        padding: 0;
+        font-family: 'Kanit', sans-serif;
+        background-color: #e0e9ff;
+        background-image: url("https://www.transparenttextures.com/patterns/lined-paper-2.png");
+        background-repeat: repeat;
+        background-attachment: fixed;
     }
 
     .header-bar {
-      background-color: #2C4FA0;
-      padding: 2vh 0;
-      text-align: center;
-      position: relative;
-      width: 100%;
-      top: 0;
-      left: 0;
-      z-index: 1;
+        position: relative;
+        width: 100%;
+        padding: 2vh 0;
+        text-align: center;
+        background-color: #2C4FA0;
+        z-index: 1;
     }
 
     .header-bar h1 {
-      color: #2C4FA0;
+        color: #2C4FA0;
     }
 
     .lightbulb {
-      position: absolute;
-      top: 1vh;
-      left: 3vh;
-      height: 21vw;
-      width: auto;
-      z-index: 2;
+        position: absolute;
+        top: 1vh;
+        left: 3vh;
+        width: auto;
+        height: 21vw;
+        z-index: 2;
     }
 
     .title-oval {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #ffffff;
-      border-radius: 20vw;
-      padding: .7vh 3vw;
-      margin: 0 2vw 1.3vh 2vw;
-      max-width: calc(100% - 10vw);
-      box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 2vw 1.3vh;
+        padding: .7vh 3vw;
+        max-width: calc(100% - 10vw);
+        background-color: #fff;
+        border-radius: 20vw;
+        box-shadow: 0 .5vh 1vh rgba(0,0,0,.2);
     }
 
     .title-wrapper {
-      display: flex;
-      flex-direction: column;
-      line-height: .8;
-      margin-top: -1vh;
-      padding-left: 17vw;
-    }
-
-    .denheyer {
-      font-family: 'Anton', sans-serif;
-      font-size: 7vw;
-      letter-spacing: .3vw;
-    }
-
-    .electric {
-      font-family: 'Teko', sans-serif;
-      font-size: 7vw;
-      letter-spacing: .3vw;
-    }
-
-    .subtitle {
-      margin-top: -.8vh;
-      margin-bottom: .9vh;
-      font-size: 2.3vw;
-      color: #0a1125;
-      font-family: 'Kanit', sans-serif;
-      font-style: italic;
-      text-decoration: underline;
-    }
-
-    .navbar {
-      display: flex;
-      gap: 11vw;
-      padding-left: 21vw;
-
-    }
-
-    .navbar a, .dropbtn {
-      color: #F0F0F0;
-      text-decoration: none;
-      font-size: 2vw;
-      padding: .5vh;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-family: 'Kanit', sans-serif;
-    }
-
-    .navbar a:hover, .dropbtn:hover {
-      background-color: #A3B6E9;
-      border-radius: .3vh;
-    }
-
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #F8F9FA;
-      min-width: 14vw;
-      box-shadow: 0 .5vh 1vh rgba(0, 0, 0, 0.2);
-      z-index: 1;
-      border-radius: 1vh;
-    }
-
-    .dropdown-content a {
-      color: black;
-      padding: 1vh;
-      display: block;
-      text-align: left;
-      font-size: 1.3vw;
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
-    .header-spacer {
-        height: 5vh;
-        width: 100%;
-    }
-
-    .home-link {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .contact-float {
-      position: fixed;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      background: #2C4FA0;
-      color: white;
-      padding: 1.2vh 1vw;
-      border-radius: 1vw 0 0 1vw;
-      cursor: pointer;
-      font-size: 1.1vw;
-      font-family: 'Kanit', sans-serif;
-      box-shadow: -0.3vw 0 0.8vw rgba(0,0,0,0.2);
-      z-index: 999;
-    }
-
-    /* Slide-out panel */
-    .contact-panel {
-      position: fixed;
-      right: -320px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 300px;
-      background: white;
-      padding: 2vh 1.5vw;
-      box-shadow: -0.5vw 0 1vw rgba(0,0,0,0.2);
-      border-radius: 1vw 0 0 1vw;
-      transition: right 0.3s ease;
-      font-family: 'Kanit', sans-serif;
-      z-index: 998;
-    }
-
-    .contact-panel.open {
-      right: 0;
-    }
-
-@media (max-width: 768px) {
-
-    .navbar {
         display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-        gap: .1vw;
-        padding: 0;
-        margin-bottom: -3vw;
-    }
-
-    .navbar a,
-    .dropbtn {
-        font-size: 3.8vw;
-        padding: 1vh 1.5vw;
-        width: auto;
-        text-align: center;
-        margin: 0;
-        white-space: nowrap;
-    }
-
-    .dropdown {
-        position: relative; /* keep menu relative to button */
-    }
-
-    .dropdown-content {
-        position: absolute;
-        right: 0; /* align right edge of menu to right edge of button */
-        left: auto; /* ignore left */
-        min-width: 150px; /* or auto, whatever fits content */
-        max-width: 90vw; /* never overflow viewport */
-        box-sizing: border-box;
-    }
-
-    .dropdown-content a {
-        font-size: 3.8vw;
-        padding: 1vh 1.5vw;
+        flex-direction: column;
+        line-height: .8;
+        margin-top: -1vh;
+        padding-left: 17vw;
     }
 
     .denheyer {
         font-family: 'Anton', sans-serif;
-        font-size: 8vw;
+        font-size: 7vw;
         letter-spacing: .3vw;
     }
 
     .electric {
         font-family: 'Teko', sans-serif;
-        font-size: 8vw;
+        font-size: 7vw;
         letter-spacing: .3vw;
     }
-}
 
+    .subtitle {
+        margin-top: -.8vh;
+        margin-bottom: .9vh;
+        font-size: 2.3vw;
+        color: #0a1125;
+        font-style: italic;
+        text-decoration: underline;
+    }
+
+    .home-link {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .navbar {
+        display: flex;
+        gap: 11vw;
+        padding-left: 21vw;
+    }
+
+    .navbar a,
+    .dropbtn {
+        padding: .5vh;
+        border: none;
+        background: none;
+        color: #F0F0F0;
+        cursor: pointer;
+        text-decoration: none;
+        font-family: 'Kanit', sans-serif;
+        font-size: 2vw;
+    }
+
+    .navbar a:hover,
+    .dropbtn:hover {
+        background-color: #A3B6E9;
+        border-radius: .3vh;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        min-width: 14vw;
+        background-color: #F8F9FA;
+        border-radius: 1vh;
+        box-shadow: 0 .5vh 1vh rgba(0,0,0,.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        display: block;
+        padding: 1vh;
+        color: black;
+        text-align: left;
+        font-size: 1.3vw;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .header-spacer {
+        width: 100%;
+        height: 5vh;
+    }
+
+    .contact-float {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        width: 70px;
+        height: 70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 1000;
+        background: linear-gradient(135deg, #007bff, #0056d6);
+        box-shadow: 0 4px 15px rgba(0,0,0,.3);
+        transition: all .3s ease;
+    }
+
+    .contact-float:hover {
+        transform: scale(1.1);
+        background: linear-gradient(135deg, #1e90ff, #0066ff);
+        box-shadow: 0 6px 20px rgba(0,0,0,.4);
+    }
+
+    .contact-float i {
+        color: white;
+        font-size: 30px;
+    }
+
+    .contact-panel {
+        position: fixed;
+        top: 50%;
+        right: -320px;
+        width: 300px;
+        padding: 2vh 1.5vw;
+        transform: translateY(-50%);
+        background: white;
+        border-radius: 1vw 0 0 1vw;
+        box-shadow: -.5vw 0 1vw rgba(0,0,0,.2);
+        font-family: 'Kanit', sans-serif;
+        transition: right .3s ease, opacity .3s ease;
+        opacity: 0;
+        visibility: hidden;
+        z-index: 998;
+    }
+
+    .contact-panel.open {
+        right: 0;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    @media (max-width: 768px) {
+
+        .navbar {
+            justify-content: space-around;
+            align-items: center;
+            gap: .1vw;
+            padding: 0;
+            margin-bottom: -3vw;
+        }
+
+        .navbar a,
+        .dropbtn {
+            width: auto;
+            margin: 0;
+            padding: 1vh 1.5vw;
+            text-align: center;
+            white-space: nowrap;
+            font-size: 3.8vw;
+        }
+
+        .dropdown-content {
+            right: 0;
+            left: auto;
+            min-width: 150px;
+            max-width: 90vw;
+            box-sizing: border-box;
+        }
+
+        .dropdown-content a {
+            padding: 1vh 1.5vw;
+            font-size: 3.8vw;
+        }
+
+        .denheyer,
+        .electric {
+            font-size: 8vw;
+        }
+
+        .contact-panel {
+            width: 75vw;
+            right: -80vw;
+            padding: 3vh 5vw;
+            border-radius: 4vw 0 0 4vw;
+        }
+
+        .contact-panel p {
+            margin: 2vh 0;
+            line-height: 1.6;
+            font-size: 4.5vw;
+        }
+
+        .contact-panel strong {
+            font-size: 4.8vw;
+        }
+
+        .contact-float {
+            width: 80px;
+            height: 80px;
+        }
+
+        .contact-float i {
+            font-size: 34px;
+        }
+    }
 </style>
 
-<!-- Header with Title and Contact Info -->
-  <div class="header-bar">
-    <img src="/static/images/LightBulbOG_AnniePaxson.png" alt="Lightbulb" class="lightbulb">
-    <div class="title-oval">
-      <div class="title-wrapper">
-          <h1>
-            <a href="/" class="home-link">
-              <span class="denheyer">DenHeyer  </span>
-              <span class="electric"> ELECTRIC</span>
-            </a>
-          </h1>
-          <p class="subtitle">Serving the Sussex County area since 2015</p>
-        </div>
 
-    </div>
-    <nav class="navbar">
-      <a href="/requestEstimate">Request Estimate</a>
-      <a href="/gallery">Gallery</a>
-      <a href="/reviews">Reviews</a>
-      <div class="dropdown">
-        <button class="dropbtn">More ▼</button>
-        <div class="dropdown-content">
-          <a href="/aboutUs">About Us</a>
-          <a href="/FAQ">FAQ</a>
-          <a href="/certifsAndInsurance">Payment</a>
-          <a href="/certifsAndInsurance">Insurance</a>
-          <a href="/employeePortal">Employee Portal</a>
+</head>
+
+<body>
+
+
+<div class="header-bar">
+    <img src="/static/images/LightBulbOG_AnniePaxson.png" alt="Lightbulb" class="lightbulb">
+
+    <div class="title-oval">
+        <div class="title-wrapper">
+            <h1>
+                <a href="/" class="home-link">
+                    <span class="denheyer">DenHeyer</span>
+                    <span class="electric"> ELECTRIC</span>
+                </a>
+            </h1>
+            <p class="subtitle">Serving the Sussex County area since 2015</p>
         </div>
-      </div>
+    </div>
+
+    <nav class="navbar">
+        <a href="/requestEstimate">Request Estimate</a>
+        <a href="/gallery">Gallery</a>
+        <a href="/reviews">Reviews</a>
+
+        <div class="dropdown">
+            <button class="dropbtn">More ▼</button>
+
+            <div class="dropdown-content">
+                <a href="/aboutUs">About Us</a>
+                <a href="/FAQ">FAQ</a>
+                <a href="/certifsAndInsurance">Payment</a>
+                <a href="/certifsAndInsurance">Insurance</a>
+                <a href="/employeePortal">Employee Portal</a>
+            </div>
+        </div>
     </nav>
-  </div>
+</div>
+
 <div class="header-spacer"></div>
 
 <div class="contact-float" onclick="toggleContact()">
-  Contact
+    <i class="fas fa-phone-alt"></i>
 </div>
 
 <div class="contact-panel" id="contactPanel">
-  <p><strong>Phone:</strong> (862) 268-1290</p>
-  <p><strong>Email:</strong> Denheyerelectric@gmail.com</p>
-  <p><strong>Hours:</strong> M–F 8am–4pm</p>
-  <p><strong>Address:</strong> 24 County Rd 639 Wantage, NJ 07461</p>
+    <p><strong>Phone:</strong> (862) 268-1290</p>
+    <p><strong>Email:</strong> Denheyerelectric@gmail.com</p>
+    <p><strong>Hours:</strong> M–F 8am–4pm</p>
+    <p><strong>Address:</strong> 24 County Rd 639 Wantage, NJ 07461</p>
 </div>
 
 <script>
-function toggleContact(){
-  document.getElementById("contactPanel").classList.toggle("open");
-}
+    function toggleContact() {
+        document.getElementById("contactPanel").classList.toggle("open");
+    }
 </script>
+
+</body>
+</html>

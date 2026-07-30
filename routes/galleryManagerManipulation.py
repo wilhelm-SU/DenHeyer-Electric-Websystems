@@ -35,52 +35,58 @@ def insertImage():
     if not session.get('loggedIn'):
         return redirect(url_for('employee.employeeLogin'))
 
-    # Get image data from the form
     description = request.form.get('description')
-    public = request.form.get('public') == 'on'  # Checkbox logic
+    public = request.form.get('public') == 'on'
     image_file = request.files.get('image')
 
     if not image_file:
         return "No image uploaded", 400
 
-#so this is going to be the spot where the image gets split into high/low resolution
+    cursor = None
+    connect = None
 
     try:
-        # Step 1: Load the original image
+        # Load image
         image = Image.open(image_file)
 
-        # Save full-res image bytes
-        full_res_bytes = io.BytesIO()
-        image.save(full_res_bytes, format='JPEG')
-        full_res_bytes = full_res_bytes.getvalue()
+        # Convert to RGB so it can always be saved as JPEG
+        if image.mode != "RGB":
+            image = image.convert("RGB")
 
-        # Create thumbnail (lazy-load version)
-        thumbnail_size = (300, 300)  # adjust as needed for display speed/quality
-        image.thumbnail(thumbnail_size)     #this might need to be adjusted for mobile view
+        # Save full-resolution JPEG
+        full_res_buffer = io.BytesIO()
+        image.save(full_res_buffer, format="JPEG", quality=95)
+        full_res_bytes = full_res_buffer.getvalue()
 
-        thumbnail_bytes = io.BytesIO()
-        image.save(thumbnail_bytes, format='JPEG')
-        thumbnail_bytes = thumbnail_bytes.getvalue()
+        # Create thumbnail from a copy (don't shrink the full-resolution image)
+        thumbnail = image.copy()
+        thumbnail.thumbnail((300, 300))
 
-        # Insert into DB
+        thumbnail_buffer = io.BytesIO()
+        thumbnail.save(thumbnail_buffer, format="JPEG", quality=85)
+        thumbnail_bytes = thumbnail_buffer.getvalue()
+
+        # Connect to database
         connect = connect_to_db()
         cursor = connect.cursor()
 
-        # Insert metadata first
-        cursor.execute('''
-                INSERT INTO "GALLERY_META" ("DESCRIPTION", "PUBLIC")
-                VALUES (%s, %s)
-                RETURNING "PRIMARY_KEY"
-            ''', (description, public))
+        # Insert metadata
+        cursor.execute("""
+            INSERT INTO "GALLERY_META" ("DESCRIPTION", "PUBLIC")
+            VALUES (%s, %s)
+            RETURNING "PRIMARY_KEY"
+        """, (description, public))
+
         gallery_key = cursor.fetchone()[0]
 
-        # Insert image data linked to metadata
-        cursor.execute('''
-                INSERT INTO "GALLERY_IMAGE" ("GALLERY_KEY", "THUMBNAIL", "FULL_RES")
-                VALUES (%s, %s, %s)
-            ''', (gallery_key, thumbnail_bytes, full_res_bytes))
+        # Insert image data
+        cursor.execute("""
+            INSERT INTO "GALLERY_IMAGE" ("GALLERY_KEY", "THUMBNAIL", "FULL_RES")
+            VALUES (%s, %s, %s)
+        """, (gallery_key, thumbnail_bytes, full_res_bytes))
 
         connect.commit()
+
         print(f"Inserted image with GALLERY_KEY = {gallery_key}")
 
     except Exception as e:
@@ -94,7 +100,6 @@ def insertImage():
             connect.close()
 
     return redirect(url_for('galleryManager.galleryManager'))
-
 @galleryManagerManipulationBP.route('/insertImagePage', methods=['GET'])
 def insertImagePage():
     if not session.get('loggedIn'):

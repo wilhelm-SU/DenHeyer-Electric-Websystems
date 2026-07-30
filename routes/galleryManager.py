@@ -89,3 +89,5 @@ def galleryManager():
                 connect.close()
         except Exception as e:
             print(f"Error closing connection: {e}")
+
+"""nothin"""
