@@ -10,6 +10,96 @@
   <link rel="apple-touch-icon" href="/static/images/LightBulbOG_AnniePaxson.png">
 
 <style>
+
+    .google-reviews-container {
+
+    background-color: #f8f9fa;
+    padding: 4vh 4vw;
+    border-radius: 1.5vw;
+    box-shadow: 0 0.5vh 1vh rgba(0,0,0,0.2);
+    max-width: 70vw;
+    margin: 4vh auto;
+    text-align: center;
+
+}
+
+
+.google-reviews-container h2 {
+
+    color: #2C4FA0;
+    font-size: 2.5vw;
+    margin-bottom: 3vh;
+
+}
+
+
+.google-review-card {
+
+    background-color: white;
+    padding: 2vh 2vw;
+    margin: 2vh auto;
+    border-radius: 1vw;
+    text-align: left;
+    box-shadow: 0 0.3vh 0.8vh rgba(0,0,0,0.15);
+
+}
+
+
+.google-review-card h3 {
+
+    color: #2C4FA0;
+    margin-top: 0;
+
+}
+
+
+.google-review-card p {
+
+    font-size: 1.3vw;
+    line-height: 1.5;
+
+}
+
+
+.google-review-author {
+
+    font-size: 1vw;
+    color: #555;
+
+}
+
+
+@media (max-width:768px) {
+
+    .google-reviews-container {
+
+        max-width: 85vw;
+
+    }
+
+
+    .google-reviews-container h2 {
+
+        font-size: 6vw;
+
+    }
+
+
+    .google-review-card p {
+
+        font-size: 4vw;
+
+    }
+
+
+    .google-review-author {
+
+        font-size: 3vw;
+
+    }
+
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -161,10 +251,157 @@ body {
     </div>
 </div>
 
+<div class="google-reviews-container">
+
+    <h2>Google Reviews</h2>
+
+    <div id="google-reviews">
+        Loading Google Reviews...
+    </div>
+
+</div>
+
 <div class="bottom-ribbon">
     Licensed & Insured • Serving Sussex County Area • Est. 2015<br>
     Website developed by: Jadon Wilhelm, Connor McKay, Michael Tardi, Matthew Houseworth for Stockton University's Software Engineering Class Spring 2025
 </div>
 
 </body>
+
+<script>
+
+fetch("/googleReviews")
+
+.then(response => response.json())
+
+.then(data => {
+
+    const container = document.getElementById(
+        "google-reviews"
+    );
+
+
+    let stars = "";
+
+    if (data.rating) {
+
+        stars = "⭐".repeat(
+            Math.round(data.rating)
+        );
+
+    }
+
+
+    let html = `
+
+        <div class="google-review-card">
+
+            <h3>
+                ${stars}
+            </h3>
+
+            <p>
+                ${data.rating} / 5
+            </p>
+
+            <p>
+                Based on ${data.userRatingCount} Google reviews
+            </p>
+
+        </div>
+
+    `;
+
+
+    const writtenReviews = (data.reviews || [])
+        .filter(review =>
+            review.text &&
+            review.text.text &&
+            review.text.text.trim() !== ""
+        )
+        .slice(0, 5);
+
+
+
+    writtenReviews.forEach(review => {
+
+
+        let reviewStars = "⭐".repeat(
+            review.rating
+        );
+
+
+        html += `
+
+            <div class="google-review-card">
+
+                <h3>
+                    ${reviewStars}
+                </h3>
+
+
+                <p>
+                    ${review.text.text}
+                </p>
+
+
+                <div class="google-review-author">
+
+                    ${review.authorAttribution?.displayName
+                    || "Google User"}
+
+                </div>
+
+            </div>
+
+        `;
+
+    });
+
+
+
+    if (data.googleMapsUri) {
+
+        html += `
+
+            <div class="actions">
+
+                <a href="${data.googleMapsUri}"
+                   target="_blank">
+
+                    View all Google Reviews
+
+                </a>
+
+            </div>
+
+        `;
+
+    }
+
+
+    container.innerHTML = html;
+
+
+})
+
+
+.catch(error => {
+
+    console.error(
+        "Google Review Error:",
+        error
+    );
+
+
+    document.getElementById(
+        "google-reviews"
+    ).innerHTML =
+        "Unable to load Google Reviews.";
+
+});
+
+
+</script>
+
 </html>

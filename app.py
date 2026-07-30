@@ -64,6 +64,10 @@ app.register_blueprint(certifsAndInsuranceBP)
 from routes.FAQ import FAQBP
 app.register_blueprint(FAQBP)
 
+#GOOGLE REVIEW Routes
+from routes.googleReviews import googleReviewsBP
+app.register_blueprint(googleReviewsBP)
+
 @app.route('/test-db')
 def test_db():
     conn = connect_to_db()
