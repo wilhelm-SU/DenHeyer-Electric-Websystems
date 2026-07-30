@@ -1,7 +1,5 @@
 import os
 
-from flask import Blueprint, request, render_template, redirect, url_for, session, jsonify, flash
-from app import currentTime
 from databaseModule import connect_to_db
 import smtplib
 from datetime import datetime
