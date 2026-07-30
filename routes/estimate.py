@@ -1,14 +1,16 @@
 import os
-
-from flask import Blueprint, request, render_template, redirect, url_for, session, jsonify, flash
-from app import currentTime
-from databaseModule import connect_to_db
 import smtplib
+from datetime import datetime
+import pytz
+
+from flask import Blueprint, request, render_template, redirect, url_for, jsonify, flash
+from databaseModule import connect_to_db
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from submissionLimit import canSubmit
 
 estimateBP = Blueprint('estimate', __name__)
+
 
 @estimateBP.route('/requestEstimate', methods=['GET', 'POST'])
 def requestEstimate():
@@ -24,23 +26,35 @@ def requestEstimate():
         address = request.form.get('address')
         city = request.form.get('city')
         zipCode = request.form.get('zipCode')
-        date = currentTime
+
+        # Get the current Eastern time at the moment the request is submitted
+        eastern = pytz.timezone("US/Eastern")
+        date = datetime.now(eastern)
 
         if not name or not phone or not address or not city or not zipCode:
             return "Fields with '*' are required.", 400
-
 
         try:
             connect = connect_to_db()
             cursor = connect.cursor()
 
-            cursor.execute('INSERT INTO "ESTIMATES" ("NAME", "PHONE", "EMAIL", "DATE", "ADDRESS", "CITY", "ZIP_CODE", "HANDLED", "DESCRIPTION") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING "PRIMARY_KEY"',
-                                (name, phone, email, date, address, city, zipCode, False, description))
+            cursor.execute(
+                '''
+                INSERT INTO "ESTIMATES"
+                ("NAME", "PHONE", "EMAIL", "DATE", "ADDRESS", "CITY", "ZIP_CODE", "HANDLED", "DESCRIPTION")
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                RETURNING "PRIMARY_KEY"
+                ''',
+                (name, phone, email, date, address, city, zipCode, False, description)
+            )
 
             requestID = cursor.fetchone()[0]
             connect.commit()
 
-            cursor.execute('SELECT * FROM "ESTIMATES" WHERE "PRIMARY_KEY" = %s', (requestID,))
+            cursor.execute(
+                'SELECT * FROM "ESTIMATES" WHERE "PRIMARY_KEY" = %s',
+                (requestID,)
+            )
             requestData = cursor.fetchone()
 
             sendEstimateRequestEmail(requestData)
@@ -61,6 +75,7 @@ def requestEstimate():
 
     return render_template('estimateForm.html')
 
+
 def sendEstimateRequestEmail(requestData):
     senderEmail = os.getenv("EMAIL_USER")
     senderPassword = os.getenv("EMAIL_PASSWORD")
@@ -78,10 +93,17 @@ def sendEstimateRequestEmail(requestData):
     Description: {requestData[9]}
     """
 
+    connect = None
+    cursor = None
+
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
-        cursor.execute('SELECT "EMPLOYEE_EMAIL" FROM "EMPLOYEE_CREDENTIALS" WHERE "EMAIL_LIST" = TRUE')
+
+        cursor.execute(
+            'SELECT "EMPLOYEE_EMAIL" FROM "EMPLOYEE_CREDENTIALS" WHERE "EMAIL_LIST" = TRUE'
+        )
+
         email_rows = cursor.fetchall()
         recipientEmails = [row[0] for row in email_rows]
         recipientEmails.append("denheyerhelper@gmail.com")
@@ -101,11 +123,14 @@ def sendEstimateRequestEmail(requestData):
         server.login(senderEmail, senderPassword)
         server.sendmail(senderEmail, recipientEmails, msg.as_string())
         server.quit()
+
         print("Email sent successfully")
 
     except Exception as e:
         print(f"Error sending email: {e}")
 
     finally:
-        if cursor: cursor.close()
-        if connect: connect.close()
+        if cursor:
+            cursor.close()
+        if connect:
+            connect.close()
