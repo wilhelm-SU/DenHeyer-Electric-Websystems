@@ -5,22 +5,45 @@ from PIL import Image
 
 galleryManagerManipulationBP = Blueprint('galleryManagerManipulation', __name__)
 
-@galleryManagerManipulationBP.route('/deleteImage/<int:primary_key>', methods=['POST'])
-def deleteImage(primary_key):
+@galleryManagerManipulationBP.route('/deleteImage/<int:image_id>', methods=['POST'])
+def deleteImage(image_id):
     if not session.get('loggedIn'):
         return redirect(url_for('employee.employeeLogin'))
+
+    connect = None
+    cursor = None
 
     try:
         connect = connect_to_db()
         cursor = connect.cursor()
 
-        # Deleting from GALLERY_META automatically removes related images in GALLERY_IMAGE
-        cursor.execute('DELETE FROM "GALLERY_META" WHERE "PRIMARY_KEY" = %s', (primary_key,))
+        # Find the project this image belongs to
+        cursor.execute("""
+            SELECT "PROJECT_ID"
+            FROM "GALLERY_IMAGE"
+            WHERE "IMAGE_ID" = %s
+        """, (image_id,))
+
+        result = cursor.fetchone()
+
+        if not result:
+            return "Image not found.", 404
+
+        project_id = result[0]
+
+        # Delete the image
+        cursor.execute("""
+            DELETE FROM "GALLERY_IMAGE"
+            WHERE "IMAGE_ID" = %s
+        """, (image_id,))
+
         connect.commit()
-        print(f"Deleted image with PRIMARY_KEY = {primary_key}")
 
     except Exception as e:
-        print(f"Error deleting image: {e}")
+        if connect:
+            connect.rollback()
+        print(e)
+        return "Error deleting image.", 500
 
     finally:
         if cursor:
@@ -28,70 +51,104 @@ def deleteImage(primary_key):
         if connect:
             connect.close()
 
-    return redirect(url_for('galleryManager.galleryManager'))
+    return redirect(
+        url_for(
+            'galleryManager.projectManager',
+            project_id=project_id
+        )
+    )
+@galleryManagerManipulationBP.route('/createProjectPage', methods=['GET'])
+def createProjectPage():
+    if not session.get('loggedIn'):
+        return redirect(url_for('employee.employeeLogin'))
 
+    return render_template('createProject.html')
+
+@galleryManagerManipulationBP.route('/createProject', methods=['POST'])
+def createProject():
+    if not session.get('loggedIn'):
+        return redirect(url_for('employee.employeeLogin'))
+
+    title = request.form.get("title")
+    description = request.form.get("description")
+    public = request.form.get("public") == "on"
+
+    connect = connect_to_db()
+    cursor = connect.cursor()
+
+    cursor.execute("""
+    INSERT INTO "GALLERY_PROJECT"
+    ("TITLE","DESCRIPTION","PUBLIC")
+    VALUES (%s,%s,%s)
+    RETURNING "PROJECT_ID"
+    """, (title, description, public))
+
+    project_id = cursor.fetchone()[0]
+
+    connect.commit()
+
+    cursor.close()
+    connect.close()
+
+    return redirect(
+        url_for(
+            "galleryManager.projectManager",
+            project_id=project_id
+        )
+    )
 @galleryManagerManipulationBP.route('/insertImage', methods=['POST'])
 def insertImage():
+
     if not session.get('loggedIn'):
         return redirect(url_for('employee.employeeLogin'))
 
-    description = request.form.get('description')
-    public = request.form.get('public') == 'on'
-    image_file = request.files.get('image')
+    project_id = request.form.get("project_id", type=int)
 
-    if not image_file:
-        return "No image uploaded", 400
+    files = request.files.getlist("image")
 
-    cursor = None
+    if not files:
+        return "No images uploaded", 400
+
     connect = None
+    cursor = None
 
     try:
-        # Load image
-        image = Image.open(image_file)
-
-        # Convert to RGB so it can always be saved as JPEG
-        if image.mode != "RGB":
-            image = image.convert("RGB")
-
-        # Save full-resolution JPEG
-        full_res_buffer = io.BytesIO()
-        image.save(full_res_buffer, format="JPEG", quality=95)
-        full_res_bytes = full_res_buffer.getvalue()
-
-        # Create thumbnail from a copy (don't shrink the full-resolution image)
-        thumbnail = image.copy()
-        thumbnail.thumbnail((300, 300))
-
-        thumbnail_buffer = io.BytesIO()
-        thumbnail.save(thumbnail_buffer, format="JPEG", quality=85)
-        thumbnail_bytes = thumbnail_buffer.getvalue()
-
-        # Connect to database
         connect = connect_to_db()
         cursor = connect.cursor()
 
-        # Insert metadata
-        cursor.execute("""
-            INSERT INTO "GALLERY_META" ("DESCRIPTION", "PUBLIC")
-            VALUES (%s, %s)
-            RETURNING "PRIMARY_KEY"
-        """, (description, public))
+        for image_file in files:
 
-        gallery_key = cursor.fetchone()[0]
+            image = Image.open(image_file)
 
-        # Insert image data
-        cursor.execute("""
-            INSERT INTO "GALLERY_IMAGE" ("GALLERY_KEY", "THUMBNAIL", "FULL_RES")
-            VALUES (%s, %s, %s)
-        """, (gallery_key, thumbnail_bytes, full_res_bytes))
+            if image.mode != "RGB":
+                image = image.convert("RGB")
+
+            full_buffer = io.BytesIO()
+            image.save(full_buffer, format="JPEG", quality=95)
+
+            thumb = image.copy()
+            thumb.thumbnail((300, 300))
+
+            thumb_buffer = io.BytesIO()
+            thumb.save(thumb_buffer, format="JPEG", quality=85)
+
+            cursor.execute("""
+                INSERT INTO "GALLERY_IMAGE"
+                ("PROJECT_ID","THUMBNAIL","FULL_RES")
+                VALUES (%s,%s,%s)
+            """, (
+                project_id,
+                thumb_buffer.getvalue(),
+                full_buffer.getvalue()
+            ))
 
         connect.commit()
 
-        print(f"Inserted image with GALLERY_KEY = {gallery_key}")
-
     except Exception as e:
-        print(f"Error inserting image: {e}")
-        return "Error inserting image", 500
+        if connect:
+            connect.rollback()
+        print(e)
+        return "Error uploading images.", 500
 
     finally:
         if cursor:
@@ -99,45 +156,87 @@ def insertImage():
         if connect:
             connect.close()
 
-    return redirect(url_for('galleryManager.galleryManager'))
-@galleryManagerManipulationBP.route('/insertImagePage', methods=['GET'])
-def insertImagePage():
-    if not session.get('loggedIn'):
-        return redirect(url_for('employee.employeeLogin'))
-
-    return render_template('uploadImage.html')
+    return redirect(
+        url_for(
+            "galleryManager.projectManager",
+            project_id=project_id
+        )
+    )
 
 # New toggle function for public/private
 #
-@galleryManagerManipulationBP.route('/togglePublic/<int:primary_key>', methods=['POST'])
-def togglePublic(primary_key):
+@galleryManagerManipulationBP.route('/togglePublic/<int:project_id>', methods=['POST'])
+def togglePublic(project_id):
     if not session.get('loggedIn'):
         return redirect(url_for('employee.employeeLogin'))
 
-    try:
-        connect = connect_to_db()
-        cursor = connect.cursor()
+    connect = connect_to_db()
+    cursor = connect.cursor()
 
-        # Toggle PUBLIC value in GALLERY_META
-        cursor.execute('''
-            UPDATE "GALLERY_META"
-            SET "PUBLIC" = NOT "PUBLIC"
-            WHERE "PRIMARY_KEY" = %s
-        ''', (primary_key,))
+    cursor.execute("""
+        UPDATE "GALLERY_PROJECT"
+        SET "PUBLIC" = NOT "PUBLIC"
+        WHERE "PROJECT_ID"=%s
+    """,(project_id,))
 
-        connect.commit()
-        print(f"Toggled PUBLIC for image PRIMARY_KEY={primary_key}")
+    connect.commit()
 
-    except Exception as e:
-        print(f"Error toggling public: {e}")
-
-    finally:
-        if cursor:
-            cursor.close()
-        if connect:
-            connect.close()
+    cursor.close()
+    connect.close()
 
     return redirect(url_for('galleryManager.galleryManager'))
 
+@galleryManagerManipulationBP.route('/deleteProject/<int:project_id>', methods=['POST'])
+def deleteProject(project_id):
+    if not session.get('loggedIn'):
+        return redirect(url_for('employee.employeeLogin'))
+
+    connect = connect_to_db()
+    cursor = connect.cursor()
+
+    cursor.execute("""
+        DELETE FROM "GALLERY_PROJECT"
+        WHERE "PROJECT_ID"=%s
+    """,(project_id,))
+
+    connect.commit()
+
+    cursor.close()
+    connect.close()
+
+    return redirect(url_for('galleryManager.galleryManager'))
+
+@galleryManagerManipulationBP.route('/insertImagePage')
+def insertImagePage():
+
+    if not session.get('loggedIn'):
+        return redirect(url_for('employee.employeeLogin'))
+
+    connect = connect_to_db()
+    cursor = connect.cursor()
+
+    cursor.execute("""
+        SELECT
+            "PROJECT_ID",
+            "TITLE"
+        FROM "GALLERY_PROJECT"
+        ORDER BY "TITLE";
+    """)
+
+    project_list = [
+        {
+            "id": row[0],
+            "title": row[1]
+        }
+        for row in cursor.fetchall()
+    ]
+
+    cursor.close()
+    connect.close()
+
+    return render_template(
+        "uploadImage.html",
+        project_list=project_list
+    )
 
 

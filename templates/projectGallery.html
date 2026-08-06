@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DenHeyer Electric - {{ project.title }}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="icon" href="/static/images/LightBulbOG_AnniePaxson.png" sizes="any">
+<link rel="icon" type="image/png" href="/static/images/LightBulbOG_AnniePaxson.png">
+<link rel="apple-touch-icon" href="/static/images/LightBulbOG_AnniePaxson.png">
+
+<style>
+
+body{
+    margin:0;
+    padding:0;
+    font-family:'Courgette', cursive;
+    background:#ffffff;
+}
+
+.page-section{
+    max-width:75vw;
+    margin:2vh auto;
+    padding:4vh 4vw;
+    background:#f8f9fa;
+    border-radius:1.5vw;
+    box-shadow:0 .5vh 1vh rgba(0,0,0,.2);
+    text-align:center;
+}
+
+.page-section h1{
+    color:#2C4FA0;
+    font-size:2.5vw;
+}
+
+.project-description{
+    color:#555;
+    margin-bottom:4vh;
+    font-size:1.1vw;
+}
+
+.gallery{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:2vw;
+
+}
+
+.image-item{
+
+    cursor:pointer;
+    text-align:center;
+
+}
+
+.image-item img{
+
+    width:100%;
+    max-width:250px;
+    border-radius:1vw;
+    box-shadow:2px 2px 10px rgba(0,0,0,.15);
+    transition:.2s;
+
+}
+
+.image-item img:hover{
+
+    transform:scale(1.04);
+
+}
+
+.return-link{
+
+    display:inline-block;
+    margin-top:40px;
+    color:#2C4FA0;
+    text-decoration:none;
+    font-size:1.2vw;
+
+}
+
+.return-link:hover{
+
+    text-decoration:underline;
+
+}
+
+.lightbox{
+
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.9);
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+
+}
+
+.lightbox img{
+
+    max-width:90%;
+    max-height:85%;
+
+}
+
+.close-btn{
+
+    position:absolute;
+    top:20px;
+    right:30px;
+    color:white;
+    font-size:40px;
+    cursor:pointer;
+
+}
+
+.nav-arrow{
+
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    color:white;
+    font-size:50px;
+    cursor:pointer;
+    padding:20px;
+
+}
+
+.arrow-left{
+
+    left:10px;
+
+}
+
+.arrow-right{
+
+    right:10px;
+
+}
+
+.bottom-ribbon{
+
+    width:100%;
+    background:#2C4FA0;
+    color:white;
+    text-align:center;
+    padding:1vh;
+    margin-top:50px;
+    font-size:.8vw;
+
+}
+
+@media(max-width:768px){
+
+.page-section{
+
+    max-width:90vw;
+
+}
+
+.page-section h1{
+
+    font-size:7vw;
+
+}
+
+.project-description{
+
+    font-size:4vw;
+
+}
+
+.return-link{
+
+    font-size:5vw;
+
+}
+
+.bottom-ribbon{
+
+    font-size:2.5vw;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+{% include 'header.html' %}
+
+<div class="page-section">
+
+<h1>{{ project.title }}</h1>
+
+{% if project.description %}
+<p class="project-description">
+    {{ project.description }}
+</p>
+{% endif %}
+
+<div class="gallery">
+
+{% for image in image_list %}
+
+<div
+class="image-item"
+data-index="{{ loop.index0 }}"
+data-fullres="/get_fullres/{{ image.id }}">
+
+<img
+src="data:image/jpeg;base64,{{ image.thumbnail }}"
+loading="lazy">
+
+</div>
+
+{% else %}
+
+<p>This project has no images.</p>
+
+{% endfor %}
+
+</div>
+
+<a href="/gallery" class="return-link">
+← Back to Projects
+</a>
+
+</div>
+
+<div class="lightbox" id="lightbox">
+
+<span class="close-btn" id="closeBtn">&times;</span>
+
+<span class="nav-arrow arrow-left" id="prevBtn">
+&#10094;
+</span>
+
+<img id="lightboxImg">
+
+<span class="nav-arrow arrow-right" id="nextBtn">
+&#10095;
+</span>
+
+</div>
+
+<div class="bottom-ribbon">
+Licensed &amp; Insured • Serving Sussex County Area • Est. 2015
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+const items=document.querySelectorAll(".image-item");
+
+const lightbox=document.getElementById("lightbox");
+
+const lightboxImg=document.getElementById("lightboxImg");
+
+const closeBtn=document.getElementById("closeBtn");
+
+const prevBtn=document.getElementById("prevBtn");
+
+const nextBtn=document.getElementById("nextBtn");
+
+let currentIndex=0;
+
+items.forEach((item,index)=>{
+
+    item.addEventListener("click",()=>{
+
+        currentIndex=index;
+
+        openImage(item);
+
+    });
+
+});
+
+function openImage(item){
+
+    fetch(item.dataset.fullres)
+
+    .then(r=>r.blob())
+
+    .then(blob=>{
+
+        lightboxImg.src=URL.createObjectURL(blob);
+
+        lightbox.style.display="flex";
+
+    });
+
+}
+
+function show(index){
+
+    if(index<0) index=items.length-1;
+
+    if(index>=items.length) index=0;
+
+    currentIndex=index;
+
+    openImage(items[currentIndex]);
+
+}
+
+prevBtn.onclick=()=>show(currentIndex-1);
+
+nextBtn.onclick=()=>show(currentIndex+1);
+
+closeBtn.onclick=()=>{
+
+    lightbox.style.display="none";
+
+    lightboxImg.src="";
+
+};
+
+lightbox.onclick=(e)=>{
+
+    if(e.target===lightbox){
+
+        closeBtn.onclick();
+
+    }
+
+};
+
+document.addEventListener("keydown",(e)=>{
+
+    if(lightbox.style.display!=="flex") return;
+
+    if(e.key==="Escape") closeBtn.onclick();
+
+    if(e.key==="ArrowLeft") show(currentIndex-1);
+
+    if(e.key==="ArrowRight") show(currentIndex+1);
+
+});
+
+});
+
+</script>
+
+</body>
+</html>

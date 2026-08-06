@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Create Project - DenHeyer Electric</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+
+<link rel="icon" href="/static/images/LightBulbOG_AnniePaxson.png" sizes="any">
+<link rel="icon" type="image/png" href="/static/images/LightBulbOG_AnniePaxson.png">
+<link rel="apple-touch-icon" href="/static/images/LightBulbOG_AnniePaxson.png">
+
+<style>
+
+body{
+    font-family:'Kanit',sans-serif;
+    background-color:#e0e9ff;
+    background-image:url("https://www.transparenttextures.com/patterns/lined-paper-2.png");
+    background-repeat:repeat;
+    background-attachment:fixed;
+    margin:0;
+    padding:0;
+}
+
+.header-bar{
+    background:#2C4FA0;
+    padding:1vh 0;
+    text-align:center;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:1000;
+}
+
+.header-bar h1{
+    margin:0;
+}
+
+.home-link{
+    text-decoration:none;
+    color:white;
+}
+
+.denheyer{
+    font-family:'Anton',sans-serif;
+    font-size:5vw;
+    letter-spacing:.2vw;
+}
+
+.electric{
+    font-family:'Teko',sans-serif;
+    font-size:5vw;
+    letter-spacing:.2vw;
+}
+
+.page-section{
+    margin:13vh auto;
+    padding:4vh 3vw;
+    max-width:650px;
+    background:#f8f9fa;
+    border-radius:15px;
+    box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+.page-section h2{
+    text-align:center;
+    color:#2C4FA0;
+    margin-bottom:30px;
+}
+
+.form-group{
+    margin-bottom:25px;
+}
+
+label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:bold;
+}
+
+input[type=text],
+textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:1rem;
+    box-sizing:border-box;
+}
+
+textarea{
+    resize:vertical;
+    min-height:120px;
+}
+
+.checkbox{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.checkbox input{
+    transform:scale(1.3);
+}
+
+.buttons{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin-top:35px;
+}
+
+button{
+    background:#2C4FA0;
+    color:white;
+    border:none;
+    padding:12px 24px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:1rem;
+}
+
+button:hover{
+    background:#1d3671;
+}
+
+.cancel{
+    text-decoration:none;
+    background:#777;
+    color:white;
+    padding:12px 24px;
+    border-radius:6px;
+}
+
+.cancel:hover{
+    background:#555;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header-bar">
+    <h1>
+        <a href="/employeePortal" class="home-link">
+            <span class="denheyer">DenHeyer </span>
+            <span class="electric">ELECTRIC</span>
+        </a>
+    </h1>
+</div>
+
+<div class="page-section">
+
+<h2>Create New Project</h2>
+
+<form action="/createProject" method="POST">
+
+    <div class="form-group">
+        <label for="title">Project Title</label>
+        <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="Example: Whole House Generator Installation"
+            required>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Project Description</label>
+        <textarea
+            id="description"
+            name="description"
+            placeholder="Describe the installation..."></textarea>
+    </div>
+
+    <div class="form-group checkbox">
+        <input
+            type="checkbox"
+            id="public"
+            name="public">
+
+        <label for="public" style="margin:0;">
+            Display this project in the public gallery
+        </label>
+    </div>
+
+    <div class="buttons">
+
+        <button type="submit">
+            Create Project
+        </button>
+
+        <a href="/galleryManager/galleryManager" class="cancel">
+            Cancel
+        </a>
+
+    </div>
+
+</form>
+
+</div>
+
+</body>
+</html>

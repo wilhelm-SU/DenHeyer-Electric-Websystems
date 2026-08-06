@@ -44,7 +44,16 @@ body {
 
 .image-item {
     text-align: center;
+    text-decoration: none;
+    color: inherit;
     cursor: pointer;
+    display: block;
+}
+
+.image-item p{
+    font-size:.9vw;
+    color:#555;
+    margin-top:.5vh;
 }
 
 .image-item img {
@@ -195,15 +204,32 @@ body {
 <div class="page-section">
     <h2>Welcome to the Gallery</h2>
     <div class="gallery">
-      {% for image in image_list %}
-        <div class="image-item" data-index="{{ loop.index0 }}" data-fullres="/get_fullres/{{ image.id }}">
-          <img src="data:image/jpeg;base64,{{ image.thumbnail }}" alt="{{ image.description }}" loading="lazy">
-          <h3>{{ image.description }}</h3>
-        </div>
-      {% else %}
-        <p>No images available.</p>
-      {% endfor %}
-    </div>
+    {% for project in projects %}
+
+    <a class="image-item"
+       href="{{ url_for('gallery.project_gallery', project_id=project.id) }}">
+
+        {% if project.thumbnail %}
+            <img src="data:image/jpeg;base64,{{ project.thumbnail }}"
+                 alt="{{ project.title }}"
+                 loading="lazy">
+        {% else %}
+            <img src="{{ url_for('static', filename='images/no-image.png') }}"
+                 alt="No Image">
+        {% endif %}
+
+        <h3>{{ project.title }}</h3>
+
+        {% if project.description %}
+            <p>{{ project.description }}</p>
+        {% endif %}
+
+    </a>
+
+    {% else %}
+        <p>No projects available.</p>
+    {% endfor %}
+</div>
 
     <a href="/" class="return-link">Return</a>
 </div>

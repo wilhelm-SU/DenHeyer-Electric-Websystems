@@ -1,137 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upload Image - DenHeyer Electric</title>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="icon" href="/static/images/LightBulbOG_AnniePaxson.png" sizes="any">
-  <link rel="icon" type="image/png" href="/static/images/LightBulbOG_AnniePaxson.png">
-  <link rel="apple-touch-icon" href="/static/images/LightBulbOG_AnniePaxson.png">
+<title>Upload Images - DenHeyer Electric</title>
 
-  <style>
-    body {
-      font-family: 'Kanit', sans-serif;
-      background-color: #e0e9ff;
-      background-image: url("https://www.transparenttextures.com/patterns/lined-paper-2.png");
-      background-repeat: repeat;
-      background-attachment: fixed;
-      margin: 0;
-      padding: 0;
-    }
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
 
-    .header-bar {
-      background-color: #2C4FA0;
-      padding: 1vh 0;
-      text-align: center;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-    }
+<link rel="icon" href="/static/images/LightBulbOG_AnniePaxson.png" sizes="any">
+<link rel="icon" type="image/png" href="/static/images/LightBulbOG_AnniePaxson.png">
+<link rel="apple-touch-icon" href="/static/images/LightBulbOG_AnniePaxson.png">
 
-    .header-bar h1 {
-      margin: 0;
-    }
+<style>
 
-    .home-link {
-      text-decoration: none;
-      color: inherit;
-    }
+body{
+    font-family:'Kanit',sans-serif;
+    background:#e0e9ff url("https://www.transparenttextures.com/patterns/lined-paper-2.png");
+    margin:0;
+}
 
-    .denheyer {
-      font-family: 'Anton', sans-serif;
-      font-size: 5vw;
-      letter-spacing: .2vw;
-      color: #ffffff;
-    }
+.header-bar{
+    background:#2C4FA0;
+    position:fixed;
+    width:100%;
+    top:0;
+    text-align:center;
+    padding:1vh;
+}
 
-    .electric {
-      font-family: 'Teko', sans-serif;
-      font-size: 5vw;
-      letter-spacing: .2vw;
-      color: #ffffff;
-    }
+.header-bar h1{
+    margin:0;
+}
 
-    .page-section {
-      margin: 13vh auto;
-      padding: 4vh 2vw;
-      max-width: 60vw;
-      background-color: #f8f9fa;
-      border-radius: 1.5vw;
-      box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
-      text-align: center;
-    }
+.home-link{
+    text-decoration:none;
+    color:white;
+}
 
-    label, input, button {
-      font-size: 1.2vw;
-      margin-bottom: 1vh;
-    }
+.denheyer{
+    font-family:'Anton';
+    font-size:5vw;
+}
 
-    input[type="text"], input[type="file"] {
-      width: 80%;
-      padding: 1vh;
-      font-size: 1vw;
-      margin: 1vh auto;
-      border-radius: 0.5vw;
-      border: 1px solid #ccc;
-    }
+.electric{
+    font-family:'Teko';
+    font-size:5vw;
+}
 
-    button {
-      background-color: #2C4FA0;
-      color: white;
-      padding: 1vh 2vw;
-      border: none;
-      border-radius: 1vw;
-      font-size: 1.2vw;
-      cursor: pointer;
-    }
+.page-section{
+    margin:13vh auto;
+    max-width:650px;
+    background:white;
+    padding:40px;
+    border-radius:15px;
+    box-shadow:0 4px 12px rgba(0,0,0,.15);
+    text-align:center;
+}
 
-    button:hover {
-      background-color: #1d3671;
-    }
+select,
+input[type=file]{
+    width:100%;
+    padding:12px;
+    margin:15px 0;
+    font-size:1rem;
+}
 
-    .return-link {
-      display: block;
-      text-align: center;
-      margin-top: 3vh;
-      font-size: 1.2vw;
-      color: #2C4FA0;
-      text-decoration: none;
-    }
-    .return-link:hover {
-      text-decoration: underline;
-    }
-  </style>
+button{
+    background:#2C4FA0;
+    color:white;
+    border:none;
+    padding:12px 24px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1d3671;
+}
+
+.return-link{
+    display:block;
+    margin-top:25px;
+    color:#2C4FA0;
+    text-decoration:none;
+}
+
+.return-link:hover{
+    text-decoration:underline;
+}
+
+</style>
+
 </head>
+
 <body>
-  <div class="header-bar">
-    <h1>
-      <a href="/employeePortal" class="home-link">
-        <span class="denheyer">DenHeyer </span>
-        <span class="electric">ELECTRIC</span>
-      </a>
-    </h1>
-  </div>
 
-  <div class="page-section">
-    <h2>Upload a New Image</h2>
-    <form action="/insertImage" method="POST" enctype="multipart/form-data">
-      <label for="description">Description:</label><br>
-      <input type="text" name="description" id="description"><br><br>
+<div class="header-bar">
+<h1>
+<a href="/employeePortal" class="home-link">
+<span class="denheyer">DenHeyer </span>
+<span class="electric">ELECTRIC</span>
+</a>
+</h1>
+</div>
 
-      <label for="public">Public?</label>
-      <input type="checkbox" name="public" id="public"><br><br>
+<div class="page-section">
 
-      <label for="image">Choose an image to upload:</label><br>
-      <input type="file" name="image" id="image" accept="image/*" required><br><br>
+<h2>Upload Images</h2>
 
-      <button type="submit">Upload</button>
-    </form>
-    <a href="/galleryManager" class="return-link">Back to Gallery Manager</a>
-  </div>
+<p>Select a project, then choose one or more images to upload.</p>
+
+<form action="/insertImage" method="POST" enctype="multipart/form-data">
+
+<label for="project_id">
+<strong>Project</strong>
+</label>
+
+<select name="project_id" id="project_id" required>
+
+<option value="">-- Select Project --</option>
+
+{% for project in project_list %}
+<option value="{{ project.id }}">
+    {{ project.title }}
+</option>
+{% endfor %}
+
+</select>
+
+<br><br>
+
+<label for="image">
+<strong>Select Images</strong>
+</label>
+
+<input
+type="file"
+name="image"
+id="image"
+accept="image/*"
+multiple
+required>
+
+<br><br>
+
+<button type="submit">
+Upload Images
+</button>
+
+</form>
+
+<a href="/galleryManager/galleryManager" class="return-link">
+Back to Gallery Manager
+</a>
+
+</div>
+
 </body>
 </html>
