@@ -1,7 +1,7 @@
-"""This is the repository for the DenHeyer Electric Websystem which was designed and utilized by the DenHeyer Electric company up until 8/6/2026, which on said date the repo was copied to another repo.
+"""This is the repository for the DenHeyer Electric Websystem which was designed and utilized by the DenHeyer Electric company up until 8/6/2026, which on said date the repo was copied to a new repo.
 
-This new repo will be the one utilized by the DenHeyer Electric company, it will be where all upcoming updates and changes are be made, and will be the source repository which Render accesses to build the 
-web service. For security purposes, this new repo will not be accessible to the public.
+The new repo will be the one utilized by the DenHeyer Electric company, it will be where all upcoming updates and changes are made, and will be the source repository that Render accesses to build the 
+web service. For security purposes, the new repo will not be accessible to the public.
 
 However, all code and updates that were committed to this repo up until 8/6/2026 will remain here and continue to be accessible to the public. This is primarily done with the purpose of letting past contributors
 utilize this repo for whatever purpose they desire, whether that be for future programming or career acceleration.
